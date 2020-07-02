@@ -13,7 +13,7 @@ while True:
     if os.path.exists(usr_input) and isdir(usr_input):
         base_path=usr_input#+'\\'
         break
-    elif not path.exists(usr_input):
+    elif not os.path.exists(usr_input):
         print('This folder doesn\'t exist...')
     elif not isdir(usr_input):
         print('This isn\'t a folder.')
