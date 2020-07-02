@@ -129,3 +129,6 @@ output.*
 out.*
 *.out
 *output*
+
+# Word and Excel temp files
+~$*
