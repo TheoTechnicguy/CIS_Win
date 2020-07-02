@@ -10,8 +10,8 @@ This is a program to automate collection of Group Policy Objects and verify thie
   4. `Key` references the policy key.
   5. `User_key` references a user-readable policy name. This is the value that will be used in the *out.csv* file. Here you can use the name of the section in the compliance guidance file.
   6. `Type` references the value type that the program will be comapring. See *Types* for more information.
-  7. `Min_val` references the minimum value in a range of values. This value is inclusive.
-  8. `Max_val` references the maximum value in a range of values. This value is **exclusive**.
+  7. `Min_val` references the minimum value in a range of values. This value is inclusive. Leave blank for -infinity.
+  8. `Max_val` references the maximum value in a range of values. This value is **exclusive**. Leave blank for infinity.
   Example:
   ```python
   Min_val = 0
@@ -28,7 +28,7 @@ The types used are python types. Valid types are:
 
 | Type | Full name | Desctiption                         | Examples | Accepted values |
 | :--- | :-------- | :---------------------------------- | :------- | :-------------- |
-| int  | integer   | An entire non-floating point number | `1`, `50`| range, exact    |
+| int  | integer   | An entire non-floating point number | `1`, `50`| range, exact, min, max    |
 | float| float     | A deciam floating point number      | `3.1415` | exact           |
 | bool | boolean   | `True` or `False` / Valid or not    | `True`/`False`| exact      |
 | None | None      | None or Null type. Equivalent to an empty str|`None`, `""`| exact|
