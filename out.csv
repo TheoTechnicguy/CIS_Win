@@ -1,11 +1,15 @@
-Number,Policy,Current_val,Min_val,Max_val,Compliant
-Note:,Version:,0.0.0.5,,Max value excluede. Used (-)999999 for (-)infinity.
-1.1.1,PasswordHistorySize,24,24,999999,True
-1.1.2,MaximumPasswordAge,42,1,61,True
-1.1.3,MinimumPasswordAge,5,1,999999,True
-1.1.4,MinimumPasswordLength,8,14,999999,False
-1.1.5,PasswordComplexity,1,1,2,True
-1.1.6,ClearTextPassword,0,0,1,True
-1.2.1,LockoutDuration,30,15,999999,True
-1.2.2,LockoutBadCount,5,1,11,True
-1.2.3,ResetLockoutCount,15,15,999999,True
+Output file version:,0.0.0.6,Execution time:,2020-07-02 18:27:39.488761,Time stamp:,1593707259.488761
+User:,Theo2,Domain,DESKTOP-A3DGT90
+Computer:,DESKTOP-A3DGT90,IP:,192.168.188.100
+Note:,Max value excluede. Used (-)999999 for (-)infinity.
+---------------,---------------,---------------,---------------,---------------,---------------
+Number,Policy,Current_val,Min_val,Max_val,Exact_val,Compliant
+1.1.1,System Access/PasswordHistorySize,24,24,999999,,True
+1.1.2,System Access/MaximumPasswordAge,42,1,61,,True
+1.1.3,System Access/MinimumPasswordAge,5,1,999999,,True
+1.1.4,System Access/MinimumPasswordLength,8,14,999999,,False
+1.1.5,System Access/PasswordComplexity,1,,,1,True
+1.1.6,System Access/ClearTextPassword,0,,,0,True
+1.2.1,System Access/LockoutDuration,30,15,999999,,True
+1.2.2,System Access/LockoutBadCount,5,1,11,,True
+1.2.3,System Access/ResetLockoutCount,15,15,999999,,True
