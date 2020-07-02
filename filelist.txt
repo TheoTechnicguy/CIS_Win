@@ -1,0 +1,1801 @@
+
+
+    Directory: C:\Windows\System32\GroupPolicy
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                DataStore
+d-----       11/29/2019   2:20 PM                Machine
+d-----        2/12/2019   3:05 PM                User
+-a----        6/23/2020   5:43 PM           2902 gpt.ini
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                0
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                SysVol
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                na.pg.com
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        1/30/2020   8:41 AM                Policies
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        7/31/2019  10:01 AM                {0443DD02-CC21-4570-8D4D-DA6D6E86DDC5}
+d-----        2/12/2019   2:32 PM                {0FD30263-3705-4AE4-B610-02E6B6A5CFD9}
+d-----        2/12/2019   2:31 PM                {1BE27C9C-48BB-4DF7-83F9-C44337B39346}
+d-----        2/12/2019   2:31 PM                {2652D24D-7A78-4F32-A4B6-0FF375E7122B}
+d-----        3/13/2019  12:11 PM                {2B881FB7-41EE-4F97-90B6-519E47B2380C}
+d-----        2/12/2019   2:31 PM                {31B2F340-016D-11D2-945F-00C04FB984F9}
+d-----        5/29/2019  10:42 AM                {3AC07DCC-CC71-46AF-ADEC-A5ABD7246402}
+d-----        5/29/2019  10:44 AM                {3BE20C34-AAA8-43DB-93AB-26555EBA4B56}
+d-----        2/12/2019   2:32 PM                {77709360-9BA3-478D-8B9A-1595B1978F10}
+d-----        11/6/2019   8:44 AM                {7DE82B2F-5961-4E28-A39B-21E97742CFCB}
+d-----        3/11/2019   8:31 AM                {7DFC2843-7670-4C6E-B563-328775B3C46F}
+d-----        2/12/2019   2:31 PM                {7E9D452E-E243-4C8F-8198-D7729FEE96D6}
+d-----        2/25/2019   8:58 AM                {81E00673-E5CC-402C-B0E4-55ED6D9BADC1}
+d-----        1/30/2020   8:41 AM                {82FD081D-E766-4C42-96D9-CC4B2BAEA558} <<<
+d-----        5/14/2019   8:02 AM                {89FCFE8A-D437-4C17-9043-6C529105C58A}
+d-----        12/3/2019   9:29 AM                {8E6A834C-239D-4AA5-AE5E-9CE797C04554}
+d-----        2/12/2019   2:31 PM                {8E719777-5B5F-40C6-9D80-A2410C9D104F}
+d-----        2/12/2019   2:31 PM                {92F8E330-ED76-4D44-AEAD-D26E44B0770A}
+d-----        2/12/2019   2:31 PM                {95750D50-9ABB-4021-A3DB-D379E5609385}
+d-----        2/12/2019   2:31 PM                {9A3EE678-4C92-447A-BA98-B682EBA7B4AE}
+d-----        2/12/2019   2:31 PM                {9BD274C5-ECB9-492B-ACF7-499AED829CD3}
+d-----        5/29/2019  10:43 AM                {A67A8091-B58C-4769-A062-36A507365701}
+d-----        1/17/2020   8:16 AM                {AC8A8C7A-0D48-42B5-8B12-51A729831CCE}  <
+d-----       10/21/2019  11:58 AM                {ADD567E8-48AD-4180-87DF-8A601855BA24}
+d-----        3/11/2019   8:31 AM                {D91206DE-24FC-48C8-AC8A-D9C8ADA86387}
+d-----        2/12/2019   2:31 PM                {D96F7F1B-7DFA-432C-B27B-4CFA21ADEBD9}
+d-----        2/12/2019   2:32 PM                {DE0FB0FB-4038-4DB2-9B68-DBAF7B758BBF}
+d-----        9/18/2019   9:19 AM                {E0572A39-A69A-483D-B40B-73750785DE28}
+d-----        3/11/2019   8:31 AM                {E2BA608B-BC93-47BC-871D-1C0D78F7EDF1}
+d-----        2/22/2019   4:51 PM                {E4DCE590-6F87-4105-BD2A-C72B8EF72D47}
+d-----        4/23/2019   8:24 AM                {E53236F5-89C9-4097-A55D-8F50359F3CF6}
+d-----        2/12/2019   2:31 PM                {ED2DF902-18E5-4325-95DD-3369A3C30839}
+d-----        9/10/2019  10:15 AM                {EDDFB5B7-5D6F-452A-B3CE-CB00D37A2338}
+d-----         9/6/2019   9:11 AM                {EE6A6C5B-184F-431A-B10A-C0E09CEE6330}
+d-----        2/12/2019   2:31 PM                {FB386A36-27CA-467B-B1B4-CDE1FFD22966}
+d-----        2/12/2019   2:32 PM                {FE76B231-28E5-4694-8CB7-B02BE4638AA3}
+
+
+    Directory:
+    C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{0443DD02-CC21-4570-8D4D-DA6D6E86DDC5}
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        7/31/2019  10:01 AM                Machine
+-a----        7/30/2019  10:36 PM             26 gpt.ini
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{0443DD02-CC21-4570-8D4D-DA6D6E86D
+    DC5}\Machine
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        7/31/2019  10:01 AM                Preferences
+d-----        7/31/2019  10:01 AM                Scripts
+-a----         3/4/2019   6:11 PM            551 comment.cmtx
+-a----         3/4/2019   6:11 PM            148 registry.pol
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{0443DD02-CC21-4570-8D4D-DA6D6E86D
+    DC5}\Machine\Preferences
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        7/31/2019  10:01 AM                Registry
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{0443DD02-CC21-4570-8D4D-DA6D6E86D
+    DC5}\Machine\Scripts
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        7/31/2019  10:01 AM                Shutdown
+d-----        7/31/2019  10:01 AM                Startup
+
+
+    Directory:
+    C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{0FD30263-3705-4AE4-B610-02E6B6A5CFD9}
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:32 PM                Machine
+-a----         3/2/2014  11:11 PM             27 gpt.ini
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{0FD30263-3705-4AE4-B610-02E6B6A5C
+    FD9}\Machine
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:32 PM                Microsoft
+d-----        2/12/2019   2:32 PM                Scripts
+-a----       10/11/2013   5:02 PM          10366 registry.pol
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{0FD30263-3705-4AE4-B610-02E6B6A5C
+    FD9}\Machine\Microsoft
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:32 PM                Windows NT
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{0FD30263-3705-4AE4-B610-02E6B6A5C
+    FD9}\Machine\Microsoft\Windows NT
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:32 PM                SecEdit
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{0FD30263-3705-4AE4-B610-02E6B6A5C
+    FD9}\Machine\Microsoft\Windows NT\SecEdit
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----       10/11/2013   4:54 PM            142 GptTmpl.inf
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{0FD30263-3705-4AE4-B610-02E6B6A5C
+    FD9}\Machine\Scripts
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:32 PM                Shutdown
+d-----        2/12/2019   2:32 PM                Startup
+
+
+    Directory:
+    C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{1BE27C9C-48BB-4DF7-83F9-C44337B39346}
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                Machine
+-a----         9/5/2017   6:01 PM             59 gpt.ini
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{1BE27C9C-48BB-4DF7-83F9-C44337B39
+    346}\Machine
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                Microsoft
+d-----        2/12/2019   2:31 PM                Scripts
+-a----         9/5/2017   6:01 PM           6333 Registry.pol
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{1BE27C9C-48BB-4DF7-83F9-C44337B39
+    346}\Machine\Microsoft
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                Windows NT
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{1BE27C9C-48BB-4DF7-83F9-C44337B39
+    346}\Machine\Microsoft\Windows NT
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                SecEdit
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{1BE27C9C-48BB-4DF7-83F9-C44337B39
+    346}\Machine\Microsoft\Windows NT\SecEdit
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----        4/25/2017   6:11 AM            142 GptTmpl.inf
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{1BE27C9C-48BB-4DF7-83F9-C44337B39
+    346}\Machine\Scripts
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                Shutdown
+d-----        2/12/2019   2:31 PM                Startup
+
+
+    Directory:
+    C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{2652D24D-7A78-4F32-A4B6-0FF375E7122B}
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                Machine
+-a----        1/11/2018   9:13 PM             27 gpt.ini
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{2652D24D-7A78-4F32-A4B6-0FF375E71
+    22B}\Machine
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                Applications
+d-----        2/12/2019   2:31 PM                microsoft
+d-----        2/12/2019   2:31 PM                Preferences
+d-----        2/12/2019   2:31 PM                Scripts
+-a----         1/9/2018   6:24 PM           1481 comment.cmtx
+-a----         1/9/2018   6:24 PM          11762 registry.pol
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{2652D24D-7A78-4F32-A4B6-0FF375E71
+    22B}\Machine\microsoft
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                windows nt
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{2652D24D-7A78-4F32-A4B6-0FF375E71
+    22B}\Machine\microsoft\windows nt
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                SecEdit
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{2652D24D-7A78-4F32-A4B6-0FF375E71
+    22B}\Machine\microsoft\windows nt\SecEdit
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----        1/11/2018   9:13 PM            142 GptTmpl.inf
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{2652D24D-7A78-4F32-A4B6-0FF375E71
+    22B}\Machine\Preferences
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                Registry
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{2652D24D-7A78-4F32-A4B6-0FF375E71
+    22B}\Machine\Scripts
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                Shutdown
+d-----        2/12/2019   2:31 PM                Startup
+
+
+    Directory:
+    C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{2B881FB7-41EE-4F97-90B6-519E47B2380C}
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        3/13/2019  12:11 PM                Machine
+-a----        3/12/2019   8:19 PM             26 gpt.ini
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{2B881FB7-41EE-4F97-90B6-519E47B23
+    80C}\Machine
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        3/13/2019  12:11 PM                Applications
+d-----        3/13/2019  12:11 PM                microsoft
+d-----        3/13/2019  12:11 PM                Preferences
+d-----        3/13/2019  12:11 PM                Scripts
+-a----         2/4/2019   8:33 PM            552 comment.cmtx
+-a----         2/4/2019   8:33 PM          42500 registry.pol
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{2B881FB7-41EE-4F97-90B6-519E47B23
+    80C}\Machine\microsoft
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        3/13/2019  12:11 PM                windows nt
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{2B881FB7-41EE-4F97-90B6-519E47B23
+    80C}\Machine\microsoft\windows nt
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        3/13/2019  12:11 PM                Audit
+d-----        3/13/2019  12:11 PM                SecEdit
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{2B881FB7-41EE-4F97-90B6-519E47B23
+    80C}\Machine\microsoft\windows nt\Audit
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----         1/9/2018   5:51 PM           2353 audit.csv
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{2B881FB7-41EE-4F97-90B6-519E47B23
+    80C}\Machine\microsoft\windows nt\SecEdit
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----        3/12/2019   8:19 PM          15236 GptTmpl.inf
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{2B881FB7-41EE-4F97-90B6-519E47B23
+    80C}\Machine\Preferences
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        3/13/2019  12:11 PM                Registry
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{2B881FB7-41EE-4F97-90B6-519E47B23
+    80C}\Machine\Preferences\Registry
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----        11/2/2018   2:48 PM           5283 Registry.xml
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{2B881FB7-41EE-4F97-90B6-519E47B23
+    80C}\Machine\Scripts
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        3/13/2019  12:11 PM                Shutdown
+d-----        3/13/2019  12:11 PM                Startup
+
+
+    Directory:
+    C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{31B2F340-016D-11D2-945F-00C04FB984F9}
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                Machine
+-a----        5/15/2020  12:42 PM             27 gpt.ini
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{31B2F340-016D-11D2-945F-00C04FB98
+    4F9}\Machine
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                Applications
+d-----        2/12/2019   2:31 PM                Microsoft
+d-----        2/12/2019   2:31 PM                Scripts
+-a----         5/1/2007  10:29 PM           1608 Registry.pol
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{31B2F340-016D-11D2-945F-00C04FB98
+    4F9}\Machine\Microsoft
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                Windows NT
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{31B2F340-016D-11D2-945F-00C04FB98
+    4F9}\Machine\Microsoft\Windows NT
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                SecEdit
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{31B2F340-016D-11D2-945F-00C04FB98
+    4F9}\Machine\Microsoft\Windows NT\SecEdit
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----        5/15/2020  12:41 PM           1194 GptTmpl.inf
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{31B2F340-016D-11D2-945F-00C04FB98
+    4F9}\Machine\Scripts
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                Shutdown
+d-----        2/12/2019   2:31 PM                Startup
+
+
+    Directory:
+    C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{3AC07DCC-CC71-46AF-ADEC-A5ABD7246402}
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        5/29/2019  10:42 AM                Machine
+-a----        5/30/2019   8:46 PM             26 gpt.ini
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{3AC07DCC-CC71-46AF-ADEC-A5ABD7246
+    402}\Machine
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----        5/16/2019   3:20 PM            542 comment.cmtx
+-a----        5/30/2019   8:46 PM           5912 registry.pol
+
+
+    Directory:
+    C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{3BE20C34-AAA8-43DB-93AB-26555EBA4B56}
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        5/29/2019  10:44 AM                Machine
+-a----         5/6/2020  12:27 PM             26 gpt.ini
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{3BE20C34-AAA8-43DB-93AB-26555EBA4
+    B56}\Machine
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----        3/18/2020  11:32 AM            552 comment.cmtx
+-a----         5/6/2020  12:27 PM           1238 registry.pol
+
+
+    Directory:
+    C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{77709360-9BA3-478D-8B9A-1595B1978F10}
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:32 PM                Machine
+-a----        5/27/2017   2:07 AM             26 gpt.ini
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{77709360-9BA3-478D-8B9A-1595B1978
+    F10}\Machine
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:32 PM                Applications
+d-----        2/12/2019   2:32 PM                Preferences
+d-----        2/12/2019   2:32 PM                Scripts
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{77709360-9BA3-478D-8B9A-1595B1978
+    F10}\Machine\Preferences
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:32 PM                Files
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{77709360-9BA3-478D-8B9A-1595B1978
+    F10}\Machine\Preferences\Files
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----        5/27/2017   2:07 AM            478 Files.xml
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{77709360-9BA3-478D-8B9A-1595B1978
+    F10}\Machine\Scripts
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:32 PM                Shutdown
+d-----        2/12/2019   2:32 PM                Startup
+
+
+    Directory:
+    C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{7DE82B2F-5961-4E28-A39B-21E97742CFCB}
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        11/6/2019   8:44 AM                Machine
+-a----       10/31/2019   7:56 PM             26 gpt.ini
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{7DE82B2F-5961-4E28-A39B-21E97742C
+    FCB}\Machine
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        11/6/2019   8:44 AM                microsoft
+d-----        11/6/2019   8:44 AM                Preferences
+d-----        11/6/2019   8:44 AM                Scripts
+-a----       11/28/2018   3:23 PM            550 comment.cmtx
+-a----       11/28/2018   3:23 PM            148 registry.pol
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{7DE82B2F-5961-4E28-A39B-21E97742C
+    FCB}\Machine\microsoft
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        11/6/2019   8:44 AM                windows nt
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{7DE82B2F-5961-4E28-A39B-21E97742C
+    FCB}\Machine\microsoft\windows nt
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        11/6/2019   8:44 AM                SecEdit
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{7DE82B2F-5961-4E28-A39B-21E97742C
+    FCB}\Machine\microsoft\windows nt\SecEdit
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----       10/31/2019   7:22 PM            142 GptTmpl.inf
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{7DE82B2F-5961-4E28-A39B-21E97742C
+    FCB}\Machine\Preferences
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        11/6/2019   8:44 AM                Registry
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{7DE82B2F-5961-4E28-A39B-21E97742C
+    FCB}\Machine\Preferences\Registry
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----       10/31/2019   7:56 PM           1491 Registry.xml
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{7DE82B2F-5961-4E28-A39B-21E97742C
+    FCB}\Machine\Scripts
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        11/6/2019   8:44 AM                Shutdown
+d-----        11/6/2019   8:44 AM                Startup
+
+
+    Directory:
+    C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{7DFC2843-7670-4C6E-B563-328775B3C46F}
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----         6/5/2019   9:34 AM                Machine
+-a----         3/7/2019  11:20 PM             26 gpt.ini
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{7DFC2843-7670-4C6E-B563-328775B3C
+    46F}\Machine
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----         2/5/2019   6:43 PM            542 comment.cmtx
+-a----         3/7/2019   9:00 PM           1462 registry.pol
+
+
+    Directory:
+    C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{7E9D452E-E243-4C8F-8198-D7729FEE96D6}
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                Machine
+-a----        2/22/2019   2:56 PM             26 gpt.ini
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{7E9D452E-E243-4C8F-8198-D7729FEE9
+    6D6}\Machine
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                Scripts
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{7E9D452E-E243-4C8F-8198-D7729FEE9
+    6D6}\Machine\Scripts
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                Shutdown
+d-----        2/12/2019   2:31 PM                Startup
+
+
+    Directory:
+    C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{81E00673-E5CC-402C-B0E4-55ED6D9BADC1}
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/25/2019   8:58 AM                Machine
+-a----       11/15/2018   4:52 PM             26 gpt.ini
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{81E00673-E5CC-402C-B0E4-55ED6D9BA
+    DC1}\Machine
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----        11/9/2018   7:17 PM            552 comment.cmtx
+-a----        11/9/2018   7:17 PM           4248 registry.pol
+
+*******************************************************************************************************************************************************************************************************************
+
+    Directory:
+    C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{82FD081D-E766-4C42-96D9-CC4B2BAEA558}
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        1/30/2020   8:41 AM                Machine
+-a----        4/15/2020   4:45 PM             26 gpt.ini
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{82FD081D-E766-4C42-96D9-CC4B2BAEA
+    558}\Machine
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        1/30/2020   8:41 AM                Preferences
+-a----        8/27/2019   3:39 PM            542 comment.cmtx
+-a----        4/15/2020   4:45 PM           7614 registry.pol
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{82FD081D-E766-4C42-96D9-CC4B2BAEA
+    558}\Machine\Preferences
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        1/30/2020   8:41 AM                Registry
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{82FD081D-E766-4C42-96D9-CC4B2BAEA
+    558}\Machine\Preferences\Registry
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----        1/28/2020  12:59 PM            959 Registry.xml
+
+
+    Directory:
+    C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{89FCFE8A-D437-4C17-9043-6C529105C58A}
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        5/14/2019   8:02 AM                Machine
+-a----       10/22/2018   9:49 PM             26 gpt.ini
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{89FCFE8A-D437-4C17-9043-6C529105C
+    58A}\Machine
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        5/14/2019   8:02 AM                Microsoft
+d-----        5/14/2019   8:02 AM                Preferences
+d-----        5/14/2019   8:02 AM                Scripts
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{89FCFE8A-D437-4C17-9043-6C529105C
+    58A}\Machine\Microsoft
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        5/14/2019   8:02 AM                Windows NT
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{89FCFE8A-D437-4C17-9043-6C529105C
+    58A}\Machine\Microsoft\Windows NT
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        5/14/2019   8:02 AM                SecEdit
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{89FCFE8A-D437-4C17-9043-6C529105C
+    58A}\Machine\Microsoft\Windows NT\SecEdit
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----       10/15/2018   6:18 PM            142 GptTmpl.inf
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{89FCFE8A-D437-4C17-9043-6C529105C
+    58A}\Machine\Preferences
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        5/14/2019   8:02 AM                Registry
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{89FCFE8A-D437-4C17-9043-6C529105C
+    58A}\Machine\Preferences\Registry
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----       10/15/2018  10:04 PM            939 Registry.xml
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{89FCFE8A-D437-4C17-9043-6C529105C
+    58A}\Machine\Scripts
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        5/14/2019   8:02 AM                Shutdown
+d-----        5/14/2019   8:02 AM                Startup
+
+
+    Directory:
+    C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{8E6A834C-239D-4AA5-AE5E-9CE797C04554}
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        12/3/2019   9:29 AM                Machine
+-a----        9/16/2019   7:14 PM             26 gpt.ini
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{8E6A834C-239D-4AA5-AE5E-9CE797C04
+    554}\Machine
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----        9/12/2019   6:11 PM            561 comment.cmtx
+-a----        9/12/2019   6:11 PM            656 registry.pol
+
+
+    Directory:
+    C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{8E719777-5B5F-40C6-9D80-A2410C9D104F}
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                Machine
+-a----        1/14/2019   7:08 PM             26 gpt.ini
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{8E719777-5B5F-40C6-9D80-A2410C9D1
+    04F}\Machine
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                Applications
+d-----        2/12/2019   2:31 PM                microsoft
+d-----        2/12/2019   2:31 PM                Preferences
+d-----        2/12/2019   2:31 PM                Scripts
+-a----        11/1/2018  12:59 PM            897 comment.cmtx
+-a----        11/1/2018  12:59 PM          42500 registry.pol
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{8E719777-5B5F-40C6-9D80-A2410C9D1
+    04F}\Machine\microsoft
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                windows nt
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{8E719777-5B5F-40C6-9D80-A2410C9D1
+    04F}\Machine\microsoft\windows nt
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                Audit
+d-----        2/12/2019   2:31 PM                SecEdit
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{8E719777-5B5F-40C6-9D80-A2410C9D1
+    04F}\Machine\microsoft\windows nt\Audit
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----         1/9/2018   5:51 PM           2353 audit.csv
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{8E719777-5B5F-40C6-9D80-A2410C9D1
+    04F}\Machine\microsoft\windows nt\SecEdit
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----        1/14/2019   7:08 PM          15236 GptTmpl.inf
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{8E719777-5B5F-40C6-9D80-A2410C9D1
+    04F}\Machine\Preferences
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                Registry
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{8E719777-5B5F-40C6-9D80-A2410C9D1
+    04F}\Machine\Preferences\Registry
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----        11/2/2018   2:48 PM           5283 Registry.xml
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{8E719777-5B5F-40C6-9D80-A2410C9D1
+    04F}\Machine\Scripts
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                Shutdown
+d-----        2/12/2019   2:31 PM                Startup
+
+
+    Directory:
+    C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{92F8E330-ED76-4D44-AEAD-D26E44B0770A}
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                Machine
+-a----       11/15/2018   4:41 PM             26 gpt.ini
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{92F8E330-ED76-4D44-AEAD-D26E44B07
+    70A}\Machine
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                Scripts
+-a----        11/1/2018   3:06 PM            552 comment.cmtx
+-a----        11/1/2018   3:06 PM           4248 registry.pol
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{92F8E330-ED76-4D44-AEAD-D26E44B07
+    70A}\Machine\Scripts
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                Shutdown
+d-----        2/12/2019   2:31 PM                Startup
+
+
+    Directory:
+    C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{95750D50-9ABB-4021-A3DB-D379E5609385}
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                Machine
+-a----       10/16/2018   9:49 PM             59 gpt.ini
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{95750D50-9ABB-4021-A3DB-D379E5609
+    385}\Machine
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                Preferences
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{95750D50-9ABB-4021-A3DB-D379E5609
+    385}\Machine\Preferences
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                Registry
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{95750D50-9ABB-4021-A3DB-D379E5609
+    385}\Machine\Preferences\Registry
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----       10/16/2018   9:49 PM            587 Registry.xml
+
+
+    Directory:
+    C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{9A3EE678-4C92-447A-BA98-B682EBA7B4AE}
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                Machine
+-a----        5/10/2014   1:19 AM             26 gpt.ini
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{9A3EE678-4C92-447A-BA98-B682EBA7B
+    4AE}\Machine
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                Microsoft
+d-----        2/12/2019   2:31 PM                Preferences
+d-----        2/12/2019   2:31 PM                Scripts
+-a----        4/14/2014   9:57 PM          18264 registry.pol
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{9A3EE678-4C92-447A-BA98-B682EBA7B
+    4AE}\Machine\Microsoft
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                Windows NT
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{9A3EE678-4C92-447A-BA98-B682EBA7B
+    4AE}\Machine\Microsoft\Windows NT
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                SecEdit
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{9A3EE678-4C92-447A-BA98-B682EBA7B
+    4AE}\Machine\Microsoft\Windows NT\SecEdit
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----        4/11/2014   8:11 AM            142 GptTmpl.inf
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{9A3EE678-4C92-447A-BA98-B682EBA7B
+    4AE}\Machine\Preferences
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                Registry
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{9A3EE678-4C92-447A-BA98-B682EBA7B
+    4AE}\Machine\Preferences\Registry
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----        4/11/2014   9:22 AM            539 Registry.xml
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{9A3EE678-4C92-447A-BA98-B682EBA7B
+    4AE}\Machine\Scripts
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                Shutdown
+d-----        2/12/2019   2:31 PM                Startup
+
+
+    Directory:
+    C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{9BD274C5-ECB9-492B-ACF7-499AED829CD3}
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                Machine
+-a----       10/29/2015  11:57 PM             26 gpt.ini
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{9BD274C5-ECB9-492B-ACF7-499AED829
+    CD3}\Machine
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                Microsoft
+d-----        2/12/2019   2:31 PM                Preferences
+d-----        2/12/2019   2:31 PM                Scripts
+-a----       10/29/2015  11:57 PM          18264 registry.pol
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{9BD274C5-ECB9-492B-ACF7-499AED829
+    CD3}\Machine\Microsoft
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                Windows NT
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{9BD274C5-ECB9-492B-ACF7-499AED829
+    CD3}\Machine\Microsoft\Windows NT
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                SecEdit
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{9BD274C5-ECB9-492B-ACF7-499AED829
+    CD3}\Machine\Microsoft\Windows NT\SecEdit
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----        4/11/2014   8:11 AM            142 GptTmpl.inf
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{9BD274C5-ECB9-492B-ACF7-499AED829
+    CD3}\Machine\Preferences
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                Registry
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{9BD274C5-ECB9-492B-ACF7-499AED829
+    CD3}\Machine\Preferences\Registry
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----        4/11/2014   9:22 AM            539 Registry.xml
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{9BD274C5-ECB9-492B-ACF7-499AED829
+    CD3}\Machine\Scripts
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                Shutdown
+d-----        2/12/2019   2:31 PM                Startup
+
+
+    Directory:
+    C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{A67A8091-B58C-4769-A062-36A507365701}
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        5/29/2019  10:43 AM                Machine
+-a----        5/29/2020   8:30 AM             27 gpt.ini
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{A67A8091-B58C-4769-A062-36A507365
+    701}\Machine
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        5/29/2019   3:56 PM                Scripts
+-a----        5/29/2020   8:30 AM            552 comment.cmtx
+-a----        5/29/2020   8:30 AM           4860 registry.pol
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{A67A8091-B58C-4769-A062-36A507365
+    701}\Machine\Scripts
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        5/29/2019   3:56 PM                Shutdown
+d-----        5/29/2019   3:56 PM                Startup
+
+
+    Directory:
+    C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{AC8A8C7A-0D48-42B5-8B12-51A729831CCE}
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        9/16/2019   9:43 AM                Machine
+-a----         4/9/2020   7:26 PM             26 gpt.ini
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{AC8A8C7A-0D48-42B5-8B12-51A729831
+    CCE}\Machine
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        9/16/2019   9:43 AM                Applications
+d-----        9/16/2019   9:43 AM                Scripts
+-a----         9/3/2019   7:00 PM            575 comment.cmtx
+-a----         4/9/2020   7:25 PM          38884 registry.pol
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{AC8A8C7A-0D48-42B5-8B12-51A729831
+    CCE}\Machine\Scripts
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        9/16/2019   9:43 AM                Shutdown
+d-----        9/16/2019   9:43 AM                Startup
+
+
+    Directory:
+    C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{ADD567E8-48AD-4180-87DF-8A601855BA24}
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----       10/21/2019  11:58 AM                Machine
+-a----       10/18/2019   4:25 PM             26 gpt.ini
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{ADD567E8-48AD-4180-87DF-8A601855B
+    A24}\Machine
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----        8/27/2019   3:39 PM            542 comment.cmtx
+-a----       10/15/2019   5:34 PM           7202 registry.pol
+
+
+    Directory:
+    C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{D91206DE-24FC-48C8-AC8A-D9C8ADA86387}
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        3/11/2019   8:31 AM                Machine
+-a----        2/28/2019   5:14 PM             26 gpt.ini
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{D91206DE-24FC-48C8-AC8A-D9C8ADA86
+    387}\Machine
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        3/11/2019   8:31 AM                Applications
+d-----        3/11/2019   8:31 AM                Scripts
+-a----        2/22/2019   6:54 PM            552 comment.cmtx
+-a----        2/22/2019   6:54 PM          40284 registry.pol
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{D91206DE-24FC-48C8-AC8A-D9C8ADA86
+    387}\Machine\Scripts
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        3/11/2019   8:31 AM                Shutdown
+d-----        3/11/2019   8:31 AM                Startup
+
+
+    Directory:
+    C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{D96F7F1B-7DFA-432C-B27B-4CFA21ADEBD9}
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                Machine
+-a----         9/1/2010   5:57 PM             59 gpt.ini
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{D96F7F1B-7DFA-432C-B27B-4CFA21ADE
+    BD9}\Machine
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                Microsoft
+d-----        2/12/2019   2:31 PM                Scripts
+-a----         9/1/2010   5:57 PM           2761 Registry.pol
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{D96F7F1B-7DFA-432C-B27B-4CFA21ADE
+    BD9}\Machine\Microsoft
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                Windows NT
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{D96F7F1B-7DFA-432C-B27B-4CFA21ADE
+    BD9}\Machine\Microsoft\Windows NT
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                SecEdit
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{D96F7F1B-7DFA-432C-B27B-4CFA21ADE
+    BD9}\Machine\Microsoft\Windows NT\SecEdit
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----        8/25/2010  10:48 PM            142 GptTmpl.inf
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{D96F7F1B-7DFA-432C-B27B-4CFA21ADE
+    BD9}\Machine\Scripts
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                Shutdown
+d-----        2/12/2019   2:31 PM                Startup
+
+
+    Directory:
+    C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{DE0FB0FB-4038-4DB2-9B68-DBAF7B758BBF}
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:32 PM                Machine
+-a----        4/26/2012   4:58 PM             63 gpt.ini
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{DE0FB0FB-4038-4DB2-9B68-DBAF7B758
+    BBF}\Machine
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:32 PM                Applications
+d-----        2/12/2019   2:32 PM                microsoft
+d-----        2/12/2019   2:32 PM                Scripts
+-a----        3/30/2012   2:35 PM            978 registry.pol
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{DE0FB0FB-4038-4DB2-9B68-DBAF7B758
+    BBF}\Machine\microsoft
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:32 PM                windows nt
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{DE0FB0FB-4038-4DB2-9B68-DBAF7B758
+    BBF}\Machine\microsoft\windows nt
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:32 PM                SecEdit
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{DE0FB0FB-4038-4DB2-9B68-DBAF7B758
+    BBF}\Machine\microsoft\windows nt\SecEdit
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----        4/26/2012   4:58 PM            740 GptTmpl.inf
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{DE0FB0FB-4038-4DB2-9B68-DBAF7B758
+    BBF}\Machine\Scripts
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:32 PM                Shutdown
+d-----        2/12/2019   2:32 PM                Startup
+
+
+    Directory:
+    C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{E0572A39-A69A-483D-B40B-73750785DE28}
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        9/18/2019   9:19 AM                Machine
+-a----        9/11/2019   8:00 PM             26 gpt.ini
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{E0572A39-A69A-483D-B40B-73750785D
+    E28}\Machine
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        9/18/2019   9:19 AM                Microsoft
+d-----        9/18/2019   9:19 AM                Scripts
+-a----         9/3/2019   3:59 PM            554 comment.cmtx
+-a----        9/11/2019   8:00 PM           2670 registry.pol
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{E0572A39-A69A-483D-B40B-73750785D
+    E28}\Machine\Microsoft
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        9/18/2019   9:19 AM                Windows NT
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{E0572A39-A69A-483D-B40B-73750785D
+    E28}\Machine\Microsoft\Windows NT
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        9/18/2019   9:19 AM                SecEdit
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{E0572A39-A69A-483D-B40B-73750785D
+    E28}\Machine\Microsoft\Windows NT\SecEdit
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----         9/3/2019   4:00 PM            142 GptTmpl.inf
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{E0572A39-A69A-483D-B40B-73750785D
+    E28}\Machine\Scripts
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        9/18/2019   9:19 AM                Shutdown
+d-----        9/18/2019   9:19 AM                Startup
+
+
+    Directory:
+    C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{E2BA608B-BC93-47BC-871D-1C0D78F7EDF1}
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        3/11/2019   8:31 AM                Machine
+-a----         3/7/2019  11:02 PM             26 gpt.ini
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{E2BA608B-BC93-47BC-871D-1C0D78F7E
+    DF1}\Machine
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----         2/5/2019   6:50 PM            542 comment.cmtx
+-a----         3/7/2019   8:54 PM           5168 registry.pol
+
+
+    Directory:
+    C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{E4DCE590-6F87-4105-BD2A-C72B8EF72D47}
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/22/2019   4:51 PM                Machine
+-a----        2/22/2019   3:55 PM             27 gpt.ini
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{E4DCE590-6F87-4105-BD2A-C72B8EF72
+    D47}\Machine
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/22/2019   4:51 PM                microsoft
+d-----        2/22/2019   4:51 PM                Preferences
+d-----        2/22/2019   4:51 PM                Scripts
+-a----       11/28/2018   3:23 PM            550 comment.cmtx
+-a----       11/28/2018   3:23 PM            148 registry.pol
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{E4DCE590-6F87-4105-BD2A-C72B8EF72
+    D47}\Machine\microsoft
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/22/2019   4:51 PM                windows nt
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{E4DCE590-6F87-4105-BD2A-C72B8EF72
+    D47}\Machine\microsoft\windows nt
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/22/2019   4:51 PM                SecEdit
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{E4DCE590-6F87-4105-BD2A-C72B8EF72
+    D47}\Machine\microsoft\windows nt\SecEdit
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----        2/22/2019   3:55 PM            142 GptTmpl.inf
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{E4DCE590-6F87-4105-BD2A-C72B8EF72
+    D47}\Machine\Preferences
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/22/2019   4:51 PM                Registry
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{E4DCE590-6F87-4105-BD2A-C72B8EF72
+    D47}\Machine\Preferences\Registry
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----        12/6/2018   6:48 PM           2094 Registry.xml
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{E4DCE590-6F87-4105-BD2A-C72B8EF72
+    D47}\Machine\Scripts
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/22/2019   4:51 PM                Shutdown
+d-----        2/22/2019   4:51 PM                Startup
+
+
+    Directory:
+    C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{E53236F5-89C9-4097-A55D-8F50359F3CF6}
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        4/23/2019   8:24 AM                Machine
+-a----        5/15/2020   1:10 PM             26 gpt.ini
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{E53236F5-89C9-4097-A55D-8F50359F3
+    CF6}\Machine
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        4/23/2019   8:24 AM                Applications
+d-----        4/23/2019   8:24 AM                microsoft
+d-----        4/23/2019   8:24 AM                Preferences
+d-----        4/23/2019   8:24 AM                Scripts
+-a----        2/12/2020  12:39 PM            543 comment.cmtx
+-a----        2/12/2020  12:39 PM          42860 registry.pol
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{E53236F5-89C9-4097-A55D-8F50359F3
+    CF6}\Machine\microsoft
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        4/23/2019   8:24 AM                windows nt
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{E53236F5-89C9-4097-A55D-8F50359F3
+    CF6}\Machine\microsoft\windows nt
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        4/23/2019   8:24 AM                Audit
+d-----        4/23/2019   8:24 AM                SecEdit
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{E53236F5-89C9-4097-A55D-8F50359F3
+    CF6}\Machine\microsoft\windows nt\Audit
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----         1/9/2018   5:51 PM           2353 audit.csv
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{E53236F5-89C9-4097-A55D-8F50359F3
+    CF6}\Machine\microsoft\windows nt\SecEdit
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----        5/15/2020   1:10 PM          15260 GptTmpl.inf
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{E53236F5-89C9-4097-A55D-8F50359F3
+    CF6}\Machine\Preferences
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        4/23/2019   8:24 AM                Registry
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{E53236F5-89C9-4097-A55D-8F50359F3
+    CF6}\Machine\Preferences\Registry
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----        11/2/2018   2:48 PM           5283 Registry.xml
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{E53236F5-89C9-4097-A55D-8F50359F3
+    CF6}\Machine\Scripts
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        4/23/2019   8:24 AM                Shutdown
+d-----        4/23/2019   8:24 AM                Startup
+
+
+    Directory:
+    C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{ED2DF902-18E5-4325-95DD-3369A3C30839}
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                Machine
+-a----        4/22/2010   6:06 AM             22 gpt.ini
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{ED2DF902-18E5-4325-95DD-3369A3C30
+    839}\Machine
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                Microsoft
+d-----        2/12/2019   2:31 PM                Scripts
+-a----        4/22/2010   6:06 AM            338 Registry.pol
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{ED2DF902-18E5-4325-95DD-3369A3C30
+    839}\Machine\Microsoft
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                Windows NT
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{ED2DF902-18E5-4325-95DD-3369A3C30
+    839}\Machine\Microsoft\Windows NT
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                SecEdit
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{ED2DF902-18E5-4325-95DD-3369A3C30
+    839}\Machine\Microsoft\Windows NT\SecEdit
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----        1/31/2012   8:43 PM            142 GptTmpl.inf
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{ED2DF902-18E5-4325-95DD-3369A3C30
+    839}\Machine\Scripts
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                Shutdown
+d-----        2/12/2019   2:31 PM                Startup
+
+
+    Directory:
+    C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{EDDFB5B7-5D6F-452A-B3CE-CB00D37A2338}
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        9/10/2019  10:15 AM                Machine
+-a----         9/9/2019   8:39 PM             26 gpt.ini
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{EDDFB5B7-5D6F-452A-B3CE-CB00D37A2
+    338}\Machine
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        9/10/2019  10:15 AM                Applications
+d-----        9/10/2019  10:15 AM                Scripts
+-a----         9/3/2019   7:00 PM            575 comment.cmtx
+-a----         9/3/2019   7:00 PM          39724 registry.pol
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{EDDFB5B7-5D6F-452A-B3CE-CB00D37A2
+    338}\Machine\Scripts
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        9/10/2019  10:15 AM                Shutdown
+d-----        9/10/2019  10:15 AM                Startup
+
+
+    Directory:
+    C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{EE6A6C5B-184F-431A-B10A-C0E09CEE6330}
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----         9/6/2019   9:11 AM                Machine
+-a----         9/5/2019   7:09 PM             26 gpt.ini
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{EE6A6C5B-184F-431A-B10A-C0E09CEE6
+    330}\Machine
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----        8/15/2019  12:15 PM            542 comment.cmtx
+-a----        8/27/2019   3:39 PM           6454 registry.pol
+
+
+    Directory:
+    C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{FB386A36-27CA-467B-B1B4-CDE1FFD22966}
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                Machine
+-a----        12/7/2017  11:38 PM             26 gpt.ini
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{FB386A36-27CA-467B-B1B4-CDE1FFD22
+    966}\Machine
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----        12/6/2017   4:34 AM            647 comment.cmtx
+-a----        12/6/2017   4:34 AM            530 registry.pol
+
+
+    Directory:
+    C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{FE76B231-28E5-4694-8CB7-B02BE4638AA3}
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:32 PM                Machine
+-a----        5/27/2017   2:10 AM             26 gpt.ini
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{FE76B231-28E5-4694-8CB7-B02BE4638
+    AA3}\Machine
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                Applications
+d-----        2/12/2019   2:31 PM                Preferences
+d-----        2/12/2019   2:32 PM                Scripts
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{FE76B231-28E5-4694-8CB7-B02BE4638
+    AA3}\Machine\Preferences
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:31 PM                Files
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{FE76B231-28E5-4694-8CB7-B02BE4638
+    AA3}\Machine\Preferences\Files
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----        5/27/2017   2:10 AM            542 Files.xml
+
+
+    Directory: C:\Windows\System32\GroupPolicy\DataStore\0\SysVol\na.pg.com\Policies\{FE76B231-28E5-4694-8CB7-B02BE4638
+    AA3}\Machine\Scripts
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----        2/12/2019   2:32 PM                Shutdown
+d-----        2/12/2019   2:32 PM                Startup                                                               
