@@ -11,7 +11,7 @@ logging.basicConfig(filename=__file__+'.log', level=logging.DEBUG, format='%(lev
 logging.info('Started')
 logging.debug('Importing')
 from logging import info as linfo, warning as lwarn, critical as lfatal, debug as ldb
-import os, ctypes, sys, configparser, csv
+import os, ctypes, sys, configparser, csv, datetime, getpass, socket
 from time import sleep
 from ahk import AHK
 from tkinter import Tk
@@ -20,7 +20,7 @@ Thread(target=input).start()
 ldb('Done Importing')
 
 ldb("Setting constants")
-__version__ = "0.0.0.5"
+__version__ = "0.0.0.6"
 
 GPO_DIR = os.path.join("C:\\", "GPO")
 PATH_INF = os.path.join(GPO_DIR, "group-policy.inf")
@@ -29,11 +29,36 @@ PATH_LOG = os.path.join(GPO_DIR, "group-policy.log")
 CONFIG_FILE = os.path.join(os.path.dirname(__file__), "config.csv")
 OUT_FILE = os.path.join(os.path.dirname(__file__), "out.csv")
 
+SUPPORTED_TYPES = {"int" : int, "float" : float, "bool" : bool, "None" : type(None), "str" : str, "list" : list}
+
+ROW_DICT_TEMPLATE = {
+    "number": None,
+    "section" : None,
+    "policy" : None,
+    "user_key" : None,
+    "type" : None,
+    "min_val" : None,
+    "max_val" : None,
+    "exact_val" : None
+}
+
+ldb("Creating classes")
+class ImplementationError(Exception):
+    """Error class for my program"""
+
+    def __init__(self, msg = None):
+        if not msg:
+            msg = "This feature is not implemented yet."
+        super().__init__(msg)
+
+
 if not os.path.exists(CONFIG_FILE):
-    with open(CONFIG_FILE, "w+") as file:
+    with open(CONFIG_FILE, "w+", newline = "") as file:
         config_csv = csv.writer(file, delimiter=",")
-        config_csv.writerow(["Section", "Number", "Key", "Min_val", "Max_val"])
-        config_csv.writerow(["Note:", "Version:", __version__, "", "Max_val is excluded --> min=0 max=5 = 0-1-2-3-4. Use (-)999999 for (-)infinity."])
+        config_csv.writerows([["Version:", __version__],
+        ["Note:", "Max_val is excluded --> min=0 max=5 = 0-1-2-3-4. Use (-)999999 for (-)infinity."],
+        ["Number","Section", "Key", "User_key", "Type", "Min_val", "Max_val", "Exact_val"],
+        ["-"*15]*8])
     raise Exception("Configuration file generated. Please fill.")
 
 POLICIES = {}
@@ -43,9 +68,9 @@ with open(CONFIG_FILE, "r") as file:
         if not row:
             continue
 
-        if row[0] == "Note:" and row[2].strip() != __version__:
-            raise Exception("Configuration file is depreciated. Please back it up and delete it so it can be regenerated. Current version: %s - File version %s"%(row[2].strip(), __version__))
-        elif row[0] == "Note:" and row[2] == __version__:
+        if row[0].startswith("Version:") and row[1] != __version__:
+            raise Exception("Configuration file is depreciated. Please back it up and delete it so it can be regenerated. Current version: %s - File version %s"%(__version__, row[2].strip()))
+        elif row[0].startswith("Version:") and row[1] == __version__:
             break
 # print(PASSWORD_POLICY)
 # raise Exception()
@@ -98,26 +123,82 @@ if is_admin():
     ldb("Config file %s has sections %s", config_file, policy_file.sections())
 
     linfo("Fetching policies")
+    linfo("Setting dictionnary")
 
-    with open(OUT_FILE, "w+") as out_file, open(CONFIG_FILE, "r") as config_file:
+    with open(OUT_FILE, "w+", newline = "") as out_file, open(CONFIG_FILE, "r", newline = "") as config_file:
         out_csv = csv.writer(out_file, delimiter=",")
         config_csv = csv.reader(config_file, delimiter=",")
-        out_csv.writerow(["Number", "Policy", "Current_val", "Min_val", "Max_val", "Compliant"])
-        out_csv.writerow(["Note:", "Version:", __version__, "", "Max value excluede. Used (-)999999 for (-)infinity."])
+        out_csv.writerow(["Output file version:", __version__, "Execution time:", datetime.datetime.now(), "Time stamp:", datetime.datetime.timestamp(datetime.datetime.now())])
+        out_csv.writerow(["User:", getpass.getuser(), "Domain", os.environ["userdomain"]])
+        out_csv.writerow(["Computer:", socket.gethostname(),"IP:", socket.gethostbyname(socket.gethostname())])
+        out_csv.writerow(["Note:", "Max value excluede. Used (-)999999 for (-)infinity."])
+        out_csv.writerow(["-"*15]*6)
+        out_csv.writerow(["Number", "Policy", "Current_val", "Min_val", "Max_val", "Exact_val", "Compliant"])
 
         for config_row in config_csv:
             if not config_row:
                 continue
-            if config_row[0] in ("Section", "Note:", "Comment"):
+            if config_row[0] in ("Number", "Note:", "Comment", "Version:", "-"*15):
                 continue
 
-            ldb("Fetching policy %s of value %s - should be %s", config_row[2], policy_file[config_row[0]][config_row[2]], range(int(config_row[3]), int(config_row[4])))
+            row_dict = ROW_DICT_TEMPLATE.copy()
 
-            out_csv.writerow([config_row[1], config_row[2], policy_file[config_row[0]][config_row[2]], config_row[3], config_row[4], int(policy_file[config_row[0]][config_row[2]]) in range(int(config_row[3]), int(config_row[4]))])
+            for pos in range(len(config_row)):
+                row_dict[list(ROW_DICT_TEMPLATE.keys())[pos]] = config_row[pos]
 
+            if row_dict["type"].lower().strip() not in SUPPORTED_TYPES.keys():
+                raise TypeError("%s is not a member of known types %s"%(row_dict["type"], tuple(SUPPORTED_TYPES.keys())))
+            else:
+                row_dict["type"] = SUPPORTED_TYPES[row_dict["type"]]
+                # print(row_dict["type"])
+
+            if not row_dict["user_key"]:
+                row_dict["user_key"] = row_dict["section"]+"/"+row_dict["policy"]
+            # print(row_dict["exact_val"], type(row_dict["exact_val"]), bool(row_dict["exact_val"]))
+            to_csv = [row_dict["number"], row_dict["user_key"], policy_file[row_dict["section"]][row_dict["policy"]], row_dict["min_val"],     row_dict["max_val"], row_dict["exact_val"]]
+
+            ldb("Inintial to_csv: %s", to_csv)
+
+            linfo("%s is %s", row_dict["user_key"], row_dict["type"])
+            if not row_dict["min_val"] and not row_dict["max_val"] and row_dict["exact_val"]: # Exact values
+                if row_dict["type"] == int:
+                    to_csv.append(int(policy_file[row_dict["section"]][row_dict["policy"]]) == int(row_dict["exact_val"])) # compliance
+
+                elif row_dict["type"] == float:
+                    to_csv.append(float(policy_file[row_dict["section"]][row_dict["policy"]]) == float(row_dict["exact_val"]))
+
+                elif row_dict["type"] == type(None):
+                    to_csv.append(not policy_file[row_dict["section"]][row_dict["policy"]]) # compliance
+
+                elif row_dict["type"] == str:
+                    to_csv.append(policy_file[row_dict["section"]][row_dict["policy"]].lower().strip() == row_dict["exact_val"].lower().strip()) # compliance
+
+                elif row_dict["type"] == list:
+                    values = row_dict["exact_val"].split(",")
+                    for pos in range(len(values)):
+                        values[pos] = values[pos].strip().lower()
+
+                    raise ImplementationError()
+
+            elif row_dict["min_val"] and row_dict["max_val"] and not row_dict["exact_val"]:
+                if row_dict["type"] == int:
+                    to_csv.append(int(policy_file[row_dict["section"]][row_dict["policy"]]) in range(int(row_dict["min_val"]),                       int(row_dict["max_val"])))
+
+                elif row_dict["type"] == float:
+                    raise ImplementationError()
+
+                else:
+                    raise TypeError("Cannot evaluate a range with type %s"%row_dict["type"])
+
+            else:
+                raise Exception("Inconsistent data. Verify config file at number %s"%row_dict["number"])
+
+            linfo("Writing %s", to_csv)
+            out_csv.writerow(to_csv)
     print("Done")
 else:
     # Re-run the program with admin rights
+    # NOTE: Cannot rerun beacuse of "advanced" admin management
     # ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv[1:]), None, 1)
     print("This program requires access to the GPO and thus FULL administrator rights. Please run this program with FULL administrator rights.")
     raise
