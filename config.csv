@@ -1,14 +1,13 @@
-Version:,0.0.0.6,,,,,,
+Version:,0.0.0.7,,,,,,
 Note:,Max_val is excluded --> min=0 max=5 = 0-1-2-3-4. Use (-)999999 for (-)infinity.,,,,,,
 Number,Section,Key,User_key,Type,Min_val,Max_val,Exact_val
 ---------------,---------------,---------------,---------------,---------------,---------------,---------------,---------------
-1.1.1,System Access,PasswordHistorySize,,int,24,999999,
+1.1.1,System Access,PasswordHistorySize,,int,24,,
 1.1.2,System Access,MaximumPasswordAge,,int,1,61,
-1.1.3,System Access,MinimumPasswordAge,,int,1,999999,
-1.1.4,System Access,MinimumPasswordLength,,int,14,999999,
+1.1.3,System Access,MinimumPasswordAge,,int,1,,
+1.1.4,System Access,MinimumPasswordLength,,int,14,,
 1.1.5,System Access,PasswordComplexity,,int,,,1
 1.1.6,System Access,ClearTextPassword,,int,,,0
-1.2.1,System Access,LockoutDuration,,int,15,999999,
+1.2.1,System Access,LockoutDuration,,int,15,,
 1.2.2,System Access,LockoutBadCount,,int,1,11,
-1.2.3,System Access,ResetLockoutCount,,int,15,999999,
-1.2.4,System Access,ResetLockoutCount,Modification,list,,,"A, B C"
+1.2.3,System Access,ResetLockoutCount,,int,15,,
