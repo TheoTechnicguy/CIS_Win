@@ -20,7 +20,7 @@ Thread(target=input).start()
 ldb('Done Importing')
 
 ldb("Setting constants")
-__version__ = "0.0.0.6"
+__version__ = "0.0.0.7"
 
 GPO_DIR = os.path.join("C:\\", "GPO")
 PATH_INF = os.path.join(GPO_DIR, "group-policy.inf")
@@ -56,7 +56,7 @@ if not os.path.exists(CONFIG_FILE):
     with open(CONFIG_FILE, "w+", newline = "") as file:
         config_csv = csv.writer(file, delimiter=",")
         config_csv.writerows([["Version:", __version__],
-        ["Note:", "Max_val is excluded --> min=0 max=5 = 0-1-2-3-4. Use (-)999999 for (-)infinity."],
+        ["Note:", "Max_val is excluded --> min=0 max=5 = 0-1-2-3-4."],
         ["Number","Section", "Key", "User_key", "Type", "Min_val", "Max_val", "Exact_val"],
         ["-"*15]*8])
     raise Exception("Configuration file generated. Please fill.")
@@ -131,7 +131,7 @@ if is_admin():
         out_csv.writerow(["Output file version:", __version__, "Execution time:", datetime.datetime.now(), "Time stamp:", datetime.datetime.timestamp(datetime.datetime.now())])
         out_csv.writerow(["User:", getpass.getuser(), "Domain", os.environ["userdomain"]])
         out_csv.writerow(["Computer:", socket.gethostname(),"IP:", socket.gethostbyname(socket.gethostname())])
-        out_csv.writerow(["Note:", "Max value excluede. Used (-)999999 for (-)infinity."])
+        out_csv.writerow(["Note:", "Max value excluede."])
         out_csv.writerow(["-"*15]*6)
         out_csv.writerow(["Number", "Policy", "Current_val", "Min_val", "Max_val", "Exact_val", "Compliant"])
 
@@ -180,7 +180,7 @@ if is_admin():
 
                     raise ImplementationError()
 
-            elif row_dict["min_val"] and row_dict["max_val"] and not row_dict["exact_val"]:
+            elif row_dict["min_val"] and row_dict["max_val"] and not row_dict["exact_val"]: # range
                 if row_dict["type"] == int:
                     to_csv.append(int(policy_file[row_dict["section"]][row_dict["policy"]]) in range(int(row_dict["min_val"]),                       int(row_dict["max_val"])))
 
@@ -189,6 +189,20 @@ if is_admin():
 
                 else:
                     raise TypeError("Cannot evaluate a range with type %s"%row_dict["type"])
+
+            elif row_dict["min_val"] and not row_dict["max_val"] and not row_dict["exact_val"]: # minimum
+                if row_dict["type"] == int:
+                    to_csv.append(int(policy_file[row_dict["section"]][row_dict["policy"]]) >= int(row_dict["min_val"])) # compliance
+
+                else:
+                    raise ImplementationError()
+
+            elif row_dict["min_val"] and row_dict["max_val"] and not row_dict["exact_val"]:
+                if row_dict["type"] == int:
+                    to_csv.append(int(policy_file[row_dict["section"]][row_dict["policy"]]) < int(row_dict["min_val"])) # compliance
+
+                else:
+                    raise ImplementationError()
 
             else:
                 raise Exception("Inconsistent data. Verify config file at number %s"%row_dict["number"])
