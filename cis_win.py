@@ -2,6 +2,7 @@
 # Author: Nicolas Fischer
 # Program: Python 3.8
 # Ext: py
+# Licensed under GPU GPLv3 and later.
 # -----------------------
 
 import logging
