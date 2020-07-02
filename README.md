@@ -40,3 +40,6 @@ All alphanumerical character or character sequences will be interpreted in lower
 # License
 This repository and all its content is licensed under the GNU GPLv3 license and later.
 A copy can be found in the LICENSE file.
+
+# To do
+- [ ] Convert configparser to xml.
