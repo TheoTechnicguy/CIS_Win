@@ -21,7 +21,8 @@ This is a program to automate collection of Group Policy Objects and verify thie
     > Note: Useing (-)999999 for (-)infinity
   9. `Exact_val` references an exact value.
     > Note: Use a range **or** an exact value.
-  10. Save file and **keep it in csv** format.
+3. You can comment a row by setting the value of the first cell to `Comment` (casesenstive).
+4. Save file and **keep it in csv** format.
 
 ## Types
 The types used are python types. Valid types are:
