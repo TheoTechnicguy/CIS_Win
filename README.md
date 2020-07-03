@@ -29,15 +29,23 @@ The types used are python types. Valid types are:
 
 | Type | Full name | Desctiption                         | Examples | Accepted values |
 | :--- | :-------- | :---------------------------------- | :------- | :-------------- |
-| int  | integer   | An entire non-floating point number | `1`, `50`, `-4`| range, exact, min, max|
-| float| float     | A deciam floating point number      | `3.1415` | exact           |
-| bool | boolean   | `True` or `False` / Valid or not    | `True`/`False`| exact      |
-| None | None      | None or Null type. Equivalent to an empty str|`None`, `""`| exact|
-| str  | string    | A(n) (sequence of) alphanumerical character|`a`, `d4g-`| exact   |
-| list | list      | A squence of values seperated by a comma `,`|`a, b, c`| exact    |
-| print| print     | Adds a row to the output file. Is interpreted as str| `placeholder`| exact|
+| int  | integer   | An entire non-floating point number | `1`, `50`, `-4`|min, max, range, exact|
+| float| float     | A deciam floating point number      | `3.1415` | min, max, exact |
+| bool | boolean   | `True` or `False` / Valid or not    | `True`/`False`|exact       |
+| None | None      | None or Null type. Equivalent to an empty str. Use for `empty or not set`|`None`, `""`|exact |
+| str  | string    | A(n) (sequence of) alphanumerical character|`a`, `d4g-`|exact    |
+| list | list      | A squence of values seperated by a comma `,`|`a, b, c`|min, max, range, exact|
+| print| print     | Adds a row to the output file. Is interpreted as str|`placeholder`|exact|
 
 All alphanumerical character or character sequences will be interpreted in lowercase. Leading or trailing spaces will not be taken into account.
+
+# Exceptions
+- ImplementationError: Error that means you have successfully found a NIY/TBI/WIP part of the program.
+- AdminError: Error that means you have not run the program with administrator rights.
+- ConfigError: Error that means something is wrong with the config file.
+- TypeError: Error that means the value given has not a correct type. See *types* above.
+
+> Note: the program is (almost) always right! :P
 
 # License
 This repository and all its content is licensed under the GNU GPLv3 license and later.
