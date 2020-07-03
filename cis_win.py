@@ -23,7 +23,7 @@ lwarn("Thread input_keep_alive intentionally commented!")
 ldb("Done threads")
 
 ldb("Setting constants")
-__version__ = "0.0.0.12"
+__version__ = "0.0.0.13"
 linfo("Current SW version: %s", __version__)
 
 WORK_DIR = os.path.dirname(__file__)
@@ -36,7 +36,8 @@ STUPID_NAMESPACE = {
     "rsop" : "http://www.microsoft.com/GroupPolicy/Rsop",
     "settings" : "http://www.microsoft.com/GroupPolicy/Settings",
     "registry" : "http://www.microsoft.com/GroupPolicy/Settings/Registry",
-    "security" : "http://www.microsoft.com/GroupPolicy/Settings/Security"
+    "security" : "http://www.microsoft.com/GroupPolicy/Settings/Security",
+    "type" : "http://www.microsoft.com/GroupPolicy/Types"
 }
 
 SUPPORTED_TYPES = {"int" : int, "float" : float, "bool" : bool, "none" : type(None), "str" : str, "list" : list, "print": "print"}
@@ -135,13 +136,14 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
         [["Output file version:", __version__, "Execution time:", datetime.datetime.now(), "XML execution time:", xml_root.find("rsop:ReadTime", STUPID_NAMESPACE).text],
         ["User:", getpass.getuser(), "Domain:", os.environ["userdomain"]],
         ["Computer:", socket.gethostname(), "IP:", socket.gethostbyname(socket.gethostname())],
-        ["Note:", "Max value excluede."],
+        ["Note:", "Max value excluede. A Current_val of None might mean 'policy not found in export file'."],
         ["-"*15]*6,
         ["Number", "Policy", "Current_val", "Min_val", "Max_val", "Exact_val", "Compliant"]]
     )
     ldb("Written Heading")
 
     for config_row in config_csv:
+        linfo(" --- New config row ---")
         ldb("Current config_row: %s", config_row)
         if not config_row or config_row[0] in ("Number", "Note:", "Comment", "Version:", "-"*15):
             continue
@@ -159,11 +161,11 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
         linfo("Current policy: %s", row_dict["policy"])
 
         ldb("Analizing ending of section: %s", row_dict["section"])
-        if not row_dict["section"].endswith("/*"):
-            if not row_dict["section"].endswith("*") and row_dict["section"].endswith("/"):
-                row_dict["section"] += "*"
-            elif not row_dict["section"].endswith("/"):
-                row_dict["section"] += "/*"
+        if not row_dict["section"].endswith("/"):
+            if row_dict["section"].endswith("*"):
+                row_dict["section"] = row_dict["section"][:-1]
+            if not row_dict["section"].endswith("/"):
+                row_dict["section"] += "/"
         ldb("Current section: >>>%s<<<", row_dict["section"])
 
         if str(row_dict["type"]).lower().strip() not in SUPPORTED_TYPES.keys():
@@ -178,26 +180,33 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
                 row_dict["exact_val"] = "This is a place-holder line and exists only for consistency."
             out_csv.writerow([row_dict["number"], row_dict["user_key"], row_dict["exact_val"]])
             continue
-
-        if row_dict["type"] == bool:
+        elif row_dict["type"] == bool:
             ldb("Converting boolean %s", row_dict["exact_val"])
             if row_dict["exact_val"].title().strip() == "True":
                 row_dict["exact_val"] = True
             else:
                 row_dict["exact_val"] = False
             ldb("Current row_dict['exact_val']: %s", row_dict["exact_val"])
+        elif row_dict["type"] == list:
+            ldb("Converting list %s", row_dict["exact_val"])
+            values = row_dict["exact_val"].split(",")
+            for pos in range(len(values)):
+                values[pos] = values[pos].lower().strip()
+            values.sort()
+            ldb("Current values: %s", values)
 
         if not row_dict["user_key"]:
             row_dict["user_key"] = row_dict["policy"]
 
         ldb("Getting xml value")
         next_is_value = False
+        policy_values = []
         for item in xml_root.findall(row_dict["section"], STUPID_NAMESPACE):
             item_tag = item.tag.split("}")[-1]
-            ldb("Current item: %s", item_tag)
-            if item_tag not in ("Name", "SettingNumber", "SettingBoolean"):
+            if item_tag not in ("Name", "SettingNumber", "SettingBoolean", "Member"):
                 continue
-
+            ldb("Current item: %s", item_tag)
+            ldb("Current next_is_value: %s", next_is_value)
             if "Name" in item_tag and item.text == row_dict["policy"]:
                 ldb("Found policy %s", item.text)
                 next_is_value = True
@@ -207,46 +216,57 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
                 tag_type_str = item_tag[len("Setting"):]
                 if tag_type_str.lower().strip() == "number":
                     ldb("Policy value is a number: %s", policy_value)
-                    policy_value = int(policy_value)
+                    policy_values.append(int(policy_value))
+                elif tag_type_str.lower().strip() == "string":
+                    ldb("Policy value is a string: %s", policy_value)
+                    policy_values.append(str(policy_value))
                 elif tag_type_str.lower().strip() == "boolean":
                     ldb("Policy value is a boolean: %s", policy_value)
                     if policy_value.title() == "True":
-                        policy_value = True
+                        policy_values.append(True)
                     else:
-                        policy_value = False
+                        policy_values.append(False)
                 break
-        else:
-            policy_value = None
-        ldb("Current policy_value %s is %s", policy_value, type(policy_value))
+                ldb("After adding value Current policy_values: %s", policy_values)
+            elif next_is_value and "Member" in item_tag:
+                ldb("Getting Members")
+                for name in xml_root.findall(row_dict["section"]+item.tag+"type:Name", STUPID_NAMESPACE):
+                    ldb("Current name: %s", name.tag.split("}")[-1])
+                    policy_values.append(name.text)
 
-        to_csv = [row_dict["number"], row_dict["user_key"], policy_value, row_dict["min_val"], row_dict["max_val"], row_dict["exact_val"]]
+
+        ldb("Current policy_values: %s length: %i", policy_values, len(policy_values))
+        if len(policy_values) == 0:
+            policy_values = None
+        elif len(policy_values) == 1:
+            policy_values = policy_values[0]
+        else:
+            policy_values.sort()
+        ldb("Current policy_values %s is %s", policy_values, type(policy_values))
+
+        to_csv = [row_dict["number"], row_dict["user_key"], str(policy_values), row_dict["min_val"], row_dict["max_val"], row_dict["exact_val"]]
         ldb("Inintial to_csv: %s", to_csv)
 
         linfo("%s is %s where min: %s max: %s exact: %s", row_dict["user_key"], row_dict["type"], bool(row_dict["min_val"]), bool(row_dict["max_val"]), bool(row_dict["exact_val"]))
-        if row_dict["min_val"] == None and row_dict["max_val"] == None and str(row_dict["exact_val"]): # Exact value(s)
+        if row_dict["min_val"] == None and row_dict["max_val"] == None and str(row_dict["exact_val"]): # Exact value(s):
+            ldb("In exact value")
             if row_dict["type"] == int:
-                to_csv.append(int(policy_value) == int(row_dict["exact_val"])) # compliance
+                to_csv.append(int(policy_values) == int(row_dict["exact_val"])) # compliance
 
             elif row_dict["type"] == float:
-                to_csv.append(float(policy_value) == float(row_dict["exact_val"]))
+                to_csv.append(float(policy_values) == float(row_dict["exact_val"]))
 
             elif row_dict["type"] == type(None):
-                to_csv.append(not policy_value) # compliance
+                to_csv.append(not policy_values) # compliance
 
             elif row_dict["type"] == str:
-                to_csv.append(policy_value.lower().strip() == row_dict["exact_val"].lower().strip()) # compliance:
+                to_csv.append(policy_values == row_dict["exact_val"].lower().strip()) # compliance:
 
             elif row_dict["type"] == list:
-                lfatal(ImplementationError())
-                raise ImplementationError()
-                # TBI
-                values = row_dict["exact_val"].split(",")
-                for pos in range(len(values)):
-                    values[pos] = values[pos].strip().lower()
-
+                to_csv.append(values == policy_values)
 
             elif row_dict["type"] == bool:
-                to_csv.append(policy_value == row_dict["exact_val"])
+                to_csv.append(policy_values == row_dict["exact_val"])
 
             else:
                 lfatal(ImplementationError())
@@ -254,25 +274,54 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
 
 
         elif str(row_dict["min_val"]) and row_dict["max_val"] == None and row_dict["exact_val"] == None: # minimum:
+            ldb("In min value")
             if row_dict["type"] == int:
-                to_csv.append(int(policy_value) >= int(row_dict["min_val"])) # compliance
+                to_csv.append(int(policy_values) >= int(row_dict["min_val"])) # compliance
+
+            elif row_dict["type"] == float:
+                to_csv.append(float(policy_values) >= float(row_dict["min_val"])) # compliance
+
+            elif row_dict["type"] == list:
+                for value in values:
+                    if value not in policy_values:
+                        compliant = False
+                        break
+                else:
+                    compliant = True
+                to_csv.append(compliant)
 
             else:
+                lfatal(ImplementationError())
                 raise ImplementationError()
 
         elif row_dict["min_val"] == None and str(row_dict["max_val"]) and row_dict["exact_val"] == None: # maximum:
+            ldb("In max value")
             if row_dict["type"] == int:
-                to_csv.append(int(policy_value) < int(row_dict["min_val"])) # compliance
+                to_csv.append(int(policy_values) < int(row_dict["min_val"])) # compliance
+
+            elif row_dict["type"] == float:
+                to_csv.append(float(policy_values) < float(row_dict["min_val"])) # compliance
+
+            elif row_dict["type"] == list:
+                for value in policy_value:
+                    if value not in values:
+                        compliant = False
+                        break
+                else:
+                    compliant = True
+                to_csv.append(compliant)
 
             else:
+                lfatal(ImplementationError())
                 raise ImplementationError()
 
         elif str(row_dict["min_val"]) and str(row_dict["max_val"]) and row_dict["exact_val"] == None: # range:
+            ldb("In range")
             if row_dict["type"] == int:
-                to_csv.append(int(policy_value) in range(int(row_dict["min_val"]), int(row_dict["max_val"])))
+                to_csv.append(int(policy_values) in range(int(row_dict["min_val"]), int(row_dict["max_val"])))
 
-            elif row_dict["type"] == float:
-                raise ImplementationError()
+            # elif row_dict["type"] == float:
+                # raise ImplementationError()
 
             else:
                 raise TypeError("Cannot evaluate a range with type %s"%row_dict["type"])
