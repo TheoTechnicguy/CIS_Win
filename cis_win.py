@@ -23,7 +23,7 @@ lwarn("Thread input_keep_alive intentionally commented!")
 ldb("Done threads")
 
 ldb("Setting constants")
-__version__ = "0.0.0.11"
+__version__ = "0.0.0.12"
 linfo("Current SW version: %s", __version__)
 
 WORK_DIR = os.path.dirname(__file__)
@@ -39,11 +39,11 @@ STUPID_NAMESPACE = {
     "security" : "http://www.microsoft.com/GroupPolicy/Settings/Security"
 }
 
-SUPPORTED_TYPES = {"int" : int, "float" : float, "bool" : bool, "None" : type(None), "str" : str, "list" : list}
+SUPPORTED_TYPES = {"int" : int, "float" : float, "bool" : bool, "none" : type(None), "str" : str, "list" : list, "print": "print"}
 
 ROW_DICT_TEMPLATE = {
     "number": None,
-    "section" : None,
+    "section" : "",
     "policy" : None,
     "user_key" : None,
     "type" : None,
@@ -148,12 +148,13 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
 
         ldb("Copying template & filling")
         row_dict = ROW_DICT_TEMPLATE.copy()
+        row_dict_keys = list(row_dict.keys())
         for pos in range(len(config_row)):
             ldb("Setting row_dict['%s'] to %s from config_row[%i]", list(ROW_DICT_TEMPLATE.keys())[pos], config_row[pos], pos)
             if not config_row[pos]:
-                row_dict[list(ROW_DICT_TEMPLATE.keys())[pos]] = None
+                row_dict[row_dict_keys[pos]] = ROW_DICT_TEMPLATE[row_dict_keys[pos]]
             else:
-                row_dict[list(ROW_DICT_TEMPLATE.keys())[pos]] = config_row[pos]
+                row_dict[row_dict_keys[pos]] = config_row[pos]
         ldb("Current row_dict: %s", row_dict)
         linfo("Current policy: %s", row_dict["policy"])
 
@@ -161,16 +162,35 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
         if not row_dict["section"].endswith("/*"):
             if not row_dict["section"].endswith("*") and row_dict["section"].endswith("/"):
                 row_dict["section"] += "*"
-            # if not row_dict["section"].endswith(":"):
-                # row_dict["section"] += ":"
-            # elif not row_dict["section"].endswith("security"):
-                # row_dict["section"] += "security:"
             elif not row_dict["section"].endswith("/"):
                 row_dict["section"] += "/*"
         ldb("Current section: >>>%s<<<", row_dict["section"])
 
+        if str(row_dict["type"]).lower().strip() not in SUPPORTED_TYPES.keys():
+            lfatal("%s is not a member of known types %s", row_dict["type"], tuple(SUPPORTED_TYPES.keys()))
+            raise TypeError("%s is not a member of known types %s"%(row_dict["type"], tuple(SUPPORTED_TYPES.keys())))
+        else:
+            ldb("Current row_dict['type']: %s", row_dict["type"])
+            row_dict["type"] = SUPPORTED_TYPES[str(row_dict["type"]).lower().strip()]
+
+        if row_dict["type"] == "print": # add user key row to output file if type is print:
+            if row_dict["exact_val"] == None:
+                row_dict["exact_val"] = "This is a place-holder line and exists only for consistency."
+            out_csv.writerow([row_dict["number"], row_dict["user_key"], row_dict["exact_val"]])
+            continue
+
+        if row_dict["type"] == bool:
+            ldb("Converting boolean %s", row_dict["exact_val"])
+            if row_dict["exact_val"].title().strip() == "True":
+                row_dict["exact_val"] = True
+            else:
+                row_dict["exact_val"] = False
+            ldb("Current row_dict['exact_val']: %s", row_dict["exact_val"])
+
+        if not row_dict["user_key"]:
+            row_dict["user_key"] = row_dict["policy"]
+
         ldb("Getting xml value")
-        # ldb("xml_root.findall: %s", xml_root.findall(row_dict["section"], STUPID_NAMESPACE))
         next_is_value = False
         for item in xml_root.findall(row_dict["section"], STUPID_NAMESPACE):
             item_tag = item.tag.split("}")[-1]
@@ -195,31 +215,15 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
                     else:
                         policy_value = False
                 break
-        ldb("Current policy_value %s has %s", policy_value, type(policy_value))
-
-        if row_dict["type"].lower().strip() not in SUPPORTED_TYPES.keys():
-            lfatal("%s is not a member of known types %s", row_dict["type"], tuple(SUPPORTED_TYPES.keys()))
-            raise TypeError("%s is not a member of known types %s"%(row_dict["type"], tuple(SUPPORTED_TYPES.keys())))
         else:
-            row_dict["type"] = SUPPORTED_TYPES[row_dict["type"]]
-            ldb("Current row_dict['type']: %s", row_dict["type"])
-        if row_dict["type"] == bool:
-            ldb("Converting boolean %s", row_dict["exact_val"])
-            if row_dict["exact_val"].title().strip() == "True":
-                row_dict["exact_val"] = True
-            else:
-                row_dict["exact_val"] = False
-            ldb("Current row_dict['exact_val']: %s", row_dict["exact_val"])
-
-        if not row_dict["user_key"]:
-            row_dict["user_key"] = row_dict["policy"]
+            policy_value = None
+        ldb("Current policy_value %s is %s", policy_value, type(policy_value))
 
         to_csv = [row_dict["number"], row_dict["user_key"], policy_value, row_dict["min_val"], row_dict["max_val"], row_dict["exact_val"]]
         ldb("Inintial to_csv: %s", to_csv)
 
         linfo("%s is %s where min: %s max: %s exact: %s", row_dict["user_key"], row_dict["type"], bool(row_dict["min_val"]), bool(row_dict["max_val"]), bool(row_dict["exact_val"]))
         if row_dict["min_val"] == None and row_dict["max_val"] == None and str(row_dict["exact_val"]): # Exact value(s)
-            ldb("Value is exact")
             if row_dict["type"] == int:
                 to_csv.append(int(policy_value) == int(row_dict["exact_val"])) # compliance
 
