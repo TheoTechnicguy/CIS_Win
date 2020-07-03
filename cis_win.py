@@ -23,7 +23,7 @@ lwarn("Thread input_keep_alive intentionally commented!")
 ldb("Done threads")
 
 ldb("Setting constants")
-__version__ = "0.0.0.8"
+__version__ = "0.0.0.9"
 linfo("Current SW version: %s", __version__)
 
 WORK_DIR = os.path.dirname(__file__)
@@ -120,9 +120,9 @@ xml_file = ET.parse(XML_PATH)
 xml_root = xml_file.getroot()
 
 linfo("Opening file out at %s"%OUT_PATH)
-with open(OUT_PATH, "w+", newline = "") as OUT_PATH, open(CONFIG_PATH, "r", newline = "") as CONFIG_PATH:
-    out_csv = csv.writer(OUT_PATH, delimiter=",")
-    config_csv = csv.reader(CONFIG_PATH, delimiter=",")
+with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newline = "") as config_file:
+    out_csv = csv.writer(out_file, delimiter=",")
+    config_csv = csv.reader(config_file, delimiter=",")
     out_csv.writerows(
         [["Output file version:", __version__, "Execution time:", datetime.datetime.now(), "XML execution time:", xml_root.find("rsop:ReadTime", STUPID_NAMESPACE).text],
         ["User:", getpass.getuser(), "Domain:", os.environ["userdomain"]],
