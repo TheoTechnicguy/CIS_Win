@@ -23,7 +23,7 @@ lwarn("Thread input_keep_alive intentionally commented!")
 ldb("Done threads")
 
 ldb("Setting constants")
-__version__ = "0.0.0.9"
+__version__ = "0.0.0.10"
 linfo("Current SW version: %s", __version__)
 
 WORK_DIR = os.path.dirname(__file__)
@@ -82,6 +82,7 @@ if not os.path.exists(CONFIG_PATH):
         ["Note:", "Max_val is excluded --> min=0 max=5 = 0-1-2-3-4."],
         ["Number","Section", "Policy_name", "User_key", "Type", "Min_val", "Max_val", "Exact_val"],
         ["-"*15]*8])
+    lfatal(Exception("Configuration file generated. Please fill."))
     raise Exception("Configuration file generated. Please fill.")
 
 with open(CONFIG_PATH, "r") as file:
@@ -91,6 +92,7 @@ with open(CONFIG_PATH, "r") as file:
             continue
 
         if row[0].startswith("Version:") and row[1] != __version__:
+            lfatal(Exception("Configuration file is depreciated. Please back it up and delete it so it can be regenerated. Current version: %s - File version: %s"%(__version__, row[1].strip())))
             raise Exception("Configuration file is depreciated. Please back it up and delete it so it can be regenerated. Current version: %s - File version %s"%(__version__, row[2].strip()))
         elif row[0].startswith("Version:") and row[1] == __version__:
             break
@@ -98,10 +100,11 @@ ldb("Done config fetching")
 
 linfo("Cleaning up")
 for path in (OUT_PATH,):# XML_PATH):
+    ldb("Cleaning %s", path)
     try:
         os.remove(path)
-    except:
-        pass
+    except Exception as e:
+        lfatal(Exception(e))
     else:
         lwarn("Deleted %s", path)
 lwarn("Cleanup of group-policy.xml intentionally commented!")
@@ -141,7 +144,11 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
         ldb("Copying template & filling")
         row_dict = ROW_DICT_TEMPLATE.copy()
         for pos in range(len(config_row)):
-            row_dict[list(ROW_DICT_TEMPLATE.keys())[pos]] = config_row[pos]
+            ldb("Setting row_dict['%s'] to %s from config_row[%i]", list(ROW_DICT_TEMPLATE.keys())[pos], config_row[pos], pos)
+            if not config_row[pos]:
+                row_dict[list(ROW_DICT_TEMPLATE.keys())[pos]] = None
+            else:
+                row_dict[list(ROW_DICT_TEMPLATE.keys())[pos]] = config_row[pos]
         ldb("Current row_dict: %s", row_dict)
         linfo("Current policy: %s", row_dict["policy"])
 
@@ -191,6 +198,13 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
         else:
             row_dict["type"] = SUPPORTED_TYPES[row_dict["type"]]
             ldb("Current row_dict['type']: %s", row_dict["type"])
+        if row_dict["type"] == bool:
+            ldb("Converting boolean %s", row_dict["exact_val"])
+            if row_dict["exact_val"].title().strip() == "True":
+                row_dict["exact_val"] = True
+            else:
+                row_dict["exact_val"] = False
+            ldb("Current row_dict['exact_val']: %s", row_dict["exact_val"])
 
         if not row_dict["user_key"]:
             row_dict["user_key"] = row_dict["policy"]
@@ -198,8 +212,9 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
         to_csv = [row_dict["number"], row_dict["user_key"], policy_value, row_dict["min_val"], row_dict["max_val"], row_dict["exact_val"]]
         ldb("Inintial to_csv: %s", to_csv)
 
-        linfo("%s is %s", row_dict["user_key"], row_dict["type"])
-        if not row_dict["min_val"] and not row_dict["max_val"] and row_dict["exact_val"]: # Exact values
+        linfo("%s is %s where min: %s max: %s exact: %s", row_dict["user_key"], row_dict["type"], bool(row_dict["min_val"]), bool(row_dict["max_val"]), bool(row_dict["exact_val"]))
+        if row_dict["min_val"] == None and row_dict["max_val"] == None and str(row_dict["exact_val"]): # Exact value(s)
+            ldb("Value is exact")
             if row_dict["type"] == int:
                 to_csv.append(int(policy_value) == int(row_dict["exact_val"])) # compliance
 
@@ -210,42 +225,58 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
                 to_csv.append(not policy_value) # compliance
 
             elif row_dict["type"] == str:
-                to_csv.append(policy_value.lower().strip() == row_dict["exact_val"].lower().strip()) # compliance
+                to_csv.append(policy_value.lower().strip() == row_dict["exact_val"].lower().strip()) # compliance:
 
             elif row_dict["type"] == list:
+                lfatal(ImplementationError())
+                raise ImplementationError()
+                # TBI
                 values = row_dict["exact_val"].split(",")
                 for pos in range(len(values)):
                     values[pos] = values[pos].strip().lower()
 
-                raise ImplementationError()
 
-        elif row_dict["min_val"] and row_dict["max_val"] and not row_dict["exact_val"]: # range
-            if row_dict["type"] == int:
-                to_csv.append(int(policy_value) in range(int(row_dict["min_val"]),                       int(row_dict["max_val"])))
-
-            elif row_dict["type"] == float:
-                raise ImplementationError()
+            elif row_dict["type"] == bool:
+                to_csv.append(policy_value == row_dict["exact_val"])
 
             else:
-                raise TypeError("Cannot evaluate a range with type %s"%row_dict["type"])
+                lfatal(ImplementationError())
+                raise ImplementationError()
 
-        elif row_dict["min_val"] and not row_dict["max_val"] and not row_dict["exact_val"]: # minimum
+
+        elif str(row_dict["min_val"]) and row_dict["max_val"] == None and row_dict["exact_val"] == None: # minimum:
             if row_dict["type"] == int:
                 to_csv.append(int(policy_value) >= int(row_dict["min_val"])) # compliance
 
             else:
                 raise ImplementationError()
 
-        elif row_dict["min_val"] and row_dict["max_val"] and not row_dict["exact_val"]:
+        elif row_dict["min_val"] == None and str(row_dict["max_val"]) and row_dict["exact_val"] == None: # maximum:
             if row_dict["type"] == int:
                 to_csv.append(int(policy_value) < int(row_dict["min_val"])) # compliance
 
             else:
                 raise ImplementationError()
 
+        elif str(row_dict["min_val"]) and str(row_dict["max_val"]) and row_dict["exact_val"] == None: # range:
+            if row_dict["type"] == int:
+                to_csv.append(int(policy_value) in range(int(row_dict["min_val"]), int(row_dict["max_val"])))
+
+            elif row_dict["type"] == float:
+                raise ImplementationError()
+
+            else:
+                raise TypeError("Cannot evaluate a range with type %s"%row_dict["type"])
         else:
+            lfatal("Inconsistent data. Verify config file at number %s"%row_dict["number"])
+            linfo("row_dict: %s", row_dict)
             raise Exception("Inconsistent data. Verify config file at number %s"%row_dict["number"])
 
         linfo("Writing %s", to_csv)
         out_csv.writerow(to_csv)
+linfo("Cleaning up")
+# os.remove(XML_PATH)
+lwarn("XML_PATH clean up intentionally commented!")
+
+linfo("Exiting")
 print("Done")
