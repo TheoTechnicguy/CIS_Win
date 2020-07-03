@@ -11,7 +11,7 @@ logging.basicConfig(filename=__file__+'.log', level=logging.DEBUG, format='%(lev
 logging.info('Started')
 logging.info('Starting imports')
 from logging import info as linfo, warning as lwarn, critical as lfatal, debug as ldb
-import os, ctypes, sys, csv, datetime, getpass, socket
+import os, ctypes, sys, csv, datetime, getpass, socket, stat
 from time import sleep
 from threading import Thread
 from xml.etree import ElementTree as ET
@@ -23,7 +23,7 @@ lwarn("Thread input_keep_alive intentionally commented!")
 ldb("Done threads")
 
 ldb("Setting constants")
-__version__ = "0.0.0.10"
+__version__ = "0.0.0.11"
 linfo("Current SW version: %s", __version__)
 
 WORK_DIR = os.path.dirname(__file__)
@@ -102,7 +102,10 @@ linfo("Cleaning up")
 for path in (OUT_PATH,):# XML_PATH):
     ldb("Cleaning %s", path)
     try:
+        os.chmod(path, stat.S_IWUSR)
         os.remove(path)
+    except FileNotFoundError:
+        pass
     except Exception as e:
         lfatal(Exception(e))
     else:
@@ -114,9 +117,11 @@ try:
 except:
     raise AdminError()
 
-linfo("Running group-policy export command %s", GENERATION_COMMAND)
+linfo("Running group-policy export command '%s'", GENERATION_COMMAND)
 # os.system(GENERATION_COMMAND)
 lwarn("XML regeneration intentionally commented!")
+linfo("Changing %s to read_only", XML_PATH)
+os.chmod(XML_PATH, stat.S_IRUSR)
 
 linfo("Initializing xml file at %s"%XML_PATH)
 xml_file = ET.parse(XML_PATH)
@@ -274,6 +279,9 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
 
         linfo("Writing %s", to_csv)
         out_csv.writerow(to_csv)
+linfo("Changing %s to read_only", OUT_PATH)
+os.chmod(OUT_PATH, stat.S_IRUSR)
+
 linfo("Cleaning up")
 # os.remove(XML_PATH)
 lwarn("XML_PATH clean up intentionally commented!")
