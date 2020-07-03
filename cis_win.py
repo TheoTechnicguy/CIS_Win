@@ -9,25 +9,35 @@ import logging
 logging.basicConfig(filename=__file__+'.log', level=logging.DEBUG, format='%(levelname)s at %(asctime)s: %(message)s', filemode = 'w', datefmt='%d/%m/%Y %I:%M:%S %p')
 
 logging.info('Started')
-logging.debug('Importing')
+logging.info('Starting imports')
 from logging import info as linfo, warning as lwarn, critical as lfatal, debug as ldb
-import os, ctypes, sys, configparser, csv, datetime, getpass, socket
+import os, ctypes, sys, csv, datetime, getpass, socket
 from time import sleep
-from ahk import AHK
-from tkinter import Tk
 from threading import Thread
-Thread(target=input).start()
+from xml.etree import ElementTree as ET
 ldb('Done Importing')
 
-ldb("Setting constants")
-__version__ = "0.0.0.7"
+linfo("Starting threads")
+# Thread(target=input).start()
+lwarn("Thread input_keep_alive intentionally commented!")
+ldb("Done threads")
 
-GPO_DIR = os.path.join("C:\\", "GPO")
-PATH_INF = os.path.join(GPO_DIR, "group-policy.inf")
-PATH_INI = os.path.join(GPO_DIR, "group-policy.ini")
-PATH_LOG = os.path.join(GPO_DIR, "group-policy.log")
-CONFIG_FILE = os.path.join(os.path.dirname(__file__), "config.csv")
-OUT_FILE = os.path.join(os.path.dirname(__file__), "out.csv")
+ldb("Setting constants")
+__version__ = "0.0.0.8"
+linfo("Current SW version: %s", __version__)
+
+WORK_DIR = os.path.dirname(__file__)
+CONFIG_PATH = os.path.join(WORK_DIR, "config.csv")
+OUT_PATH = os.path.join(WORK_DIR, "out.csv")
+XML_PATH = os.path.join(WORK_DIR, "group-policy.xml")
+GENERATION_COMMAND = 'gpresult /F /X "%s"'%XML_PATH
+
+STUPID_NAMESPACE = {
+    "rsop" : "http://www.microsoft.com/GroupPolicy/Rsop",
+    "settings" : "http://www.microsoft.com/GroupPolicy/Settings",
+    "registry" : "http://www.microsoft.com/GroupPolicy/Settings/Registry",
+    "security" : "http://www.microsoft.com/GroupPolicy/Settings/Security"
+}
 
 SUPPORTED_TYPES = {"int" : int, "float" : float, "bool" : bool, "None" : type(None), "str" : str, "list" : list}
 
@@ -41,6 +51,7 @@ ROW_DICT_TEMPLATE = {
     "max_val" : None,
     "exact_val" : None
 }
+ldb("Done constants")
 
 ldb("Creating classes")
 class ImplementationError(Exception):
@@ -51,18 +62,29 @@ class ImplementationError(Exception):
             msg = "This feature is not implemented yet."
         super().__init__(msg)
 
+class AdminError(Exception):
+    """Error class for my program"""
 
-if not os.path.exists(CONFIG_FILE):
-    with open(CONFIG_FILE, "w+", newline = "") as file:
+    def __init__(self, msg = None):
+        if not msg:
+            msg = "This program requires access to the GPO and thus FULL administrator rights. Please run this program with FULL administrator rights."
+        super().__init__(msg)
+ldb("Done classes")
+
+# ldb("Setting functions")
+# ldb("Done functions")
+
+ldb("Starting config fetching")
+if not os.path.exists(CONFIG_PATH):
+    with open(CONFIG_PATH, "w+", newline = "") as file:
         config_csv = csv.writer(file, delimiter=",")
         config_csv.writerows([["Version:", __version__],
         ["Note:", "Max_val is excluded --> min=0 max=5 = 0-1-2-3-4."],
-        ["Number","Section", "Key", "User_key", "Type", "Min_val", "Max_val", "Exact_val"],
+        ["Number","Section", "Policy_name", "User_key", "Type", "Min_val", "Max_val", "Exact_val"],
         ["-"*15]*8])
     raise Exception("Configuration file generated. Please fill.")
 
-POLICIES = {}
-with open(CONFIG_FILE, "r") as file:
+with open(CONFIG_PATH, "r") as file:
     config_csv = csv.reader(file, delimiter=",")
     for row in config_csv:
         if not row:
@@ -72,147 +94,158 @@ with open(CONFIG_FILE, "r") as file:
             raise Exception("Configuration file is depreciated. Please back it up and delete it so it can be regenerated. Current version: %s - File version %s"%(__version__, row[2].strip()))
         elif row[0].startswith("Version:") and row[1] == __version__:
             break
-# print(PASSWORD_POLICY)
-# raise Exception()
+ldb("Done config fetching")
 
-ldb("Done constants")
-
-ldb("Setting functions")
-def is_admin():
+linfo("Cleaning up")
+for path in (OUT_PATH,):# XML_PATH):
     try:
-        return ctypes.windll.shell32.IsUserAnAdmin()
+        os.remove(path)
     except:
-        return False
-ldb("Done functions")
+        pass
+    else:
+        lwarn("Deleted %s", path)
+lwarn("Cleanup of group-policy.xml intentionally commented!")
 
-if is_admin():
-    if os.path.exists(GPO_DIR):
-        linfo("Deleting existing folder")
-        for file in os.listdir(GPO_DIR):
-            ldb("Deleting %s", os.path.join(GPO_DIR, file))
-            os.remove(os.path.join(GPO_DIR, file))
-        ldb("Deleting folder")
-        os.rmdir(GPO_DIR)
+try:
+    ctypes.windll.shell32.IsUserAnAdmin()
+except:
+    raise AdminError()
 
-    linfo("Creating folder")
-    os.mkdir(GPO_DIR)
+linfo("Running group-policy export command %s", GENERATION_COMMAND)
+# os.system(GENERATION_COMMAND)
+lwarn("XML regeneration intentionally commented!")
 
-    linfo("Running group-policy export command")
-    os.system(r'secedit /export /cfg "%s" /log "%s"'%(PATH_INF, PATH_LOG))
-    linfo(" --- Contents of %s ---", PATH_LOG)
-    ldb("Parsing %s", PATH_LOG)
-    with open(PATH_LOG, "r") as file:
-        for line in file:
-            linfo(line)
-    linfo(" --- END contents of %s ---", PATH_LOG)
+linfo("Initializing xml file at %s"%XML_PATH)
+xml_file = ET.parse(XML_PATH)
+xml_root = xml_file.getroot()
 
-    # linfo("Clearing clipboard")
-    # clp = Tk()
-    # clp.withdraw()
-    # clp.clipboard_clear()
-    # clp.update()
-    # clp.destroy()
-    # sleep(1)
+linfo("Opening file out at %s"%OUT_PATH)
+with open(OUT_PATH, "w+", newline = "") as OUT_PATH, open(CONFIG_PATH, "r", newline = "") as CONFIG_PATH:
+    out_csv = csv.writer(OUT_PATH, delimiter=",")
+    config_csv = csv.reader(CONFIG_PATH, delimiter=",")
+    out_csv.writerows(
+        [["Output file version:", __version__, "Execution time:", datetime.datetime.now(), "XML execution time:", xml_root.find("rsop:ReadTime", STUPID_NAMESPACE).text],
+        ["User:", getpass.getuser(), "Domain:", os.environ["userdomain"]],
+        ["Computer:", socket.gethostname(), "IP:", socket.gethostbyname(socket.gethostname())],
+        ["Note:", "Max value excluede."],
+        ["-"*15]*6,
+        ["Number", "Policy", "Current_val", "Min_val", "Max_val", "Exact_val", "Compliant"]]
+    )
+    ldb("Written Heading")
 
-    linfo("Rewriting %s to %s", PATH_INF, PATH_INI)
-    os.system(os.path.join(os.path.dirname(__file__), "GP-Get.exe"))
+    for config_row in config_csv:
+        ldb("Current config_row: %s", config_row)
+        if not config_row or config_row[0] in ("Number", "Note:", "Comment", "Version:", "-"*15):
+            continue
 
-    linfo("Getting configparser")
-    policy_file = configparser.ConfigParser()
-    config_file = policy_file.read(PATH_INI)
-    ldb("Config file %s has sections %s", config_file, policy_file.sections())
+        ldb("Copying template & filling")
+        row_dict = ROW_DICT_TEMPLATE.copy()
+        for pos in range(len(config_row)):
+            row_dict[list(ROW_DICT_TEMPLATE.keys())[pos]] = config_row[pos]
+        ldb("Current row_dict: %s", row_dict)
+        linfo("Current policy: %s", row_dict["policy"])
 
-    linfo("Fetching policies")
-    linfo("Setting dictionnary")
+        ldb("Analizing ending of section: %s", row_dict["section"])
+        if not row_dict["section"].endswith("/*"):
+            if not row_dict["section"].endswith("*") and row_dict["section"].endswith("/"):
+                row_dict["section"] += "*"
+            # if not row_dict["section"].endswith(":"):
+                # row_dict["section"] += ":"
+            # elif not row_dict["section"].endswith("security"):
+                # row_dict["section"] += "security:"
+            elif not row_dict["section"].endswith("/"):
+                row_dict["section"] += "/*"
+        ldb("Current section: >>>%s<<<", row_dict["section"])
 
-    with open(OUT_FILE, "w+", newline = "") as out_file, open(CONFIG_FILE, "r", newline = "") as config_file:
-        out_csv = csv.writer(out_file, delimiter=",")
-        config_csv = csv.reader(config_file, delimiter=",")
-        out_csv.writerow(["Output file version:", __version__, "Execution time:", datetime.datetime.now(), "Time stamp:", datetime.datetime.timestamp(datetime.datetime.now())])
-        out_csv.writerow(["User:", getpass.getuser(), "Domain", os.environ["userdomain"]])
-        out_csv.writerow(["Computer:", socket.gethostname(),"IP:", socket.gethostbyname(socket.gethostname())])
-        out_csv.writerow(["Note:", "Max value excluede."])
-        out_csv.writerow(["-"*15]*6)
-        out_csv.writerow(["Number", "Policy", "Current_val", "Min_val", "Max_val", "Exact_val", "Compliant"])
-
-        for config_row in config_csv:
-            if not config_row:
+        ldb("Getting xml value")
+        # ldb("xml_root.findall: %s", xml_root.findall(row_dict["section"], STUPID_NAMESPACE))
+        next_is_value = False
+        for item in xml_root.findall(row_dict["section"], STUPID_NAMESPACE):
+            item_tag = item.tag.split("}")[-1]
+            ldb("Current item: %s", item_tag)
+            if item_tag not in ("Name", "SettingNumber", "SettingBoolean"):
                 continue
-            if config_row[0] in ("Number", "Note:", "Comment", "Version:", "-"*15):
-                continue
 
-            row_dict = ROW_DICT_TEMPLATE.copy()
+            if "Name" in item_tag and item.text == row_dict["policy"]:
+                ldb("Found policy %s", item.text)
+                next_is_value = True
+            elif next_is_value and "Setting" in item_tag:
+                ldb("Getting value")
+                policy_value = item.text
+                tag_type_str = item_tag[len("Setting"):]
+                if tag_type_str.lower().strip() == "number":
+                    ldb("Policy value is a number: %s", policy_value)
+                    policy_value = int(policy_value)
+                elif tag_type_str.lower().strip() == "boolean":
+                    ldb("Policy value is a boolean: %s", policy_value)
+                    if policy_value.title() == "True":
+                        policy_value = True
+                    else:
+                        policy_value = False
+                break
+        ldb("Current policy_value %s has %s", policy_value, type(policy_value))
 
-            for pos in range(len(config_row)):
-                row_dict[list(ROW_DICT_TEMPLATE.keys())[pos]] = config_row[pos]
+        if row_dict["type"].lower().strip() not in SUPPORTED_TYPES.keys():
+            lfatal("%s is not a member of known types %s", row_dict["type"], tuple(SUPPORTED_TYPES.keys()))
+            raise TypeError("%s is not a member of known types %s"%(row_dict["type"], tuple(SUPPORTED_TYPES.keys())))
+        else:
+            row_dict["type"] = SUPPORTED_TYPES[row_dict["type"]]
+            ldb("Current row_dict['type']: %s", row_dict["type"])
 
-            if row_dict["type"].lower().strip() not in SUPPORTED_TYPES.keys():
-                raise TypeError("%s is not a member of known types %s"%(row_dict["type"], tuple(SUPPORTED_TYPES.keys())))
-            else:
-                row_dict["type"] = SUPPORTED_TYPES[row_dict["type"]]
-                # print(row_dict["type"])
+        if not row_dict["user_key"]:
+            row_dict["user_key"] = row_dict["policy"]
 
-            if not row_dict["user_key"]:
-                row_dict["user_key"] = row_dict["section"]+"/"+row_dict["policy"]
-            # print(row_dict["exact_val"], type(row_dict["exact_val"]), bool(row_dict["exact_val"]))
-            to_csv = [row_dict["number"], row_dict["user_key"], policy_file[row_dict["section"]][row_dict["policy"]], row_dict["min_val"],     row_dict["max_val"], row_dict["exact_val"]]
+        to_csv = [row_dict["number"], row_dict["user_key"], policy_value, row_dict["min_val"], row_dict["max_val"], row_dict["exact_val"]]
+        ldb("Inintial to_csv: %s", to_csv)
 
-            ldb("Inintial to_csv: %s", to_csv)
+        linfo("%s is %s", row_dict["user_key"], row_dict["type"])
+        if not row_dict["min_val"] and not row_dict["max_val"] and row_dict["exact_val"]: # Exact values
+            if row_dict["type"] == int:
+                to_csv.append(int(policy_value) == int(row_dict["exact_val"])) # compliance
 
-            linfo("%s is %s", row_dict["user_key"], row_dict["type"])
-            if not row_dict["min_val"] and not row_dict["max_val"] and row_dict["exact_val"]: # Exact values
-                if row_dict["type"] == int:
-                    to_csv.append(int(policy_file[row_dict["section"]][row_dict["policy"]]) == int(row_dict["exact_val"])) # compliance
+            elif row_dict["type"] == float:
+                to_csv.append(float(policy_value) == float(row_dict["exact_val"]))
 
-                elif row_dict["type"] == float:
-                    to_csv.append(float(policy_file[row_dict["section"]][row_dict["policy"]]) == float(row_dict["exact_val"]))
+            elif row_dict["type"] == type(None):
+                to_csv.append(not policy_value) # compliance
 
-                elif row_dict["type"] == type(None):
-                    to_csv.append(not policy_file[row_dict["section"]][row_dict["policy"]]) # compliance
+            elif row_dict["type"] == str:
+                to_csv.append(policy_value.lower().strip() == row_dict["exact_val"].lower().strip()) # compliance
 
-                elif row_dict["type"] == str:
-                    to_csv.append(policy_file[row_dict["section"]][row_dict["policy"]].lower().strip() == row_dict["exact_val"].lower().strip()) # compliance
+            elif row_dict["type"] == list:
+                values = row_dict["exact_val"].split(",")
+                for pos in range(len(values)):
+                    values[pos] = values[pos].strip().lower()
 
-                elif row_dict["type"] == list:
-                    values = row_dict["exact_val"].split(",")
-                    for pos in range(len(values)):
-                        values[pos] = values[pos].strip().lower()
+                raise ImplementationError()
 
-                    raise ImplementationError()
+        elif row_dict["min_val"] and row_dict["max_val"] and not row_dict["exact_val"]: # range
+            if row_dict["type"] == int:
+                to_csv.append(int(policy_value) in range(int(row_dict["min_val"]),                       int(row_dict["max_val"])))
 
-            elif row_dict["min_val"] and row_dict["max_val"] and not row_dict["exact_val"]: # range
-                if row_dict["type"] == int:
-                    to_csv.append(int(policy_file[row_dict["section"]][row_dict["policy"]]) in range(int(row_dict["min_val"]),                       int(row_dict["max_val"])))
-
-                elif row_dict["type"] == float:
-                    raise ImplementationError()
-
-                else:
-                    raise TypeError("Cannot evaluate a range with type %s"%row_dict["type"])
-
-            elif row_dict["min_val"] and not row_dict["max_val"] and not row_dict["exact_val"]: # minimum
-                if row_dict["type"] == int:
-                    to_csv.append(int(policy_file[row_dict["section"]][row_dict["policy"]]) >= int(row_dict["min_val"])) # compliance
-
-                else:
-                    raise ImplementationError()
-
-            elif row_dict["min_val"] and row_dict["max_val"] and not row_dict["exact_val"]:
-                if row_dict["type"] == int:
-                    to_csv.append(int(policy_file[row_dict["section"]][row_dict["policy"]]) < int(row_dict["min_val"])) # compliance
-
-                else:
-                    raise ImplementationError()
+            elif row_dict["type"] == float:
+                raise ImplementationError()
 
             else:
-                raise Exception("Inconsistent data. Verify config file at number %s"%row_dict["number"])
+                raise TypeError("Cannot evaluate a range with type %s"%row_dict["type"])
 
-            linfo("Writing %s", to_csv)
-            out_csv.writerow(to_csv)
-    print("Done")
-else:
-    # Re-run the program with admin rights
-    # NOTE: Cannot rerun beacuse of "advanced" admin management
-    # ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv[1:]), None, 1)
-    print("This program requires access to the GPO and thus FULL administrator rights. Please run this program with FULL administrator rights.")
-    raise
+        elif row_dict["min_val"] and not row_dict["max_val"] and not row_dict["exact_val"]: # minimum
+            if row_dict["type"] == int:
+                to_csv.append(int(policy_value) >= int(row_dict["min_val"])) # compliance
+
+            else:
+                raise ImplementationError()
+
+        elif row_dict["min_val"] and row_dict["max_val"] and not row_dict["exact_val"]:
+            if row_dict["type"] == int:
+                to_csv.append(int(policy_value) < int(row_dict["min_val"])) # compliance
+
+            else:
+                raise ImplementationError()
+
+        else:
+            raise Exception("Inconsistent data. Verify config file at number %s"%row_dict["number"])
+
+        linfo("Writing %s", to_csv)
+        out_csv.writerow(to_csv)
+print("Done")
