@@ -23,7 +23,7 @@ lwarn("Thread input_keep_alive intentionally commented!")
 ldb("Done threads")
 
 ldb("Setting constants")
-__version__ = "0.0.0.13"
+__version__ = "0.0.1.1"
 linfo("Current SW version: %s", __version__)
 
 WORK_DIR = os.path.dirname(__file__)
@@ -56,7 +56,8 @@ ldb("Done constants")
 
 ldb("Creating classes")
 class ImplementationError(Exception):
-    """Error class for my program"""
+    """Error class for my program.
+    Is raised when a function or method or script part is call but not implemented"""
 
     def __init__(self, msg = None):
         if not msg:
@@ -64,12 +65,21 @@ class ImplementationError(Exception):
         super().__init__(msg)
 
 class AdminError(Exception):
-    """Error class for my program"""
+    """Error class for my program.
+    Is raised when the program has no administrator rights"""
 
     def __init__(self, msg = None):
         if not msg:
             msg = "This program requires access to the GPO and thus FULL administrator rights. Please run this program with FULL administrator rights."
         super().__init__(msg)
+
+class ConfigError(Exception):
+    """Error class for my program.
+    Is raised when error in relation to the config file"""
+
+    def __init__(self, msg):
+        super().__init__(msg)
+
 ldb("Done classes")
 
 # ldb("Setting functions")
@@ -83,8 +93,8 @@ if not os.path.exists(CONFIG_PATH):
         ["Note:", "Max_val is excluded --> min=0 max=5 = 0-1-2-3-4."],
         ["Number","Section", "Policy_name", "User_key", "Type", "Min_val", "Max_val", "Exact_val"],
         ["-"*15]*8])
-    lfatal(Exception("Configuration file generated. Please fill."))
-    raise Exception("Configuration file generated. Please fill.")
+    lfatal(ConfigError("Configuration file generated. Please fill."))
+    raise ConfigError("Configuration file generated. Please fill.")
 
 with open(CONFIG_PATH, "r") as file:
     config_csv = csv.reader(file, delimiter=",")
@@ -93,8 +103,8 @@ with open(CONFIG_PATH, "r") as file:
             continue
 
         if row[0].startswith("Version:") and row[1] != __version__:
-            lfatal(Exception("Configuration file is depreciated. Please back it up and delete it so it can be regenerated. Current version: %s - File version: %s"%(__version__, row[1].strip())))
-            raise Exception("Configuration file is depreciated. Please back it up and delete it so it can be regenerated. Current version: %s - File version %s"%(__version__, row[2].strip()))
+            lfatal(ConfigError("Configuration file is depreciated. Please back it up and delete it so it can be regenerated. Current version: %s - File version: %s"%(__version__, row[1].strip())))
+            raise ConfigError("Configuration file is depreciated. Please back it up and delete it so it can be regenerated. Current version: %s - File version %s"%(__version__, row[2].strip()))
         elif row[0].startswith("Version:") and row[1] == __version__:
             break
 ldb("Done config fetching")
@@ -188,12 +198,20 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
                 row_dict["exact_val"] = False
             ldb("Current row_dict['exact_val']: %s", row_dict["exact_val"])
         elif row_dict["type"] == list:
-            ldb("Converting list %s", row_dict["exact_val"])
-            values = row_dict["exact_val"].split(",")
-            for pos in range(len(values)):
-                values[pos] = values[pos].lower().strip()
-            values.sort()
-            ldb("Current values: %s", values)
+            list_values = {}
+            if row_dict["exact_val"]:
+                list_values["exact_val"] = None
+            if row_dict["min_val"]:
+                list_values["min_val"] = None
+            if row_dict["max_val"]:
+                list_values["max_val"] = None
+            for list_item in tuple(list_values.keys()):
+                ldb("Converting list %s in row_dict['%s']", row_dict[list_item], list_item)
+                list_values[list_item] = row_dict[list_item].split(",")
+                for pos in range(len(list_values[list_item])):
+                    list_values[list_item][pos] = list_values[list_item][pos].lower().strip()
+                list_values[list_item].sort()
+                ldb("Current values: %s", list_values[list_item])
 
         if not row_dict["user_key"]:
             row_dict["user_key"] = row_dict["policy"]
@@ -210,6 +228,9 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
             if "Name" in item_tag and item.text == row_dict["policy"]:
                 ldb("Found policy %s", item.text)
                 next_is_value = True
+            elif "Name" in item_tag and policy_values:
+                ldb("Breaking")
+                break
             elif next_is_value and "Setting" in item_tag:
                 ldb("Getting value")
                 policy_value = item.text
@@ -226,13 +247,13 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
                         policy_values.append(True)
                     else:
                         policy_values.append(False)
-                break
                 ldb("After adding value Current policy_values: %s", policy_values)
             elif next_is_value and "Member" in item_tag:
-                ldb("Getting Members")
-                for name in xml_root.findall(row_dict["section"]+item.tag+"type:Name", STUPID_NAMESPACE):
-                    ldb("Current name: %s", name.tag.split("}")[-1])
-                    policy_values.append(name.text)
+                ldb("Getting Members: %s", item.tag)
+                for name in item:
+                    ldb("Current name: %s", name.tag)
+                    policy_values.append(name.text.lower().strip())
+                    ldb("Added %s", name.text)
 
 
         ldb("Current policy_values: %s length: %i", policy_values, len(policy_values))
@@ -244,7 +265,9 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
             policy_values.sort()
         ldb("Current policy_values %s is %s", policy_values, type(policy_values))
 
-        to_csv = [row_dict["number"], row_dict["user_key"], str(policy_values), row_dict["min_val"], row_dict["max_val"], row_dict["exact_val"]]
+        to_csv = [row_dict["number"], row_dict["user_key"], str(policy_values).title(), row_dict["min_val"], row_dict["max_val"], row_dict["exact_val"]]
+        if isinstance(policy_values, list):
+            to_csv[2] = ", ".join(policy_values).title()
         ldb("Inintial to_csv: %s", to_csv)
 
         linfo("%s is %s where min: %s max: %s exact: %s", row_dict["user_key"], row_dict["type"], bool(row_dict["min_val"]), bool(row_dict["max_val"]), bool(row_dict["exact_val"]))
@@ -263,7 +286,18 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
                 to_csv.append(policy_values == row_dict["exact_val"].lower().strip()) # compliance:
 
             elif row_dict["type"] == list:
-                to_csv.append(values == policy_values)
+                try:
+                    list_values["exact_val"]
+                except KeyError:
+                    raise ConfigError("Could not find any data in exact_val")
+
+                if not isinstance(policy_values, list):
+                    policy_values = [policy_values]
+                if not isinstance(list_values["exact_val"], list):
+                    list_values["exact_val"] = [list_values["exact_val"]]
+
+                ldb("list(list_values['exact_val']): %s list(policy_values): %s", list(list_values["exact_val"]), list(policy_values))
+                to_csv.append(list(list_values["exact_val"]) == list(policy_values))
 
             elif row_dict["type"] == bool:
                 to_csv.append(policy_values == row_dict["exact_val"])
@@ -282,7 +316,17 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
                 to_csv.append(float(policy_values) >= float(row_dict["min_val"])) # compliance
 
             elif row_dict["type"] == list:
-                for value in values:
+                try:
+                    list_values["min_val"]
+                except KeyError:
+                    raise ConfigError("Could not find any data in min_val")
+
+                if not isinstance(policy_values, list):
+                    policy_values = [policy_values]
+                if not isinstance(list_values["min_val"], list):
+                    list_values["min_val"] = [list_values["min_val"]]
+
+                for value in list_values["min_val"]:
                     if value not in policy_values:
                         compliant = False
                         break
@@ -303,8 +347,18 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
                 to_csv.append(float(policy_values) < float(row_dict["min_val"])) # compliance
 
             elif row_dict["type"] == list:
+                try:
+                    list_values["max_val"]
+                except KeyError:
+                    raise ConfigError("Could not find any data in max_val")
+
+                if not isinstance(policy_values, list):
+                    policy_values = [policy_values]
+                if not isinstance(list_values["max_val"], list):
+                    list_values["max_val"] = [list_values["max_val"]]
+
                 for value in policy_value:
-                    if value not in values:
+                    if value not in list_values["max_val"]:
                         compliant = False
                         break
                 else:
@@ -320,15 +374,39 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
             if row_dict["type"] == int:
                 to_csv.append(int(policy_values) in range(int(row_dict["min_val"]), int(row_dict["max_val"])))
 
-            # elif row_dict["type"] == float:
-                # raise ImplementationError()
+            elif row_dict["type"] == list:
+                try:
+                    list_values["min_val"]
+                    list_values["max_val"]
+                except KeyError:
+                    raise ConfigError("Could not find any data in min_val or max_val")
+
+                if not isinstance(policy_values, list):
+                    policy_values = [policy_values]
+                if not isinstance(list_values["max_val"], list):
+                    list_values["max_val"] = [list_values["max_val"]]
+                if not isinstance(list_values["min_val"], list):
+                    list_values["min_val"] = [list_values["min_val"]]
+
+                for value in list_values["min_val"]:
+                    if value not in policy_values:
+                        compliant = False
+                        break
+                else:
+                    for value in policy_value:
+                        if value not in list_values["max_val"]:
+                            compliant = False
+                            break
+                    else:
+                        compliant = True
+                to_csv.append(compliant)
 
             else:
                 raise TypeError("Cannot evaluate a range with type %s"%row_dict["type"])
         else:
             lfatal("Inconsistent data. Verify config file at number %s"%row_dict["number"])
             linfo("row_dict: %s", row_dict)
-            raise Exception("Inconsistent data. Verify config file at number %s"%row_dict["number"])
+            raise ConfigError("Inconsistent data. Verify config file at number %s"%row_dict["number"])
 
         linfo("Writing %s", to_csv)
         out_csv.writerow(to_csv)
