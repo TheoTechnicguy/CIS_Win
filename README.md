@@ -29,12 +29,13 @@ The types used are python types. Valid types are:
 
 | Type | Full name | Desctiption                         | Examples | Accepted values |
 | :--- | :-------- | :---------------------------------- | :------- | :-------------- |
-| int  | integer   | An entire non-floating point number | `1`, `50`| range, exact, min, max    |
+| int  | integer   | An entire non-floating point number | `1`, `50`, `-4`| range, exact, min, max|
 | float| float     | A deciam floating point number      | `3.1415` | exact           |
 | bool | boolean   | `True` or `False` / Valid or not    | `True`/`False`| exact      |
 | None | None      | None or Null type. Equivalent to an empty str|`None`, `""`| exact|
 | str  | string    | A(n) (sequence of) alphanumerical character|`a`, `d4g-`| exact   |
 | list | list      | A squence of values seperated by a comma `,`|`a, b, c`| exact    |
+| print| print     | Adds a row to the output file. Is interpreted as str| `placeholder`| exact|
 
 All alphanumerical character or character sequences will be interpreted in lowercase. Leading or trailing spaces will not be taken into account.
 
