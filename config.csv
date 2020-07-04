@@ -1,4 +1,4 @@
-Version:,0.0.1.1
+Version:,0.1.0
 Note:,Max_val is excluded --> min=0 max=5 = 0-1-2-3-4.
 Number,Section,Policy_name,User_key,Type,Min_val,Max_val,Exact_val
 ---------------,---------------,---------------,---------------,---------------,---------------,---------------,---------------
