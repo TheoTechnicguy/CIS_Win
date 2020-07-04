@@ -18,8 +18,8 @@ from xml.etree import ElementTree as ET
 ldb('Done Importing')
 
 linfo("Starting threads")
-# Thread(target=input).start()
-lwarn("Thread input_keep_alive intentionally commented!")
+Thread(target=input).start()
+# lwarn("Thread input_keep_alive intentionally commented!")
 ldb("Done threads")
 
 ldb("Setting constants")
@@ -112,7 +112,7 @@ with open(CONFIG_PATH, "r") as file:
 ldb("Done config fetching")
 
 linfo("Cleaning up")
-for path in (OUT_PATH,):# XML_PATH):
+for path in (OUT_PATH, XML_PATH):
     ldb("Cleaning %s", path)
     try:
         os.chmod(path, stat.S_IWUSR)
@@ -123,7 +123,7 @@ for path in (OUT_PATH,):# XML_PATH):
         lfatal(Exception(e))
     else:
         lwarn("Deleted %s", path)
-lwarn("Cleanup of group-policy.xml intentionally commented!")
+# lwarn("Cleanup of group-policy.xml intentionally commented!")
 
 try:
     ctypes.windll.shell32.IsUserAnAdmin()
@@ -131,8 +131,8 @@ except:
     raise AdminError()
 
 linfo("Running group-policy export command '%s'", GENERATION_COMMAND)
-# os.system(GENERATION_COMMAND)
-lwarn("XML regeneration intentionally commented!")
+os.system(GENERATION_COMMAND)
+# lwarn("XML regeneration intentionally commented!")
 linfo("Changing %s to read_only", XML_PATH)
 os.chmod(XML_PATH, stat.S_IRUSR)
 
@@ -417,8 +417,8 @@ linfo("Changing %s to read_only", OUT_PATH)
 os.chmod(OUT_PATH, stat.S_IRUSR)
 
 linfo("Cleaning up")
-# os.remove(XML_PATH)
-lwarn("XML_PATH clean up intentionally commented!")
+os.remove(XML_PATH)
+# lwarn("XML_PATH clean up intentionally commented!")
 
 linfo("Exiting")
 print("Done")
