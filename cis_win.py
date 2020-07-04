@@ -278,7 +278,12 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
 
         linfo("%s is %s where min: %s max: %s exact: %s", row_dict["user_key"], row_dict["type"], bool(row_dict["min_val"]), bool(row_dict["max_val"]), bool(row_dict["exact_val"]))
 
-        if row_dict["min_val"] == None and row_dict["max_val"] == None and str(row_dict["exact_val"]): # Exact value(s):
+        if row_dict["type"] != type(None) and policy_values == None: # Policy expected but not found:
+            lwarn("Expected policy %s not found!", row_dict["policy"])
+            to_csv[2] = "This policy could not be found!"
+            to_csv.append(False)
+
+        elif row_dict["min_val"] == None and row_dict["max_val"] == None and str(row_dict["exact_val"]): # Exact value(s):
             ldb("In exact value")
             if row_dict["type"] == int:
                 to_csv.append(int(policy_values) == int(row_dict["exact_val"])) # compliance
@@ -417,7 +422,11 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
 
         linfo("Writing %s", to_csv)
         out_csv.writerow(to_csv)
-        hash.update(bytes(str(to_csv[-1]).lower(), "utf-8"))
+        to_csv.reverse()
+        for item in to_csv:
+            if isinstance(item, bool):
+                hash.update(bytes(str(item).lower(), "utf-8"))
+                break
     out_csv.writerow(["Compliance integrity:", hash.hexdigest().upper()])
 linfo("Changing %s to read_only", OUT_PATH)
 os.chmod(OUT_PATH, stat.S_IRUSR)
