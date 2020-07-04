@@ -132,3 +132,6 @@ out.*
 
 # Word and Excel temp files
 ~$*
+
+# group-policy files
+group-policy*.xml
