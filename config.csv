@@ -1,17 +1,22 @@
-Version:,0.1.0
-Note:,Max_val is excluded --> min=0 max=5 = 0-1-2-3-4.
+Version:,0.1.0,,,,,,
+Note:,Max_val is excluded --> min=0 max=5 = 0-1-2-3-4.,,,,,,
 Number,Section,Policy_name,User_key,Type,Min_val,Max_val,Exact_val
 ---------------,---------------,---------------,---------------,---------------,---------------,---------------,---------------
+1,,,Account Policies,print,,,Account Policies
+1.1,,,Password Policy,print,,,Passowrd Policies
 1.1.1,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:Account,PasswordHistorySize,,int,24,,
 1.1.2,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:Account,MaximumPasswordAge,,int,1,61,
 1.1.3,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:Account,MinimumPasswordAge,,int,1,,
 1.1.4,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:Account,MinimumPasswordLength,,int,14,,
 1.1.5,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:Account,PasswordComplexity,,bool,,,TRUE
 1.1.6,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:Account,ClearTextPassword,,bool,,,FALSE
+1.2,,,Account Lockout Policy,print,,,Account Lockout Policies
 1.2.1,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:Account,LockoutDuration,,int,15,,
 1.2.2,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:Account,LockoutBadCount,,int,1,11,
 1.2.3,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:Account,ResetLockoutCount,,int,15,,
-0.0.0.0,,,PLACEHOLDER,print,,,This is a placeholder line!
+2,,,Local Policies,print,,,Local Policies
+2.1,,,Audit Policies,print,,,Audit Policies
+2.2,,,User Rights Assignment,print,,,User Rights Assignment
 2.2.1,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeTrustedCredManAccessPrivilege,,None,,,None
 2.2.2,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeNetworkLogonRight,,list,,,"Administrators, Remote Desktop Users"
 2.2.3,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeTcbPrivilege,,None,,,None
@@ -51,3 +56,6 @@ Number,Section,Policy_name,User_key,Type,Min_val,Max_val,Exact_val
 2.2.37,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeRestorePrivilege,,str,,,Administrators
 2.2.38,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeShutdownPrivilege,,list,,,"Administrators, Users"
 2.2.39,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeTakeOwnershipPrivilege,,str,,,Administrators
+2.3,,,Security Options,print,,,Security Options
+2.3.1,,,Accounts,print,,,Accounts
+2.3.1.1,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:SecurityOptions,MACHINE\System\CurrentControlSet\Control\Lsa\LimitBlankPasswordUse,,bool,,,TRUE
