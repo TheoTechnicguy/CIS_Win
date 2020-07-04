@@ -23,8 +23,10 @@ lwarn("Thread input_keep_alive intentionally commented!")
 ldb("Done threads")
 
 ldb("Setting constants")
-__version__ = "0.0.1.1"
+__version__ = "0.1.0"
+__cfg_version__ = "0.1.0"
 linfo("Current SW version: %s", __version__)
+linfo("Current config version: %s", __cfg_version__)
 
 WORK_DIR = os.path.dirname(__file__)
 CONFIG_PATH = os.path.join(WORK_DIR, "config.csv")
@@ -89,7 +91,7 @@ ldb("Starting config fetching")
 if not os.path.exists(CONFIG_PATH):
     with open(CONFIG_PATH, "w+", newline = "") as file:
         config_csv = csv.writer(file, delimiter=",")
-        config_csv.writerows([["Version:", __version__],
+        config_csv.writerows([["Version:", __cfg_version__],
         ["Note:", "Max_val is excluded --> min=0 max=5 = 0-1-2-3-4."],
         ["Number","Section", "Policy_name", "User_key", "Type", "Min_val", "Max_val", "Exact_val"],
         ["-"*15]*8])
@@ -102,10 +104,10 @@ with open(CONFIG_PATH, "r") as file:
         if not row:
             continue
 
-        if row[0].startswith("Version:") and row[1] != __version__:
-            lfatal(ConfigError("Configuration file is depreciated. Please back it up and delete it so it can be regenerated. Current version: %s - File version: %s"%(__version__, row[1].strip())))
-            raise ConfigError("Configuration file is depreciated. Please back it up and delete it so it can be regenerated. Current version: %s - File version %s"%(__version__, row[2].strip()))
-        elif row[0].startswith("Version:") and row[1] == __version__:
+        if row[0].startswith("Version:") and row[1] != __cfg_version__:
+            lfatal(ConfigError("Configuration file is depreciated. Please back it up and delete it so it can be regenerated. Current version: %s - File version: %s"%(__cfg_version__, row[1].strip())))
+            raise ConfigError("Configuration file is depreciated. Please back it up and delete it so it can be regenerated. Current version: %s - File version %s"%(__cfg_version__, row[1].strip()))
+        elif row[0].startswith("Version:") and row[1] == __cfg_version__:
             break
 ldb("Done config fetching")
 
@@ -271,6 +273,7 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
         ldb("Inintial to_csv: %s", to_csv)
 
         linfo("%s is %s where min: %s max: %s exact: %s", row_dict["user_key"], row_dict["type"], bool(row_dict["min_val"]), bool(row_dict["max_val"]), bool(row_dict["exact_val"]))
+
         if row_dict["min_val"] == None and row_dict["max_val"] == None and str(row_dict["exact_val"]): # Exact value(s):
             ldb("In exact value")
             if row_dict["type"] == int:
