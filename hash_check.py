@@ -7,7 +7,7 @@
 
 import os, csv, datetime, hashlib
 
-__version__ = "0.0.0"
+__version__ = "0.1.0"
 
 WORK_DIR = os.path.dirname(__file__)
 CONFIG_PATH = os.path.join(WORK_DIR, "config.csv")
