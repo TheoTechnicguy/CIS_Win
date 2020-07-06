@@ -23,7 +23,7 @@ Thread(target=input).start()
 ldb("Done threads")
 
 ldb("Setting constants")
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 __cfg_version__ = "0.1.0"
 linfo("Current SW version: %s", __version__)
 linfo("Current config version: %s", __cfg_version__)
@@ -144,13 +144,14 @@ linfo("Opening file out at %s"%OUT_PATH)
 with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newline = "") as config_file:
     out_csv = csv.writer(out_file, delimiter=",")
     config_csv = csv.reader(config_file, delimiter=",")
+    time_now = datetime.datetime.now()
     out_csv.writerows([
-        ["Output file version:", __version__, "Execution time:", datetime.datetime.now(), "XML execution time:", xml_root.find("rsop:ReadTime", STUPID_NAMESPACE).text],
+        ["Output file version:", __version__, "Execution time:", time_now, "XML execution time:", xml_root.find("rsop:ReadTime", STUPID_NAMESPACE).text],
         ["User:", getpass.getuser(), "Domain:", os.environ["userdomain"]],
         ["Computer:", socket.gethostname(), "IP:", socket.gethostbyname(socket.gethostname())],
         ["Note:", "Max value excluede. A Current_val of None might mean 'policy not found in export file'."],
         ["Validity code:", hashlib.sha3_256(
-            bytes(__version__, "ascii") + bytes(str(datetime.datetime.now()), "ascii") +
+            bytes(__version__, "ascii") + bytes(str(time_now), "ascii") +
             bytes(str(xml_root.find("rsop:ReadTime", STUPID_NAMESPACE).text), "utf-8") +
             bytes(getpass.getuser(), "utf-8") + bytes(os.environ["userdomain"], "utf-8") +
             bytes(socket.gethostname(), "utf-16") + bytes(socket.gethostbyname(socket.gethostname()), "utf-16")
@@ -190,7 +191,7 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
 
         if str(row_dict["type"]).lower().strip() not in SUPPORTED_TYPES.keys():
             lfatal("%s is not a member of known types %s", row_dict["type"], tuple(SUPPORTED_TYPES.keys()))
-            raise TypeError("%s is not a member of known types %s"%(row_dict["type"], tuple(SUPPORTED_TYPES.keys())))
+            raise TypeError("%s is not a member of supported types %s"%(row_dict["type"], tuple(SUPPORTED_TYPES.keys())))
         else:
             ldb("Current row_dict['type']: %s", row_dict["type"])
             row_dict["type"] = SUPPORTED_TYPES[str(row_dict["type"]).lower().strip()]
@@ -280,7 +281,7 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
 
         if row_dict["type"] != type(None) and policy_values == None: # Policy expected but not found:
             lwarn("Expected policy %s not found!", row_dict["policy"])
-            to_csv[2] = "This policy could not be found!"
+            to_csv[2] = "None"
             to_csv.append(False)
 
         elif row_dict["min_val"] == None and row_dict["max_val"] == None and str(row_dict["exact_val"]): # Exact value(s):
