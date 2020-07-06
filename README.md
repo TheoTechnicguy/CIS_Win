@@ -19,8 +19,10 @@ This is a program to automate collection of Group Policy Objects and verify thie
   range(Min_val, Max_val) == (0, 1, 2, 3, 4)
   ```
     > Note: Useing (-)999999 for (-)infinity
+
   9. `Exact_val` references an exact value.
     > Note: Use a range **or** an exact value.
+
 3. You can comment a row by setting the value of the first cell to `Comment` (casesenstive).
 4. Save file and **keep it in csv** format.
 
