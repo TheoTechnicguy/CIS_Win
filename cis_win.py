@@ -432,6 +432,7 @@ linfo("Changing %s to read_only", OUT_PATH)
 os.chmod(OUT_PATH, stat.S_IRUSR)
 
 linfo("Cleaning up")
+os.chmod(XML_PATH, stat.S_IWUSR) # Need to allow writing to delete.
 os.remove(XML_PATH)
 # lwarn("XML_PATH clean up intentionally commented!")
 
