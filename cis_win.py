@@ -11,7 +11,7 @@ logging.basicConfig(filename=__file__+'.log', level=logging.DEBUG, format='%(lev
 logging.info('Started')
 logging.info('Starting imports')
 from logging import info as linfo, warning as lwarn, critical as lfatal, debug as ldb
-import os, ctypes, sys, csv, datetime, getpass, socket, stat
+import os, ctypes, sys, csv, datetime, getpass, socket, stat, hashlib
 from time import sleep
 from threading import Thread
 from xml.etree import ElementTree as ET
@@ -23,7 +23,7 @@ lwarn("Thread input_keep_alive intentionally commented!")
 ldb("Done threads")
 
 ldb("Setting constants")
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 __cfg_version__ = "0.1.0"
 linfo("Current SW version: %s", __version__)
 linfo("Current config version: %s", __cfg_version__)
@@ -93,7 +93,7 @@ if not os.path.exists(CONFIG_PATH):
         config_csv = csv.writer(file, delimiter=",")
         config_csv.writerows([["Version:", __cfg_version__],
         ["Note:", "Max_val is excluded --> min=0 max=5 = 0-1-2-3-4."],
-        ["Number","Section", "Policy_name", "User_key", "Type", "Min_val", "Max_val", "Exact_val"],
+        ["Number","Section", "Policy_name", "Human_readable_policy_name", "Type", "Min_val", "Max_val", "Exact_val"],
         ["-"*15]*8])
     lfatal(ConfigError("Configuration file generated. Please fill."))
     raise ConfigError("Configuration file generated. Please fill.")
@@ -144,15 +144,23 @@ linfo("Opening file out at %s"%OUT_PATH)
 with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newline = "") as config_file:
     out_csv = csv.writer(out_file, delimiter=",")
     config_csv = csv.reader(config_file, delimiter=",")
-    out_csv.writerows(
-        [["Output file version:", __version__, "Execution time:", datetime.datetime.now(), "XML execution time:", xml_root.find("rsop:ReadTime", STUPID_NAMESPACE).text],
+    out_csv.writerows([
+        ["Output file version:", __version__, "Execution time:", datetime.datetime.now(), "XML execution time:", xml_root.find("rsop:ReadTime", STUPID_NAMESPACE).text],
         ["User:", getpass.getuser(), "Domain:", os.environ["userdomain"]],
         ["Computer:", socket.gethostname(), "IP:", socket.gethostbyname(socket.gethostname())],
         ["Note:", "Max value excluede. A Current_val of None might mean 'policy not found in export file'."],
+        ["Validity code:", hashlib.sha3_256(
+            bytes(__version__, "ascii") + bytes(str(datetime.datetime.now()), "ascii") +
+            bytes(str(xml_root.find("rsop:ReadTime", STUPID_NAMESPACE).text), "utf-8") +
+            bytes(getpass.getuser(), "utf-8") + bytes(os.environ["userdomain"], "utf-8") +
+            bytes(socket.gethostname(), "utf-16") + bytes(socket.gethostbyname(socket.gethostname()), "utf-16")
+        ).hexdigest().upper(), "Note: THIS FILE IS ONLY VALID IN READ-ONLY MODE AND CORRECT VALIDITY CODE."],
+        ["DISCLAIMER:", "THE CONTENTS OF THIS FILE ONLY REFLECT THE GPO STATE OF THE PC AT EXECUTION TIME."],
         ["-"*15]*6,
-        ["Number", "Policy", "Current_val", "Min_val", "Max_val", "Exact_val", "Compliant"]]
-    )
+        ["Number", "Policy", "Current_val", "Min_val", "Max_val", "Exact_val", "Compliant"]
+    ])
     ldb("Written Heading")
+    hash = hashlib.new("sha512")
 
     for config_row in config_csv:
         linfo(" --- New config row ---")
@@ -188,8 +196,8 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
             row_dict["type"] = SUPPORTED_TYPES[str(row_dict["type"]).lower().strip()]
 
         if row_dict["type"] == "print": # add user key row to output file if type is print:
-            if row_dict["exact_val"] == None:
-                row_dict["exact_val"] = "This is a place-holder line and exists only for consistency."
+            # if row_dict["exact_val"] == None:
+                # row_dict["exact_val"] = "This is a place-holder line and exists only for consistency."
             out_csv.writerow([row_dict["number"], row_dict["user_key"], row_dict["exact_val"]])
             continue
         elif row_dict["type"] == bool:
@@ -223,10 +231,9 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
         policy_values = []
         for item in xml_root.findall(row_dict["section"], STUPID_NAMESPACE):
             item_tag = item.tag.split("}")[-1]
-            if item_tag not in ("Name", "SettingNumber", "SettingBoolean", "Member"):
-                continue
-            ldb("Current item: %s", item_tag)
-            ldb("Current next_is_value: %s", next_is_value)
+            # if item_tag not in ("Name", "SettingNumber", "SettingBoolean", "Member"):
+            #     continue
+            ldb(f"Current item: {item_tag!s:15}"+"next_is_value: %s", next_is_value)
             if "Name" in item_tag and item.text == row_dict["policy"]:
                 ldb("Found policy %s", item.text)
                 next_is_value = True
@@ -234,7 +241,6 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
                 ldb("Breaking")
                 break
             elif next_is_value and "Setting" in item_tag:
-                ldb("Getting value")
                 policy_value = item.text
                 tag_type_str = item_tag[len("Setting"):]
                 if tag_type_str.lower().strip() == "number":
@@ -242,7 +248,7 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
                     policy_values.append(int(policy_value))
                 elif tag_type_str.lower().strip() == "string":
                     ldb("Policy value is a string: %s", policy_value)
-                    policy_values.append(str(policy_value))
+                    policy_values.append(str(policy_value).lower().strip())
                 elif tag_type_str.lower().strip() == "boolean":
                     ldb("Policy value is a boolean: %s", policy_value)
                     if policy_value.title() == "True":
@@ -253,10 +259,8 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
             elif next_is_value and "Member" in item_tag:
                 ldb("Getting Members: %s", item.tag)
                 for name in item:
-                    ldb("Current name: %s", name.tag)
+                    ldb(f"Current name .tag: {name.tag!s:15} .text: {name.text!s}")
                     policy_values.append(name.text.lower().strip())
-                    ldb("Added %s", name.text)
-
 
         ldb("Current policy_values: %s length: %i", policy_values, len(policy_values))
         if len(policy_values) == 0:
@@ -274,7 +278,12 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
 
         linfo("%s is %s where min: %s max: %s exact: %s", row_dict["user_key"], row_dict["type"], bool(row_dict["min_val"]), bool(row_dict["max_val"]), bool(row_dict["exact_val"]))
 
-        if row_dict["min_val"] == None and row_dict["max_val"] == None and str(row_dict["exact_val"]): # Exact value(s):
+        if row_dict["type"] != type(None) and policy_values == None: # Policy expected but not found:
+            lwarn("Expected policy %s not found!", row_dict["policy"])
+            to_csv[2] = "This policy could not be found!"
+            to_csv.append(False)
+
+        elif row_dict["min_val"] == None and row_dict["max_val"] == None and str(row_dict["exact_val"]): # Exact value(s):
             ldb("In exact value")
             if row_dict["type"] == int:
                 to_csv.append(int(policy_values) == int(row_dict["exact_val"])) # compliance
@@ -413,6 +422,12 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
 
         linfo("Writing %s", to_csv)
         out_csv.writerow(to_csv)
+        to_csv.reverse()
+        for item in to_csv:
+            if isinstance(item, bool):
+                hash.update(bytes(str(item).lower(), "utf-8"))
+                break
+    out_csv.writerow(["Compliance integrity:", hash.hexdigest().upper()])
 linfo("Changing %s to read_only", OUT_PATH)
 os.chmod(OUT_PATH, stat.S_IRUSR)
 
