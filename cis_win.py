@@ -280,7 +280,7 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
 
         if row_dict["type"] != type(None) and policy_values == None: # Policy expected but not found:
             lwarn("Expected policy %s not found!", row_dict["policy"])
-            to_csv[2] = "This policy could not be found!"
+            to_csv[2] = "None"
             to_csv.append(False)
 
         elif row_dict["min_val"] == None and row_dict["max_val"] == None and str(row_dict["exact_val"]): # Exact value(s):
