@@ -79,3 +79,25 @@ for key, value in d.items():
 # MinimumPasswordLength 8
 # PasswordComplexity False
 # ClearTextPassword False
+
+from xml.etree import ElementTree as ET
+xml_root = ET.parse("output-pg.xml").getroot()
+STUPID_NAMESPACE = {
+    "rsop" : "http://www.microsoft.com/GroupPolicy/Rsop",
+    "settings" : "http://www.microsoft.com/GroupPolicy/Settings",
+    "registry" : "http://www.microsoft.com/GroupPolicy/Settings/Registry",
+    "security" : "http://www.microsoft.com/GroupPolicy/Settings/Security",
+    "type" : "http://www.microsoft.com/GroupPolicy/Types"
+}
+next_is_value = False
+for i in xml_root.findall("rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:SecurityOptions/security:*", STUPID_NAMESPACE):
+    i_tag = i.tag.split("}")[-1]
+
+    if "KeyName" in i_tag:
+        next_is_value = True
+        kn = (i_tag, i.text)
+    elif "Display" in i_tag and next_is_value:
+        j = i.find("security:Name", STUPID_NAMESPACE)
+        print(j.tag.split("}")[-1]+":", j.text)
+        print(" ", ": ".join(kn))
+        next_is_value = False
