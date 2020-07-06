@@ -10,12 +10,17 @@ import os, shutil, hashlib
 VERSION = input("Version: ")
 
 WORK_DIR = os.path.dirname(__file__)
-CIS_PATH = os.path.join(WORK_DIR, "cis_win.py")
+
+# CIS_PATH = os.path.join(WORK_DIR, "cis_win.py")
+# CIS_PATH = os.path.join(WORK_DIR, "hash_check.py")
+
+BASE_NAME, BASE_EXT = os.path.splitext(os.path.basename(CIS_PATH))
+
 COMPOSE_DIR = os.path.join(WORK_DIR, "compose")
-COMPOSE_CIS_PATH = os.path.join(COMPOSE_DIR, "cis_win-%s.py"%VERSION)
-COMPOSED_EXE_PATH = os.path.join(COMPOSE_DIR, "dist", "cis_win-%s.exe"%VERSION)
-BIN_PATH = os.path.join(WORK_DIR, "bin", "cis_win-%s.exe"%VERSION)
-HASH_PATH = os.path.join(WORK_DIR, "bin", "cis_win-%s-hashes.txt"%VERSION)
+COMPOSE_CIS_PATH = os.path.join(COMPOSE_DIR, BASE_NAME + "-" + VERSION + BASE_EXT)
+COMPOSED_EXE_PATH = os.path.join(COMPOSE_DIR, "dist", BASE_NAME + "-" + VERSION + ".exe")
+BIN_PATH = os.path.join(WORK_DIR, "bin", BASE_NAME + "-" + VERSION + ".exe")
+HASH_PATH = os.path.join(WORK_DIR, "bin", BASE_NAME + "-%s-hashes.txt"%VERSION)
 
 os.mkdir(COMPOSE_DIR)
 shutil.copyfile(CIS_PATH, COMPOSE_CIS_PATH)
