@@ -1,0 +1,128 @@
+[Command: python -u C:\Users\Theo2\AppData\Local\Temp\atom_script_tempfiles\a2d8a150-be3d-11ea-842e-412af0ce6dc8]
+Name: Interactive logon: Number of previous logons to cache (in case domain controller is not available)
+  KeyName: MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\CachedLogonsCount
+Name: Network security: Minimum session security for NTLM SSP based (including secure RPC) servers
+  KeyName: MACHINE\System\CurrentControlSet\Control\Lsa\MSV1_0\NTLMMinServerSec
+Name: Microsoft network server: Server SPN target name validation level
+  KeyName: MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\SmbServerNameHardeningLevel
+Name: Network security: Allow LocalSystem NULL session fallback
+  KeyName: MACHINE\System\CurrentControlSet\Control\Lsa\MSV1_0\allownullsessionfallback
+Name: Network security: LDAP client signing requirements
+  KeyName: MACHINE\System\CurrentControlSet\Services\LDAP\LDAPClientIntegrity
+Name: Network access: Restrict clients allowed to make remote calls to SAM
+  KeyName: MACHINE\System\CurrentControlSet\Control\Lsa\RestrictRemoteSAM
+Name: Microsoft network server: Disconnect clients when logon hours expire
+  KeyName: MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\EnableForcedLogOff
+Name: Network access: Do not allow anonymous enumeration of SAM accounts
+  KeyName: MACHINE\System\CurrentControlSet\Control\Lsa\RestrictAnonymousSAM
+Name: Shutdown: Allow system to be shut down without having to log on
+  KeyName: MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ShutdownWithoutLogon
+Name: User Account Control: Behavior of the elevation prompt for administrators in Admin Approval Mode
+  KeyName: MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ConsentPromptBehaviorAdmin
+Name: Domain member: Digitally encrypt secure channel data (when possible)
+  KeyName: MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\SealSecureChannel
+Name: Interactive logon: Do not require CTRL+ALT+DEL
+  KeyName: MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DisableCAD
+Name: Microsoft network server: Amount of idle time required before suspending session
+  KeyName: MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\AutoDisconnect
+Name: Interactive logon: Smart card removal behavior
+  KeyName: MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\ScRemoveOption
+Name: User Account Control: Only elevate executables that are signed and validated
+  KeyName: MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ValidateAdminCodeSignatures
+Name: User Account Control: Virtualize file and registry write failures to per-user locations
+  KeyName: MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\EnableVirtualization
+Name: Network security: LAN Manager authentication level
+  KeyName: MACHINE\System\CurrentControlSet\Control\Lsa\LmCompatibilityLevel
+Name: User Account Control: Allow UIAccess applications to prompt for elevation without using the secure desktop
+  KeyName: MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\EnableUIADesktopToggle
+Name: Domain member: Disable machine account password changes
+  KeyName: MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\DisablePasswordChange
+Name: Microsoft network server: Digitally sign communications (always)
+  KeyName: MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\RequireSecuritySignature
+Name: Domain member: Maximum machine account password age
+  KeyName: MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\MaximumPasswordAge
+Name: Network security: Minimum session security for NTLM SSP based (including secure RPC) clients
+  KeyName: MACHINE\System\CurrentControlSet\Control\Lsa\MSV1_0\NTLMMinClientSec
+Name: Recovery console: Allow floppy copy and access to all drives and all folders
+  KeyName: MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Setup\RecoveryConsole\SetCommand
+Name: Network access: Shares that can be accessed anonymously
+  KeyName: MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\NullSessionShares
+Name: Interactive logon: Require Domain Controller authentication to unlock workstation
+  KeyName: MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\ForceUnlockLogon
+Name: Network access: Restrict anonymous access to Named Pipes and Shares
+  KeyName: MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\RestrictNullSessAccess
+Name: Microsoft network server: Digitally sign communications (if client agrees)
+  KeyName: MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\EnableSecuritySignature
+Name: System objects: Require case insensitivity for non-Windows subsystems
+  KeyName: MACHINE\System\CurrentControlSet\Control\Session Manager\Kernel\ObCaseInsensitive
+Name: System cryptography: Use FIPS compliant algorithms for encryption, hashing, and signing
+  KeyName: MACHINE\System\CurrentControlSet\Control\Lsa\FIPSAlgorithmPolicy\Enabled
+Name: Accounts: Block Microsoft accounts
+  KeyName: MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\NoConnectedUser
+Name: Network security: Allow PKU2U authentication requests to this computer to use online identities.
+
+
+  KeyName: MACHINE\System\CurrentControlSet\Control\Lsa\pku2u\AllowOnlineID
+Name: Microsoft network client: Digitally sign communications (if server agrees)
+  KeyName: MACHINE\System\CurrentControlSet\Services\LanmanWorkstation\Parameters\EnableSecuritySignature
+Name: Network access: Let Everyone permissions apply to anonymous users
+  KeyName: MACHINE\System\CurrentControlSet\Control\Lsa\EveryoneIncludesAnonymous
+Name: User Account Control: Switch to the secure desktop when prompting for elevation
+  KeyName: MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\PromptOnSecureDesktop
+Name: Microsoft network client: Send unencrypted password to third-party SMB servers
+  KeyName: MACHINE\System\CurrentControlSet\Services\LanmanWorkstation\Parameters\EnablePlainTextPassword
+Name: Audit: Shut down system immediately if unable to log security audits
+  KeyName: MACHINE\System\CurrentControlSet\Control\Lsa\CrashOnAuditFail
+Name: Devices: Allowed to format and eject removable media
+  KeyName: MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\AllocateDASD
+Name: Interactive logon: Machine account lockout threshold
+  KeyName: MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\MaxDevicePasswordFailedAttempts
+Name: User Account Control: Behavior of the elevation prompt for standard users
+  KeyName: MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ConsentPromptBehaviorUser
+Name: Network security: Do not store LAN Manager hash value on next password change
+  KeyName: MACHINE\System\CurrentControlSet\Control\Lsa\NoLMHash
+Name: Interactive logon: Don't display last signed-in
+  KeyName: MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DontDisplayLastUserName
+Name: Audit: Force audit policy subcategory settings (Windows Vista or later) to override audit policy category settings
+  KeyName: MACHINE\System\CurrentControlSet\Control\Lsa\SCENoApplyLegacyAuditPolicy
+Name: Microsoft network client: Digitally sign communications (always)
+  KeyName: MACHINE\System\CurrentControlSet\Services\LanmanWorkstation\Parameters\RequireSecuritySignature
+Name: Audit: Audit the access of global system objects
+  KeyName: MACHINE\System\CurrentControlSet\Control\Lsa\AuditBaseObjects
+Name: User Account Control: Admin Approval Mode for the Built-in Administrator account
+  KeyName: MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\FilterAdministratorToken
+Name: Network security: Configure encryption types allowed for Kerberos
+  KeyName: MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\Kerberos\Parameters\SupportedEncryptionTypes
+Name: System objects: Strengthen default permissions of internal system objects (e.g. Symbolic Links)
+  KeyName: MACHINE\System\CurrentControlSet\Control\Session Manager\ProtectionMode
+Name: Domain member: Digitally sign secure channel data (when possible)
+  KeyName: MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\SignSecureChannel
+Name: Domain member: Require strong (Windows 2000 or later) session key
+  KeyName: MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\RequireStrongKey
+Name: Shutdown: Clear virtual memory pagefile
+  KeyName: MACHINE\System\CurrentControlSet\Control\Session Manager\Memory Management\ClearPageFileAtShutdown
+Name: Network access: Sharing and security model for local accounts
+  KeyName: MACHINE\System\CurrentControlSet\Control\Lsa\ForceGuest
+Name: User Account Control: Detect application installations and prompt for elevation
+  KeyName: MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\EnableInstallerDetection
+Name: Domain member: Digitally encrypt or sign secure channel data (always)
+  KeyName: MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\RequireSignOrSeal
+Name: Recovery console: Allow automatic administrative logon
+  KeyName: MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Setup\RecoveryConsole\SecurityLevel
+Name: Accounts: Limit local account use of blank passwords to console logon only
+  KeyName: MACHINE\System\CurrentControlSet\Control\Lsa\LimitBlankPasswordUse
+Name: Audit: Audit the use of Backup and Restore privilege
+  KeyName: MACHINE\System\CurrentControlSet\Control\Lsa\FullPrivilegeAuditing
+Name: Network access: Do not allow anonymous enumeration of SAM accounts and shares
+  KeyName: MACHINE\System\CurrentControlSet\Control\Lsa\RestrictAnonymous
+Name: User Account Control: Only elevate UIAccess applications that are installed in secure locations
+  KeyName: MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\EnableSecureUIAPaths
+Name: Network access: Do not allow storage of passwords and credentials for network authentication
+  KeyName: MACHINE\System\CurrentControlSet\Control\Lsa\DisableDomainCreds
+Name: User Account Control: Run all administrators in Admin Approval Mode
+  KeyName: MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\EnableLUA
+Name: Network security: Allow Local System to use computer identity for NTLM
+  KeyName: MACHINE\System\CurrentControlSet\Control\Lsa\UseMachineId
+Name: Interactive logon: Prompt user to change password before expiration
+  KeyName: MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\PasswordExpiryWarning
+[Finished in 0.963s]
