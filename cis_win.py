@@ -23,7 +23,7 @@ lwarn("Thread input_keep_alive intentionally commented!")
 ldb("Done threads")
 
 ldb("Setting constants")
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 __cfg_version__ = "0.1.0"
 linfo("Current SW version: %s", __version__)
 linfo("Current config version: %s", __cfg_version__)
@@ -190,7 +190,7 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
 
         if str(row_dict["type"]).lower().strip() not in SUPPORTED_TYPES.keys():
             lfatal("%s is not a member of known types %s", row_dict["type"], tuple(SUPPORTED_TYPES.keys()))
-            raise TypeError("%s is not a member of known types %s"%(row_dict["type"], tuple(SUPPORTED_TYPES.keys())))
+            raise TypeError("%s is not a member of supported types %s"%(row_dict["type"], tuple(SUPPORTED_TYPES.keys())))
         else:
             ldb("Current row_dict['type']: %s", row_dict["type"])
             row_dict["type"] = SUPPORTED_TYPES[str(row_dict["type"]).lower().strip()]
