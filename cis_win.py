@@ -173,11 +173,14 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
         row_dict = ROW_DICT_TEMPLATE.copy()
         row_dict_keys = list(row_dict.keys())
         for pos in range(len(config_row)):
-            ldb("Setting row_dict['%s'] to %s from config_row[%i]", list(ROW_DICT_TEMPLATE.keys())[pos], config_row[pos], pos)
+            if len(row_dict_keys) <= pos:
+                break
+            ldb("Setting row_dict['%s'] to %s from config_row[%i]", row_dict_keys[pos], config_row[pos], pos)
             if not config_row[pos]:
                 row_dict[row_dict_keys[pos]] = ROW_DICT_TEMPLATE[row_dict_keys[pos]]
             else:
                 row_dict[row_dict_keys[pos]] = config_row[pos]
+
         ldb("Current row_dict: %s", row_dict)
         linfo("Current policy: %s", row_dict["policy"])
 
@@ -223,6 +226,11 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
                     list_values[list_item][pos] = list_values[list_item][pos].lower().strip()
                 list_values[list_item].sort()
                 ldb("Current values: %s", list_values[list_item])
+
+        if not row_dict["section"]:
+            raise ConfigError("Section number %s cannot be empty!"%row_dict["number"])
+        if not row_dict["policy"]:
+            raise ConfigError("Policy number %s cannot be empty!"%row_dict["number"])
 
         if not row_dict["user_key"]:
             row_dict["user_key"] = row_dict["policy"]
