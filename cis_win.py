@@ -271,8 +271,39 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
                     else:
                         policy_values.append(False)
                 else:
-                    lwarn("Policy value could not be determined.")
-                    raise ImplementationError("Policy value could not be determined.")
+                    lwarn("Policy value could not be determined. Using fallback.")
+                    print("Policy value could not be determined. Using fallback.")
+                    try:
+                        int(policy_value)
+                    except ValueError:
+                        policy_value = str(policy_value)
+
+                        if policy_value.title() == "True":
+                            policy_value = True
+                        elif policy_value.title() == "False":
+                            policy_value = False
+                        elif policy_value.title() in ("None", "Null"):
+                            policy_value = None
+                        else:
+                            policy_value = str(policy_value)
+                    else:
+                        if "." in str(policy_value):
+                            policy_value = float(policy_value)
+                        else:
+                            policy_value = int(policy_value)
+                    finally:
+                        print("Please consider opening an issue on github: https://github.com/TheoTechnicguy/CIS_Win/issues/new?assignees=&labels=enhancement%2C+bug&template=add_type_request.md&title=%5BType+Request%5D+Add+type+"+tag_type_str+"+as+"+str(type(policy_value)).split("'")[1])
+                        print("Please pase following:")
+                        print("-"*50)
+                        print("Version:", __version__, "Cfg:", __cfg_version__)
+                        print("Full tag:", item.tag, "Tag:", item_tag)
+                        print("Tag type:", tag_type_str, "Value:", policy_value, "class:", type(policy_value))
+                        print("-"*50)
+                        print("Please attach logfile!")
+                        linfo("Policy %s %s value %s turned out to be %s", row_dict["section"], row_dict["policy"], policy_value, type(policy_value))
+                        policy_values.append(policy_value)
+
+
                 ldb("After adding value Current policy_values: %s", policy_values)
             elif next_is_value and "Member" in item_tag:
                 ldb("Getting Members: %s", item.tag)
