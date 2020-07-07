@@ -1,5 +1,5 @@
-Version:,0.1.0,,,,,,
-Note:,Max_val is excluded --> min=0 max=5 = 0-1-2-3-4.,,,,,,
+Version:,0.1.1
+Note:,Max_val is inclusive --> min=0 max=5 = 0-1-2-3-4-5.
 Number,Section,Policy_name,Human_readable_policy_name,Type,Min_val,Max_val,Exact_val
 ---------------,---------------,---------------,---------------,---------------,---------------,---------------,---------------
 1,,,Account Policies,print,,,Account Policies
