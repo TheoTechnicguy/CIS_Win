@@ -1,3 +1,4 @@
+!!NOTE: For all following policies use rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:SecurityOptions/security:UserRightsAssignment as section!!
 Name,Interactive logon,Number of previous logons to cache (in case domain controller is not available),KeyName,MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\CachedLogonsCount
 Name,Network security,Minimum session security for NTLM SSP based (including secure RPC) servers,KeyName,MACHINE\System\CurrentControlSet\Control\Lsa\MSV1_0\NTLMMinServerSec
 Name,Microsoft network server,Server SPN target name validation level,KeyName,MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\SmbServerNameHardeningLevel
