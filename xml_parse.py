@@ -87,7 +87,14 @@ STUPID_NAMESPACE = {
     "settings" : "http://www.microsoft.com/GroupPolicy/Settings",
     "registry" : "http://www.microsoft.com/GroupPolicy/Settings/Registry",
     "security" : "http://www.microsoft.com/GroupPolicy/Settings/Security",
-    "type" : "http://www.microsoft.com/GroupPolicy/Types"
+    "type" : "http://www.microsoft.com/GroupPolicy/Types",
+    "script" : "http://www.microsoft.com/GroupPolicy/Settings/Scripts",
+    "win-reg" : "http://www.microsoft.com/GroupPolicy/Settings/Windows/Registry",
+    "audit" : "http://www.microsoft.com/GroupPolicy/Settings/Auditing",
+    "fw" : "http://www.microsoft.com/GroupPolicy/Settings/WindowsFirewall",
+    "file" : "http://www.microsoft.com/GroupPolicy/Settings/Files",
+    "pub-key" : "http://www.microsoft.com/GroupPolicy/Settings/PublicKey",
+    "eqos" : "http://www.microsoft.com/GroupPolicy/Settings/eqos"
 }
 next_is_value = False
 for i in xml_root.findall("rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:SecurityOptions/security:*", STUPID_NAMESPACE):
