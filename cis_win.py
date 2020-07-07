@@ -1,5 +1,5 @@
 # File: cis_win
-# Author: Nicolas Fischer
+# Author: Nicolas Fischer cis_win-program@licolas.net
 # Program: Python 3.8
 # Ext: py
 # Licensed under GPU GPLv3 and later.
@@ -39,7 +39,14 @@ STUPID_NAMESPACE = {
     "settings" : "http://www.microsoft.com/GroupPolicy/Settings",
     "registry" : "http://www.microsoft.com/GroupPolicy/Settings/Registry",
     "security" : "http://www.microsoft.com/GroupPolicy/Settings/Security",
-    "type" : "http://www.microsoft.com/GroupPolicy/Types"
+    "type" : "http://www.microsoft.com/GroupPolicy/Types",
+    "script" : "http://www.microsoft.com/GroupPolicy/Settings/Scripts",
+    "win-reg" : "http://www.microsoft.com/GroupPolicy/Settings/Windows/Registry",
+    "audit" : "http://www.microsoft.com/GroupPolicy/Settings/Auditing",
+    "fw" : "http://www.microsoft.com/GroupPolicy/Settings/WindowsFirewall",
+    "file" : "http://www.microsoft.com/GroupPolicy/Settings/Files",
+    "pub-key" : "http://www.microsoft.com/GroupPolicy/Settings/PublicKey",
+    "eqos" : "http://www.microsoft.com/GroupPolicy/Settings/eqos"
 }
 
 SUPPORTED_TYPES = {"int" : int, "float" : float, "bool" : bool, "none" : type(None), "str" : str, "list" : list, "print": "print"}
