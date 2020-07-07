@@ -59,19 +59,23 @@ with open(CSV_PATH, "w+", newline = "") as file:
         for child2 in child1:
             child2_tag = get_tag_name(child2)
             path.append(get_namespace(child2.tag))
+            out = ["/".join(path)]
             for child3 in child2:
                 child3_tag = get_tag_name(child3)
-                path.append(get_namespace(child3.tag))
-                for item in ("Member", "Display"):
+                # path.append(get_namespace(child3.tag))
+                # print(path)#, "/".join(path))
+                for item in ("Display",):
                     if item.lower() in child3_tag.lower():
                         for child4 in child3:
                             child4_tag = get_tag_name(child4)
                             for item in ("Name", "Type"):
                                 if item.lower() in child4_tag.lower():
-                                    csv_file.writerow(["/".join(path), child4_tag, child4.text])
+                                    out.extend((child4_tag, child4.text))
                 for item in ("Name", "Type"):
                     if item.lower() in child3_tag.lower():
-                        csv_file.writerow(["/".join(path), child3_tag, child3.text])
+                        out.extend((child3_tag, child3.text))
 
-                path = path[:-1]
+            if len(out) > 1:
+                csv_file.writerow(out)
+                # path = path[:-1]
             path = PATH.copy()
