@@ -23,7 +23,7 @@ lwarn("Thread input_keep_alive intentionally commented!")
 ldb("Done threads")
 
 ldb("Setting constants")
-__version__ = "0.1.2"
+__version__ = "0.1.3"
 __cfg_version__ = "0.1.0"
 linfo("Current SW version: %s", __version__)
 linfo("Current config version: %s", __cfg_version__)
@@ -257,19 +257,22 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
                 break
             elif next_is_value and "Setting" in item_tag:
                 policy_value = item.text
-                tag_type_str = item_tag[len("Setting"):]
-                if tag_type_str.lower().strip() == "number":
+                tag_type_str = item_tag[len("Setting"):].lower().strip()
+                if tag_type_str in ("number", "value"):
                     ldb("Policy value is a number: %s", policy_value)
                     policy_values.append(int(policy_value))
-                elif tag_type_str.lower().strip() == "string":
+                elif tag_type_str == "string":
                     ldb("Policy value is a string: %s", policy_value)
                     policy_values.append(str(policy_value).lower().strip())
-                elif tag_type_str.lower().strip() == "boolean":
+                elif tag_type_str == "boolean":
                     ldb("Policy value is a boolean: %s", policy_value)
                     if policy_value.title() == "True":
                         policy_values.append(True)
                     else:
                         policy_values.append(False)
+                else:
+                    lwarn("Policy value could not be determined.")
+                    raise ImplementationError("Policy value could not be determined.")
                 ldb("After adding value Current policy_values: %s", policy_values)
             elif next_is_value and "Member" in item_tag:
                 ldb("Getting Members: %s", item.tag)
