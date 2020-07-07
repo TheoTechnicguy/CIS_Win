@@ -83,11 +83,18 @@ for key, value in d.items():
 from xml.etree import ElementTree as ET
 xml_root = ET.parse("output-pg.xml").getroot()
 STUPID_NAMESPACE = {
-    "rsop" : "http://www.microsoft.com/GroupPolicy/Rsop",
-    "settings" : "http://www.microsoft.com/GroupPolicy/Settings",
-    "registry" : "http://www.microsoft.com/GroupPolicy/Settings/Registry",
-    "security" : "http://www.microsoft.com/GroupPolicy/Settings/Security",
-    "type" : "http://www.microsoft.com/GroupPolicy/Types"
+    "rsop" : "http://www.microsoft.com/GroupPolicy/Rsop", # root
+    "settings" : "http://www.microsoft.com/GroupPolicy/Settings", # root 2
+    "type" : "http://www.microsoft.com/GroupPolicy/Types", # root 3
+    "script" : "http://www.microsoft.com/GroupPolicy/Settings/Scripts", # q1 & q6
+    "win-reg" : "http://www.microsoft.com/GroupPolicy/Settings/Windows/Registry", # q2 & q8
+    "pub-key" : "http://www.microsoft.com/GroupPolicy/Settings/PublicKey", # q3 & q12
+    "registry" : "http://www.microsoft.com/GroupPolicy/Settings/Registry", # q4 & q5 & q15 & q16
+    "audit" : "http://www.microsoft.com/GroupPolicy/Settings/Auditing", # q7
+    "file" : "http://www.microsoft.com/GroupPolicy/Settings/Files", # q9
+    "security" : "http://www.microsoft.com/GroupPolicy/Settings/Security", # q10 & q11
+    "eqos" : "http://www.microsoft.com/GroupPolicy/Settings/eqos", # q13
+    "fw" : "http://www.microsoft.com/GroupPolicy/Settings/WindowsFirewall" # q14
 }
 next_is_value = False
 for i in xml_root.findall("rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:SecurityOptions/security:*", STUPID_NAMESPACE):
