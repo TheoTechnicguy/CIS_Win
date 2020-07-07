@@ -136,9 +136,10 @@ try:
 except:
     raise AdminError()
 
-linfo("Running group-policy export command '%s'", GENERATION_COMMAND)
-# os.system(GENERATION_COMMAND)
-lwarn("XML regeneration intentionally commented!")
+if not os.path.exists(XML_PATH):
+    linfo("Running group-policy export command '%s'", GENERATION_COMMAND)
+    os.system(GENERATION_COMMAND)
+# lwarn("XML regeneration intentionally commented!")
 linfo("Changing %s to read_only", XML_PATH)
 os.chmod(XML_PATH, stat.S_IRUSR)
 
