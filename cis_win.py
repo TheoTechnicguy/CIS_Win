@@ -24,7 +24,7 @@ ldb("Done threads")
 
 ldb("Setting constants")
 __version__ = "0.1.3"
-__cfg_version__ = "0.1.0"
+__cfg_version__ = "0.1.1"
 linfo("Current SW version: %s", __version__)
 linfo("Current config version: %s", __cfg_version__)
 
@@ -98,7 +98,7 @@ if not os.path.exists(CONFIG_PATH):
     with open(CONFIG_PATH, "w+", newline = "") as file:
         config_csv = csv.writer(file, delimiter=",")
         config_csv.writerows([["Version:", __cfg_version__],
-        ["Note:", "Max_val is excluded --> min=0 max=5 = 0-1-2-3-4."],
+        ["Note:", "Max_val is inclusive --> min=0 max=5 = 0-1-2-3-4-5."],
         ["Number","Section", "Policy_name", "Human_readable_policy_name", "Type", "Min_val", "Max_val", "Exact_val"],
         ["-"*15]*8])
     lfatal(ConfigError("Configuration file generated. Please fill."))
@@ -137,6 +137,7 @@ except:
     raise AdminError()
 
 if not os.path.exists(XML_PATH):
+    print("Getting group-policy.xml file. This may take a while...")
     linfo("Running group-policy export command '%s'", GENERATION_COMMAND)
     os.system(GENERATION_COMMAND)
 # lwarn("XML regeneration intentionally commented!")
@@ -156,7 +157,7 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
         ["Output file version:", __version__, "Execution time:", time_now, "XML execution time:", xml_root.find("rsop:ReadTime", STUPID_NAMESPACE).text],
         ["User:", getpass.getuser(), "Domain:", os.environ["userdomain"]],
         ["Computer:", socket.gethostname(), "IP:", socket.gethostbyname(socket.gethostname())],
-        ["Note:", "Max value excluede. A Current_val of None might mean 'policy not found in export file'."],
+        ["Note:", "Max value inclusive. A Current_val of None might mean 'policy not found in export file'."],
         ["Validity code:", hashlib.sha3_256(
             bytes(__version__, "ascii") + bytes(str(time_now), "ascii") +
             bytes(str(xml_root.find("rsop:ReadTime", STUPID_NAMESPACE).text), "utf-8") +
@@ -434,7 +435,7 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
         elif str(row_dict["min_val"]) and str(row_dict["max_val"]) and row_dict["exact_val"] == None: # range:
             ldb("In range")
             if row_dict["type"] == int:
-                to_csv.append(int(policy_values) in range(int(row_dict["min_val"]), int(row_dict["max_val"])))
+                to_csv.append(int(policy_values) in range(int(row_dict["min_val"]), int(row_dict["max_val"]) + 1))
 
             elif row_dict["type"] == list:
                 try:
