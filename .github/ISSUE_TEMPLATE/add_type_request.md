@@ -9,11 +9,10 @@ assignees: ''
 
 *Paste program output lines here or fill:*
 
-
 Version:
 Cfg Version:
 
-Full tag: 
+Full tag:
 Tag:
 Tag type:
 Value:
