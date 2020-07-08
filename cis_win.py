@@ -11,10 +11,11 @@ logging.basicConfig(filename=__file__+'.log', level=logging.DEBUG, format='%(lev
 logging.info('Started')
 logging.info('Starting imports')
 from logging import info as linfo, warning as lwarn, critical as lfatal, debug as ldb
-import os, ctypes, sys, csv, datetime, getpass, socket, stat, hashlib, xml
+import os, ctypes, sys, csv, datetime, getpass, socket, stat, hashlib, xml, winreg
 from time import sleep
 from threading import Thread
 from xml.etree import ElementTree as ET
+from winreg import HKEY_LOCAL_MACHINE, HKEY_CLASSES_ROOT, HKEY_CURRENT_USER, HKEY_USERS, HKEY_CURRENT_CONFIG
 ldb('Done Importing')
 
 linfo("Starting threads")
@@ -24,7 +25,7 @@ ldb("Done threads")
 
 ldb("Setting constants")
 __version__ = "0.1.3"
-__cfg_version__ = "0.1.1"
+__cfg_version__ = "0.1.2"
 linfo("Current SW version: %s", __version__)
 linfo("Current config version: %s", __cfg_version__)
 
@@ -33,6 +34,13 @@ CONFIG_PATH = os.path.join(WORK_DIR, "config.csv")
 OUT_PATH = os.path.join(WORK_DIR, "out.csv")
 XML_PATH = os.path.join(WORK_DIR, "group-policy.xml")
 GENERATION_COMMAND = 'gpresult /F /X "%s"'%XML_PATH
+REGISTRY = {
+    "HKEY_CLASSES_ROOT" : winreg.ConnectRegistry(None, HKEY_CLASSES_ROOT),
+    "HKEY_CURRENT_USER" : winreg.ConnectRegistry(None, HKEY_CURRENT_USER),
+    "HKEY_LOCAL_MACHINE" : winreg.ConnectRegistry(None, HKEY_LOCAL_MACHINE),
+    "HKEY_USERS" : winreg.ConnectRegistry(None, HKEY_USERS),
+    "HKEY_CURRENT_CONFIG" : winreg.ConnectRegistry(None, HKEY_CURRENT_CONFIG),
+}
 
 STUPID_NAMESPACE = {
     "rsop" : "http://www.microsoft.com/GroupPolicy/Rsop", # root
@@ -50,9 +58,11 @@ STUPID_NAMESPACE = {
 }
 
 SUPPORTED_TYPES = {"int" : int, "float" : float, "bool" : bool, "none" : type(None), "str" : str, "list" : list, "print": "print"}
+SUPPORTED_SOURCES = ("xml", "registry")
 
 ROW_DICT_TEMPLATE = {
     "number": None,
+    "source" : "xml",
     "section" : "",
     "policy" : None,
     "user_key" : None,
@@ -109,8 +119,8 @@ if not os.path.exists(CONFIG_PATH):
     with open(CONFIG_PATH, "w+", newline = "") as file:
         config_csv = csv.writer(file, delimiter=",")
         config_csv.writerows([["Version:", __cfg_version__],
-        ["Note:", "Max_val is inclusive --> min=0 max=5 = 0-1-2-3-4-5."],
-        ["Number","Section", "Policy_name", "Human_readable_policy_name", "Type", "Min_val", "Max_val", "Exact_val"],
+        ["Note:", "Max_val is inclusive --> min=0 max=5 = 0-1-2-3-4-5.","Default source:",ROW_DICT_TEMPLATE["source"]],
+        ["Number","Source","Section", "Policy_name", "Human_readable_policy_name", "Type", "Min_val", "Max_val", "Exact_val"],
         ["-"*15]*8])
     lfatal(ConfigError("Configuration file generated. Please fill."))
     raise ConfigError("Configuration file generated. Please fill.")
@@ -168,7 +178,7 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
         ["Output file version:", __version__, "Execution time:", time_now, "XML execution time:", xml_root.find("rsop:ReadTime", STUPID_NAMESPACE).text],
         ["User:", getpass.getuser(), "Domain:", os.environ["userdomain"]],
         ["Computer:", socket.gethostname(), "IP:", socket.gethostbyname(socket.gethostname())],
-        ["Note:", "Max value inclusive. A Current_val of None might mean 'policy not found in export file'."],
+        ["Note:", "Max value inclusive. A Current_val of None might mean 'policy not found in export file'. Integer values of 0 and 1 equal to boolean values False and True."],
         ["Validity code:", hashlib.sha3_256(
             bytes(__version__, "ascii") + bytes(str(time_now), "ascii") +
             bytes(str(xml_root.find("rsop:ReadTime", STUPID_NAMESPACE).text), "utf-8") +
@@ -185,7 +195,7 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
     for config_row in config_csv:
         linfo(" --- New config row ---")
         ldb("Current config_row: %s", config_row)
-        if not config_row or config_row[0] in ("Number", "Note:", "Comment", "Version:", "-"*15):
+        if not config_row or config_row[0] in ("Number", "Note:", "Comment", "Version:", "-"*15, ""):
             continue
 
         ldb("Copying template & filling")
@@ -198,7 +208,7 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
             if not config_row[pos]:
                 row_dict[row_dict_keys[pos]] = ROW_DICT_TEMPLATE[row_dict_keys[pos]]
             else:
-                row_dict[row_dict_keys[pos]] = config_row[pos]
+                row_dict[row_dict_keys[pos]] = config_row[pos].strip()
 
         ldb("Current row_dict: %s", row_dict)
         linfo("Current policy: %s", row_dict["policy"])
@@ -211,6 +221,7 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
                 row_dict["section"] += "/"
         ldb("Current section: >>>%s<<<", row_dict["section"])
 
+        # User input testing
         if str(row_dict["type"]).lower().strip() not in SUPPORTED_TYPES.keys():
             lfatal("%s is not a member of known types %s", row_dict["type"], tuple(SUPPORTED_TYPES.keys()))
             raise TypeError("%s is not a member of supported types %s"%(row_dict["type"], tuple(SUPPORTED_TYPES.keys())))
@@ -218,12 +229,23 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
             ldb("Current row_dict['type']: %s", row_dict["type"])
             row_dict["type"] = SUPPORTED_TYPES[str(row_dict["type"]).lower().strip()]
 
+        if str(row_dict["source"]).lower().strip() not in SUPPORTED_SOURCES:
+            lfatal("%s is not a known source.", row_dict["source"])
+            raise ConfigError("%s in not a known source."%row_dict["source"])
+
         if row_dict["type"] == "print": # add user key row to output file if type is print:
-            # if row_dict["exact_val"] == None:
-                # row_dict["exact_val"] = "This is a place-holder line and exists only for consistency."
             out_csv.writerow([row_dict["number"], row_dict["user_key"], row_dict["exact_val"]])
             continue
-        elif row_dict["type"] == bool:
+
+        if not row_dict["section"]:
+            lfatal("Section number %s cannot be empty!", row_dict["number"])
+            raise ConfigError("Section number %s cannot be empty!"%row_dict["number"])
+        if not row_dict["policy"]:
+            lfatal("Policy number %s cannot be empty!", row_dict["number"])
+            raise ConfigError("Policy number %s cannot be empty!"%row_dict["number"])
+        # END user input testing
+
+        if row_dict["type"] == bool:
             ldb("Converting boolean %s", row_dict["exact_val"])
             if row_dict["exact_val"].title().strip() == "True":
                 row_dict["exact_val"] = True
@@ -246,112 +268,149 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
                 list_values[list_item].sort()
                 ldb("Current values: %s", list_values[list_item])
 
-        if not row_dict["section"]:
-            lfatal("Section number %s cannot be empty!", row_dict["number"])
-            raise ConfigError("Section number %s cannot be empty!"%row_dict["number"])
-        if not row_dict["policy"]:
-            lfatal("Policy number %s cannot be empty!", row_dict["number"])
-            raise ConfigError("Policy number %s cannot be empty!"%row_dict["number"])
-
         if not row_dict["user_key"]:
             row_dict["user_key"] = row_dict["policy"]
 
-        ldb("Getting xml value")
-        next_is_value = False
+        ldb("Getting value from %s", row_dict["source"])
         policy_values = []
 
-        if row_dict["policy"].startswith("fw:"):
-            ldb("Looking for fw policy %s", "/".join((row_dict["section"][:-1], row_dict["policy"], "fw:Value")))
-            policy_value = xml_root.find("/".join((row_dict["section"], row_dict["policy"], "fw:Value")), STUPID_NAMESPACE).text
-
+        if row_dict["source"] == "registry":
+            path = row_dict["section"][:-1].split("\\")[1:]
+            ldb("Current path: %s", path)
+            hkey = path[0]
+            key = "\\".join(path[1:])
+            subkey =  row_dict["policy"]
             try:
-                int(policy_value)
-            except ValueError:
-                policy_value = str(policy_value)
-
-                if policy_value.title() == "True":
-                    policy_value = True
-                elif policy_value.title() == "False":
-                    policy_value = False
-                elif policy_value.title() in ("None", "Null"):
-                    policy_value = None
-                else:
-                    policy_value = str(policy_value)
+                registry = REGISTRY[hkey]
+                ldb("Current registry: %s %s", registry, REGISTRY[hkey])
+            except KeyError:
+                lfatal(ConfigError("Registry %s not found"%hkey))
+                raise ConfigError("Registry %s not found. Verify your config file!"%hkey)
             else:
-                if "." in str(policy_value):
-                    policy_value = float(policy_value)
-                else:
-                    policy_value = int(policy_value)
+                ldb("Looking for %s in %s", key, hkey)
+                try:
+                    open_key = winreg.OpenKey(registry, key)
+                    policy_value = winreg.QueryValueEx(open_key, subkey)[0]
+                except FileNotFoundError:
+                    lfatal(r"Cannot find policy %s\%s\%s", hkey, key, subkey)
+                    raise ConfigError(r"Cannot find policy %s\%s\%s. Verify spelling in the CF."%(hkey, key, subkey))
             finally:
-                policy_values.append(policy_value)
+                open_key.Close()
 
-        for item in xml_root.findall(row_dict["section"], STUPID_NAMESPACE):
-            item_tag = item.tag.split("}")[-1]
-            ldb(f"Current item: {item_tag!s:15}"+"next_is_value: %s", next_is_value)
+                try:
+                    int(policy_value)
+                except ValueError:
+                    policy_value = str(policy_value)
 
-            if "Name" in item_tag and item.text == row_dict["policy"]:
-                ldb("Found policy %s", item.text)
-                next_is_value = True
-            elif "Name" in item_tag and policy_values:
-                ldb("Breaking")
-                break
-
-            elif next_is_value and "Setting" in item_tag:
-                policy_value = item.text
-                tag_type_str = item_tag[len("Setting"):].lower().strip()
-                if tag_type_str in ("number", "value"):
-                    ldb("Policy value is a number: %s", policy_value)
-                    policy_values.append(int(policy_value))
-                elif tag_type_str == "string":
-                    ldb("Policy value is a string: %s", policy_value)
-                    policy_values.append(str(policy_value).lower().strip())
-                elif tag_type_str == "boolean":
-                    ldb("Policy value is a boolean: %s", policy_value)
                     if policy_value.title() == "True":
-                        policy_values.append(True)
+                        policy_value = True
+                    elif policy_value.title() == "False":
+                        policy_value = False
+                    elif policy_value.title() in ("None", "Null"):
+                        policy_value = None
                     else:
-                        policy_values.append(False)
-
-                else:
-                    lwarn("Policy value could not be determined. Using fallback.")
-                    print("Policy value could not be determined. Using fallback.")
-                    try:
-                        int(policy_value)
-                    except ValueError:
                         policy_value = str(policy_value)
-
-                        if policy_value.title() == "True":
-                            policy_value = True
-                        elif policy_value.title() == "False":
-                            policy_value = False
-                        elif policy_value.title() in ("None", "Null"):
-                            policy_value = None
-                        else:
-                            policy_value = str(policy_value)
+                else:
+                    if "." in str(policy_value):
+                        policy_value = float(policy_value)
                     else:
-                        if "." in str(policy_value):
-                            policy_value = float(policy_value)
+                        policy_value = int(policy_value)
+                finally:
+                    policy_values.append(policy_value)
+        else:
+            next_is_value = False
+            if row_dict["policy"].startswith("fw:"):
+                ldb("Looking for fw policy %s", "/".join((row_dict["section"][:-1], row_dict["policy"], "fw:Value")))
+                policy_value = xml_root.find("/".join((row_dict["section"], row_dict["policy"], "fw:Value")), STUPID_NAMESPACE).text
+
+                try:
+                    int(policy_value)
+                except ValueError:
+                    policy_value = str(policy_value)
+
+                    if policy_value.title() == "True":
+                        policy_value = True
+                    elif policy_value.title() == "False":
+                        policy_value = False
+                    elif policy_value.title() in ("None", "Null"):
+                        policy_value = None
+                    else:
+                        policy_value = str(policy_value)
+                else:
+                    if "." in str(policy_value):
+                        policy_value = float(policy_value)
+                    else:
+                        policy_value = int(policy_value)
+                finally:
+                    policy_values.append(policy_value)
+            else:
+                for item in xml_root.findall(row_dict["section"], STUPID_NAMESPACE):
+                    item_tag = item.tag.split("}")[-1]
+                    ldb(f"Current item: {item_tag!s:15}"+"next_is_value: %s", next_is_value)
+
+                    if "Name" in item_tag and item.text == row_dict["policy"]:
+                        ldb("Found policy %s", item.text)
+                        next_is_value = True
+                    elif "Name" in item_tag and policy_values:
+                        ldb("Breaking")
+                        break
+
+                    elif next_is_value and "Setting" in item_tag:
+                        policy_value = item.text
+                        tag_type_str = item_tag[len("Setting"):].lower().strip()
+                        if tag_type_str in ("number", "value"):
+                            ldb("Policy value is a number: %s", policy_value)
+                            policy_values.append(int(policy_value))
+                        elif tag_type_str == "string":
+                            ldb("Policy value is a string: %s", policy_value)
+                            policy_values.append(str(policy_value).lower().strip())
+                        elif tag_type_str == "boolean":
+                            ldb("Policy value is a boolean: %s", policy_value)
+                            if policy_value.title() == "True":
+                                policy_values.append(True)
+                            else:
+                                policy_values.append(False)
+
                         else:
-                            policy_value = int(policy_value)
-                    finally:
-                        print("Please consider opening an issue on github: https://github.com/TheoTechnicguy/CIS_Win/issues/new?assignees=&labels=enhancement%2C+bug&template=add_type_request.md&title=%5BType+Request%5D+Add+type+"+tag_type_str+"+as+"+str(type(policy_value)).split("'")[1])
-                        print("Please pase following:")
-                        print("-"*50)
-                        print("Version:", __version__, "Cfg:", __cfg_version__)
-                        print("Full tag:", item.tag, "Tag:", item_tag)
-                        print("Tag type:", tag_type_str, "Value:", policy_value, "class:", type(policy_value))
-                        print("-"*50)
-                        print("Please attach logfile!")
-                        linfo("Policy %s %s value %s turned out to be %s", row_dict["section"], row_dict["policy"], policy_value, type(policy_value))
-                        policy_values.append(policy_value)
+                            lwarn("Policy value could not be determined. Using fallback.")
+                            print("Policy value could not be determined. Using fallback.")
+                            try:
+                                int(policy_value)
+                            except ValueError:
+                                policy_value = str(policy_value)
+
+                                if policy_value.title() == "True":
+                                    policy_value = True
+                                elif policy_value.title() == "False":
+                                    policy_value = False
+                                elif policy_value.title() in ("None", "Null"):
+                                    policy_value = None
+                                else:
+                                    policy_value = str(policy_value)
+                            else:
+                                if "." in str(policy_value):
+                                    policy_value = float(policy_value)
+                                else:
+                                    policy_value = int(policy_value)
+                            finally:
+                                print("Please consider opening an issue on github: https://github.com/TheoTechnicguy/CIS_Win/issues/new?assignees=&labels=enhancement%2C+bug&template=add_type_request.md&title=%5BType+Request%5D+Add+type+"+tag_type_str+"+as+"+str(type(policy_value)).split("'")[1])
+                                print("Please pase following:")
+                                print("-"*50)
+                                print("Version:", __version__, "Cfg:", __cfg_version__)
+                                print("Full tag:", item.tag, "Tag:", item_tag)
+                                print("Tag type:", tag_type_str, "Value:", policy_value, "class:", type(policy_value))
+                                print("-"*50)
+                                print("Please attach logfile!")
+                                linfo("Policy %s %s value %s turned out to be %s", row_dict["section"], row_dict["policy"], policy_value, type(policy_value))
+                                policy_values.append(policy_value)
 
 
-                ldb("After adding value Current policy_values: %s", policy_values)
-            elif next_is_value and "Member" in item_tag:
-                ldb("Getting Members: %s", item.tag)
-                for name in item:
-                    ldb(f"Current name .tag: {name.tag!s:15} .text: {name.text!s}")
-                    policy_values.append(name.text.lower().strip())
+                        ldb("After adding value Current policy_values: %s", policy_values)
+                    elif next_is_value and "Member" in item_tag:
+                        ldb("Getting Members: %s", item.tag)
+                        for name in item:
+                            ldb(f"Current name .tag: {name.tag!s:15} .text: {name.text!s}")
+                            policy_values.append(name.text.lower().strip())
 
         ldb("Current policy_values: %s length: %i", policy_values, len(policy_values))
         if len(policy_values) == 0:
