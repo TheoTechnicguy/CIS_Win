@@ -11,7 +11,7 @@ logging.basicConfig(filename=__file__+'.log', level=logging.DEBUG, format='%(lev
 logging.info('Started')
 logging.info('Starting imports')
 from logging import info as linfo, warning as lwarn, critical as lfatal, debug as ldb
-import os, ctypes, sys, csv, datetime, getpass, socket, stat, hashlib
+import os, ctypes, sys, csv, datetime, getpass, socket, stat, hashlib, xml
 from time import sleep
 from threading import Thread
 from xml.etree import ElementTree as ET
@@ -48,6 +48,7 @@ STUPID_NAMESPACE = {
     "eqos" : "http://www.microsoft.com/GroupPolicy/Settings/eqos", # q13
     "fw" : "http://www.microsoft.com/GroupPolicy/Settings/WindowsFirewall" # q14
 }
+
 SUPPORTED_TYPES = {"int" : int, "float" : float, "bool" : bool, "none" : type(None), "str" : str, "list" : list, "print": "print"}
 
 ROW_DICT_TEMPLATE = {
@@ -90,8 +91,18 @@ class ConfigError(Exception):
 
 ldb("Done classes")
 
-# ldb("Setting functions")
-# ldb("Done functions")
+ldb("Setting functions")
+def get_namespace(tag):
+    global STUPID_NAMESPACE
+    if isinstance(tag, xml.etree.ElementTree.Element):
+        tag = tag.tag
+    ns = tag.split("}")[0]
+    ns = ns.split("{")[1]
+
+    for key, value in STUPID_NAMESPACE.items():
+        if value == ns:
+            return key + ":" + get_tag_name(tag)
+ldb("Done functions")
 
 ldb("Starting config fetching")
 if not os.path.exists(CONFIG_PATH):
@@ -236,8 +247,10 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
                 ldb("Current values: %s", list_values[list_item])
 
         if not row_dict["section"]:
+            lfatal("Section number %s cannot be empty!", row_dict["number"])
             raise ConfigError("Section number %s cannot be empty!"%row_dict["number"])
         if not row_dict["policy"]:
+            lfatal("Policy number %s cannot be empty!", row_dict["number"])
             raise ConfigError("Policy number %s cannot be empty!"%row_dict["number"])
 
         if not row_dict["user_key"]:
@@ -246,17 +259,43 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
         ldb("Getting xml value")
         next_is_value = False
         policy_values = []
+
+        if row_dict["policy"].startswith("fw:"):
+            ldb("Looking for fw policy %s", "/".join((row_dict["section"][:-1], row_dict["policy"], "fw:Value")))
+            policy_value = xml_root.find("/".join((row_dict["section"], row_dict["policy"], "fw:Value")), STUPID_NAMESPACE).text
+
+            try:
+                int(policy_value)
+            except ValueError:
+                policy_value = str(policy_value)
+
+                if policy_value.title() == "True":
+                    policy_value = True
+                elif policy_value.title() == "False":
+                    policy_value = False
+                elif policy_value.title() in ("None", "Null"):
+                    policy_value = None
+                else:
+                    policy_value = str(policy_value)
+            else:
+                if "." in str(policy_value):
+                    policy_value = float(policy_value)
+                else:
+                    policy_value = int(policy_value)
+            finally:
+                policy_values.append(policy_value)
+
         for item in xml_root.findall(row_dict["section"], STUPID_NAMESPACE):
             item_tag = item.tag.split("}")[-1]
-            # if item_tag not in ("Name", "SettingNumber", "SettingBoolean", "Member"):
-            #     continue
             ldb(f"Current item: {item_tag!s:15}"+"next_is_value: %s", next_is_value)
+
             if "Name" in item_tag and item.text == row_dict["policy"]:
                 ldb("Found policy %s", item.text)
                 next_is_value = True
             elif "Name" in item_tag and policy_values:
                 ldb("Breaking")
                 break
+
             elif next_is_value and "Setting" in item_tag:
                 policy_value = item.text
                 tag_type_str = item_tag[len("Setting"):].lower().strip()
@@ -272,6 +311,7 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
                         policy_values.append(True)
                     else:
                         policy_values.append(False)
+
                 else:
                     lwarn("Policy value could not be determined. Using fallback.")
                     print("Policy value could not be determined. Using fallback.")
