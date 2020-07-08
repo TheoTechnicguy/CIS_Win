@@ -77,13 +77,77 @@ Number,Source,Section,Policy_name,Human_readable_policy_name,Type,Min_val,Max_va
 2.3.6.2,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:SecurityOptions,MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\SealSecureChannel,,int,,,1
 2.3.6.3,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:SecurityOptions,MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\SignSecureChannel,,int,,,1
 2.3.6.4,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:SecurityOptions,MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\DisablePasswordChange,,int,,,0
-PG,,,,2.3 q14,print,,,
+PG,,,,2.3 q14,print,,,section 2.3
 2.3.1,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/fw:DomainProfile,fw:EnableFirewall,,bool,,,TRUE
 2.3.2,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/fw:DomainProfile,fw:DefaultInboundAction,,bool,,,FALSE
 2.3.3,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/fw:DomainProfile,fw:DefaultOutboundAction,,bool,,,FALSE
 2.3.4,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/fw:DomainProfile,fw:DisableNotifications,,bool,,,TRUE
-2.4,,,,2.4 q7,print,,,
+2.4,,,,2.4 q7,print,,,section 2.4
 2.4.1,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/audit:AuditSetting,Audit Credential Validation,,int,,,3
 2.4.2,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/audit:AuditSetting,Audit Application Group Management,,int,,,3
-,,,,,,,,
-Comment,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SecEdit\Reg Values\,,,,,,,
+2.4.3,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/audit:AuditSetting,,,print,,,key not found
+2.4.4,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/audit:AuditSetting,,,print,,,key not found
+2.4.5,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/audit:AuditSetting,Audit Security Group Management,,int,,,3
+2.5,,,,,print,,,section 2.5
+2.5.124,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\EventLog\Application,Retention,,int,,,0
+2.5.125,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\EventLog\Application,MaxSize,,int,32768,,
+2.5.126,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\EventLog\Security,Retention,,int,,,0
+2.5.127,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\EventLog\Setup,Retention,,int,,,0
+2.5.128,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\EventLog\Setup,MaxSize,,int,32768,,
+2.5.129,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\EventLog\System,Retention,,int,,,0
+2.5.130,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Explorer,NoDataExecutionPrevention,,int,,,0
+2.5.131,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Explorer,NoHeapTerminationOnCorruption,,int,,,0
+2.5.132,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer,PreXPSP2ShellProtocolBehavior,,int,,,0
+2.5.133,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\HomeGroup,DisableHomeGroup,,int,,,1
+2.5.134,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\LocationAndSensors,DisableLocation,,int,,,1
+2.5.135,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main,Cookies,,int,,,2
+2.5.136,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter,PreventOverrideAppRepUnknown,,int,,,1
+2.5.137,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main,HideLocalHostIP,,int,,,1
+Comment,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\SearchScopes,ShowSearchSuggestionsGlobal,,print,,,none
+2.5.139,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main,AllowInPrivate,,int,,,0
+2.5.140,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main,FormSuggest Passwords,,str,,,yes
+Comment,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\Main,AllowPopups,,str,,,yes
+2.5.142,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MicrosoftEdge\PhishingFilter,EnabledV9,,int,,,1
+2.5.143,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\OneDrive,DisableFileSyncNGSC,,int,,,0
+Comment,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services,fDenyTSConnections,,int,,,1
+2.5.145,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services,fDisableCcm,,int,,,1
+2.5.146,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services,fDisableCdm,,int,,,1
+2.5.147,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services,fDisableLPT,,int,,,1
+2.5.148,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services,fDisablePNPRedir,,int,,,1
+2.5.149,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services,fEncryptRPCTraffic,,int,,,1
+2.5.150,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services,MinEncryptionLevel,,int,,,3
+2.5.151,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services,MaxIdleTime,,int,1,,
+Comment,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services,MaxDisconnectionTime,,int,1,,
+2.5.153,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services,PerSessionTempDir,,int,,,1
+2.5.154,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Internet Explorer\Feeds,DisableEnclosureDownload,,int,,,1
+Comment,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search,AllowSearchToUseLocation,,int,,,0
+2.5.156,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\CurrentVersion\Software Protection Platform,NoGenTicket,,int,,,1
+Comment,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsStore,DisableStoreApps,,int,,,1
+2.5.158,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsStore,AutoDownload,,int,,,4
+Comment,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsStore,RemoveWindowsStore,,int,,,1
+2.5.160,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Installer,EnableUserControl,,int,,,0
+2.5.161,registry,Computer\HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\Installer,AlwaysInstallElevated,,int,,,0
+2.5.162,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Installer,SafeForScripting,,int,,,0
+2.5.163,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System,DisableAutomaticRestartSignOn,,int,,,1
+2.5.164,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging,EnableScriptBlockLogging,,int,,,0
+2.5.165,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\PowerShell\Transcription,EnableTranscripting,,int,,,0
+2.5.166,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WinRM\Client,AllowBasic,,int,,,0
+2.5.167,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WinRM\Client,AllowUnencryptedTraffic,,int,,,0
+2.5.168,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WinRM\Client,AllowDigest,,int,,,0
+2.5.169,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service,AllowBasic,,int,,,0
+2.5.170,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service,AllowUnencryptedTraffic,,int,,,0
+Comment,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service\WinRS,AllowRemoteShellAccess,,int,,,0
+2.5.172,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU,ScheduledInstallDay,,int,,,0
+Comment,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU,NoAutoRebootWithLoggedOnUsers,,int,,,0
+2.6,,,,,print,,,Section 2.6
+2.6.1,registry,Computer\HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\Control Panel\Desktop,ScreenSaveActive,,int,,,1
+2.6.2,registry,Computer\HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\Control Panel\Desktop,SCRNSAVE.EXE,,str,,,scrnsave.scr
+2.6.3,registry,Computer\HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\Control Panel\Desktop,ScreenSaverIsSecure,,int,,,1
+2.6.4,registry,Computer\HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\Control Panel\Desktop,ScreenSaveTimeout,,int,900,,
+2.6.5,registry,Computer\HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\CurrentVersion\PushNotifications,NoToastApplicationNotificationOnLockScreen,,int,,,1
+2.6.6,registry,Computer\HKEY_CURRENT_USER\Software\Policies\Microsoft\Assistance\Client\1.0,NoImplicitFeedback,,int,,,1
+2.6.7,registry,Computer\HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Attachments,SaveZoneInformation,,int,,,2
+2.6.8,registry,Computer\HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Attachments,ScanWithAntiVirus,,int,,,3
+2.6.9,registry,Computer\HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer,NoInplaceSharing,,int,,,1
+2.6.10,registry,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Installer,AlwaysInstallElevated,,int,,,0
+Comment,registry,Computer\HKEY_CURRENT_USER\Software\Policies\Microsoft\WindowsMediaPlayer,PreventCodecDownload,,int,,,1
