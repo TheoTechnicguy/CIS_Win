@@ -279,7 +279,7 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
             ldb("Current path: %s", path)
             hkey = path[0]
             key = "\\".join(path[1:])
-            subkey =  row_dict["policy"]
+            subkey = row_dict["policy"]
             try:
                 registry = REGISTRY[hkey]
                 ldb("Current registry: %s %s", registry, REGISTRY[hkey])
@@ -291,32 +291,33 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
                 try:
                     open_key = winreg.OpenKey(registry, key)
                     policy_value = winreg.QueryValueEx(open_key, subkey)[0]
+                    open_key.Close()
                 except FileNotFoundError:
-                    lfatal(r"Cannot find policy %s\%s\%s", hkey, key, subkey)
-                    raise ConfigError(r"Cannot find policy %s\%s\%s. Verify spelling in the CF."%(hkey, key, subkey))
-            finally:
-                open_key.Close()
-
-                try:
-                    int(policy_value)
-                except ValueError:
-                    policy_value = str(policy_value)
-
-                    if policy_value.title() == "True":
-                        policy_value = True
-                    elif policy_value.title() == "False":
-                        policy_value = False
-                    elif policy_value.title() in ("None", "Null"):
-                        policy_value = None
-                    else:
-                        policy_value = str(policy_value)
+                    # lfatal(r"Cannot find policy %s\%s\%s", hkey, key, subkey)
+                    # raise ConfigError(r"Cannot find policy %s\%s\%s. Verify spelling in the CF."%(hkey, key, subkey))
+                    # Issue #4
+                    pass
                 else:
-                    if "." in str(policy_value):
-                        policy_value = float(policy_value)
+                    try:
+                        int(policy_value)
+                    except ValueError:
+                        policy_value = str(policy_value)
+
+                        if policy_value.title() == "True":
+                            policy_value = True
+                        elif policy_value.title() == "False":
+                            policy_value = False
+                        elif policy_value.title() in ("None", "Null"):
+                            policy_value = None
+                        else:
+                            policy_value = str(policy_value)
                     else:
-                        policy_value = int(policy_value)
-                finally:
-                    policy_values.append(policy_value)
+                        if "." in str(policy_value):
+                            policy_value = float(policy_value)
+                        else:
+                            policy_value = int(policy_value)
+                    finally:
+                        policy_values.append(policy_value)
         else:
             next_is_value = False
             if row_dict["policy"].startswith("fw:"):
