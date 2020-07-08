@@ -1,5 +1,5 @@
-Version:,0.1.1
-Note:,Max_val is inclusive --> min=0 max=5 = 0-1-2-3-4-5.
+Version:,0.1.1,,,,,,
+Note:,Max_val is inclusive --> min=0 max=5 = 0-1-2-3-4-5.,,,,,,
 Number,Section,Policy_name,Human_readable_policy_name,Type,Min_val,Max_val,Exact_val
 ---------------,---------------,---------------,---------------,---------------,---------------,---------------,---------------
 1,,,Account Policies,print,,,Account Policies
@@ -78,10 +78,10 @@ Number,Section,Policy_name,Human_readable_policy_name,Type,Min_val,Max_val,Exact
 2.3.6.3,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:SecurityOptions,MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\SignSecureChannel,,int,,,1
 2.3.6.4,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:SecurityOptions,MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\DisablePasswordChange,,int,,,0
 PG,,,2.3 q14,print,,,
-2.3.1,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/audit:AuditSetting,EnableFirewall,,print,,,TRUE
-2.3.2,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/audit:AuditSetting,DefaultInboundAction,,print,,,FALSE
-2.3.3,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/audit:AuditSetting,DefaultOutboundAction,,print,,,FALSE
-2.3.4,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/audit:AuditSetting,DisableNotifications,,print,,,TRUE
+2.3.1,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/fw:DomainProfile,fw:EnableFirewall,,bool,,,TRUE
+2.3.2,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/fw:DomainProfile,fw:DefaultInboundAction,,bool,,,FALSE
+2.3.3,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/fw:DomainProfile,fw:DefaultOutboundAction,,bool,,,FALSE
+2.3.4,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/fw:DomainProfile,fw:DisableNotifications,,bool,,,TRUE
 2.4,,,2.4 q7,print,,,
 2.4.1,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/audit:AuditSetting,Audit Credential Validation,,int,,,3
 2.4.2,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/audit:AuditSetting,Audit Application Group Management,,int,,,3
