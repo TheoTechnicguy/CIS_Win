@@ -1,87 +1,89 @@
-Version:,0.1.1,,,,,,
-Note:,Max_val is inclusive --> min=0 max=5 = 0-1-2-3-4-5.,,,,,,
-Number,Section,Policy_name,Human_readable_policy_name,Type,Min_val,Max_val,Exact_val
----------------,---------------,---------------,---------------,---------------,---------------,---------------,---------------
-1,,,Account Policies,print,,,Account Policies
-1.1,,,Password Policy,print,,,Passowrd Policies
-1.1.1,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:Account,PasswordHistorySize,,int,24,,
-1.1.2,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:Account,MaximumPasswordAge,,int,1,,
-1.1.3,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:Account,MinimumPasswordAge,,int,1,,
-1.1.4,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:Account,MinimumPasswordLength,,int,14,,
-1.1.5,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:Account,PasswordComplexity,,bool,,,TRUE
-1.1.6,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:Account,ClearTextPassword,,bool,,,FALSE
-1.2,,,Account Lockout Policy,print,,,Account Lockout Policies
-1.2.1,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:Account,LockoutDuration,,int,15,,
-1.2.2,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:Account,LockoutBadCount,,int,1,11,
-1.2.3,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:Account,ResetLockoutCount,,int,15,,
-2,,,Local Policies,print,,,Local Policies
-2.1,,,Audit Policies,print,,,Audit Policies
-2.2,,,User Rights Assignment,print,,,User Rights Assignment
-2.2.1,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeTrustedCredManAccessPrivilege,,None,,,None
-2.2.2,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeNetworkLogonRight,,list,,,"Administrators, Remote Desktop Users"
-2.2.3,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeTcbPrivilege,,None,,,None
-2.2.4,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeIncreaseQuotaPrivilege,,list,,,"Administrators, LOCAL SERVICE, NETWORK SERVICE"
-2.2.5,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeInteractiveLogonRight,,list,,,"Administrators, Users"
-2.2.6,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeRemoteInteractiveLogonRight,,list,,,"Administrators, Remote Desktop Users"
-2.2.7,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeBackupPrivilege,,str,,,Administrators
-2.2.8,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeSystemtimePrivilege,,list,,,"Administrators, LOCAL SERVICE"
-2.2.9,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeTimeZonePrivilege,,list,,,"Administrators, LOCAL SERVICE, Users"
-2.2.10,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeCreatePagefilePrivilege,,str,,,Administrators
-2.2.11,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeCreateTokenPrivilege,,None,,,None
-2.2.12,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeCreateGlobalPrivilege,,list,,,"Administrators, LOCAL SERVICE, NETWORK SERVICE, SERVICE"
-2.2.13,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeCreatePermanentPrivilege,,None,,,None
-2.2.14,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeCreateSymbolicLinkPrivilege,,str,,,Administrators
-2.2.15,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeDebugPrivilege,,str,,,Administrators
-2.2.16,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeDenyNetworkLogonRight,,list,"Guests, Local account",,
-2.2.17,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeDenyBatchLogonRight,,list,Guests,,
-2.2.18,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeDenyServiceLogonRight,,list,Guests,,
-2.2.19,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeDenyInteractiveLogonRight,,list,Guests,,
-2.2.20,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeDenyRemoteInteractiveLogonRight,,list,"Guests, Local account",,
-2.2.21,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeEnableDelegationPrivilege,,None,,,None
-2.2.22,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeRemoteShutdownPrivilege,,str,,,Administrators
-2.2.23,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeAuditPrivilege,,list,,,"LOCAL SERVICE, NETWORK SERVICE"
-2.2.24,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeImpersonatePrivilege,,list,,,"Administrators, LOCAL SERVICE, NETWORK SERVICE, SERVICE"
-2.2.25,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeIncreaseBasePriorityPrivilege,,list,,,"Administrators, Window Manager\Window Manager Group"
-2.2.26,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeLoadDriverPrivilege,,str,,,Administrators
-2.2.27,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeLockMemoryPrivilege,,None,,,None
-2.2.28,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeBatchLogonRight,,str,,,Administrators
-2.2.29,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeServiceLogonRight,,None,,,None
-2.2.30,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeSecurityPrivilege,,str,,,Administrators
-2.2.31,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeRelabelPrivilege,,str,,,Administrators
-2.2.32,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeSystemEnvironmentPrivilege,,str,,,Administrators
-2.2.33,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeManageVolumePrivilege,,str,,,Administrators
-2.2.34,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeProfileSingleProcessPrivilege,,str,,,Administrators
-2.2.35,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeSystemProfilePrivilege,,list,,,"Administrators, NT SERVICE\WdiServiceHost"
-2.2.36,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeAssignPrimaryTokenPrivilege,,list,,,"LOCAL SERVICE, NETWORK SERVICE"
-2.2.37,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeRestorePrivilege,,str,,,Administrators
-2.2.38,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeShutdownPrivilege,,list,,,"Administrators, Users"
-2.2.39,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeTakeOwnershipPrivilege,,str,,,Administrators
-2.3,,,Security Options,print,,,Security Options
-2.3.1,,,Accounts,print,,,Accounts
-2.3.1.1,,,Key needed,print,,,key needed
-2.3.1.2,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:SecurityOptions,MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\NoConnectedUser,Accounts: Block Microsoft accounts,int,1,5,
-2.3.1.3,,,"key needed, default disabled",print,,,
-2.3.1.4,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:SecurityOptions,HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa:LimitBlankPasswordUse,Accounts: Limit local account use of blank passwords to console logon only,None,,,None
-2.3.1.5,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:SecurityOptions,NewAdministratorName,Accounts: Rename Administrator account,str,,,PGADMIN
-2.3.1.6,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:SecurityOptions,NewGuestName,Accounts: Rename guest account,str,,,RenamedGuestAccount
-2.3.2,,,Audit ,print,,,
-2.3.2.1,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:SecurityOptions,MACHINE\System\CurrentControlSet\Control\Lsa\SCENoApplyLegacyAuditPolicy,,int,,,1
-2.3.2.2,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:SecurityOptions,MACHINE\System\CurrentControlSet\Control\Lsa\CrashOnAuditFail,,int,,,0
-2.3.3,,,This section is intentionally blank and exists to ensure the structure of Windows benchmarks is consistent.,print,,,
-2.3.4,,,Devices,print,,,
-2.3.4.1,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:SecurityOptions,MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\AllocateDASD,,str,,,2
-2.3.4.2,registrykey,Computer\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\Print\Providers\LanMan Print Services\Servers\Addprinterdrivers,Computer\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\Print\Providers\LanMan Print Services\Servers,print,,,1
-2.3.5,,,"Domain Controller, This section is intentionally blank and exists to ensure the structure of Windows benchmarks is consistent.",print,,,
-2.3.6,,,Domain Member,print,,,
-2.3.6.1,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:SecurityOptions,MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\RequireSignOrSeal,,int,,,1
-2.3.6.2,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:SecurityOptions,MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\SealSecureChannel,,int,,,1
-2.3.6.3,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:SecurityOptions,MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\SignSecureChannel,,int,,,1
-2.3.6.4,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:SecurityOptions,MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\DisablePasswordChange,,int,,,0
-PG,,,2.3 q14,print,,,
-2.3.1,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/fw:DomainProfile,fw:EnableFirewall,,bool,,,TRUE
-2.3.2,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/fw:DomainProfile,fw:DefaultInboundAction,,bool,,,FALSE
-2.3.3,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/fw:DomainProfile,fw:DefaultOutboundAction,,bool,,,FALSE
-2.3.4,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/fw:DomainProfile,fw:DisableNotifications,,bool,,,TRUE
-2.4,,,2.4 q7,print,,,
-2.4.1,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/audit:AuditSetting,Audit Credential Validation,,int,,,3
-2.4.2,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/audit:AuditSetting,Audit Application Group Management,,int,,,3
+Version:,0.1.2,,,,,,,
+Note:,Max_val is inclusive --> min=0 max=5 = 0-1-2-3-4-5.,Default source:,xml,,,,,
+Number,Source,Section,Policy_name,Human_readable_policy_name,Type,Min_val,Max_val,Exact_val
+---------------,---------------,---------------,---------------,---------------,---------------,---------------,---------------,
+1,,,,Account Policies,print,,,Account Policies
+1.1,,,,Password Policy,print,,,Passowrd Policies
+1.1.1,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:Account,PasswordHistorySize,,int,24,,
+1.1.2,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:Account,MaximumPasswordAge,,int,1,,
+1.1.3,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:Account,MinimumPasswordAge,,int,1,,
+1.1.4,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:Account,MinimumPasswordLength,,int,14,,
+1.1.5,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:Account,PasswordComplexity,,bool,,,TRUE
+1.1.6,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:Account,ClearTextPassword,,bool,,,FALSE
+1.2,,,,Account Lockout Policy,print,,,Account Lockout Policies
+1.2.1,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:Account,LockoutDuration,,int,15,,
+1.2.2,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:Account,LockoutBadCount,,int,1,11,
+1.2.3,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:Account,ResetLockoutCount,,int,15,,
+2,,,,Local Policies,print,,,Local Policies
+2.1,,,,Audit Policies,print,,,Audit Policies
+2.2,,,,User Rights Assignment,print,,,User Rights Assignment
+2.2.1,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeTrustedCredManAccessPrivilege,,None,,,None
+2.2.2,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeNetworkLogonRight,,list,,,"Administrators, Remote Desktop Users"
+2.2.3,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeTcbPrivilege,,None,,,None
+2.2.4,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeIncreaseQuotaPrivilege,,list,,,"Administrators, LOCAL SERVICE, NETWORK SERVICE"
+2.2.5,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeInteractiveLogonRight,,list,,,"Administrators, Users"
+2.2.6,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeRemoteInteractiveLogonRight,,list,,,"Administrators, Remote Desktop Users"
+2.2.7,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeBackupPrivilege,,str,,,Administrators
+2.2.8,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeSystemtimePrivilege,,list,,,"Administrators, LOCAL SERVICE"
+2.2.9,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeTimeZonePrivilege,,list,,,"Administrators, LOCAL SERVICE, Users"
+2.2.10,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeCreatePagefilePrivilege,,str,,,Administrators
+2.2.11,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeCreateTokenPrivilege,,None,,,None
+2.2.12,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeCreateGlobalPrivilege,,list,,,"Administrators, LOCAL SERVICE, NETWORK SERVICE, SERVICE"
+2.2.13,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeCreatePermanentPrivilege,,None,,,None
+2.2.14,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeCreateSymbolicLinkPrivilege,,str,,,Administrators
+2.2.15,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeDebugPrivilege,,str,,,Administrators
+2.2.16,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeDenyNetworkLogonRight,,list,"Guests, Local account",,
+2.2.17,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeDenyBatchLogonRight,,list,Guests,,
+2.2.18,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeDenyServiceLogonRight,,list,Guests,,
+2.2.19,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeDenyInteractiveLogonRight,,list,Guests,,
+2.2.20,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeDenyRemoteInteractiveLogonRight,,list,"Guests, Local account",,
+2.2.21,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeEnableDelegationPrivilege,,None,,,None
+2.2.22,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeRemoteShutdownPrivilege,,str,,,Administrators
+2.2.23,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeAuditPrivilege,,list,,,"LOCAL SERVICE, NETWORK SERVICE"
+2.2.24,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeImpersonatePrivilege,,list,,,"Administrators, LOCAL SERVICE, NETWORK SERVICE, SERVICE"
+2.2.25,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeIncreaseBasePriorityPrivilege,,list,,,"Administrators, Window Manager\Window Manager Group"
+2.2.26,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeLoadDriverPrivilege,,str,,,Administrators
+2.2.27,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeLockMemoryPrivilege,,None,,,None
+2.2.28,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeBatchLogonRight,,str,,,Administrators
+2.2.29,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeServiceLogonRight,,None,,,None
+2.2.30,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeSecurityPrivilege,,str,,,Administrators
+2.2.31,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeRelabelPrivilege,,str,,,Administrators
+2.2.32,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeSystemEnvironmentPrivilege,,str,,,Administrators
+2.2.33,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeManageVolumePrivilege,,str,,,Administrators
+2.2.34,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeProfileSingleProcessPrivilege,,str,,,Administrators
+2.2.35,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeSystemProfilePrivilege,,list,,,"Administrators, NT SERVICE\WdiServiceHost"
+2.2.36,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeAssignPrimaryTokenPrivilege,,list,,,"LOCAL SERVICE, NETWORK SERVICE"
+2.2.37,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeRestorePrivilege,,str,,,Administrators
+2.2.38,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeShutdownPrivilege,,list,,,"Administrators, Users"
+2.2.39,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:UserRightsAssignment,SeTakeOwnershipPrivilege,,str,,,Administrators
+2.3,,,,Security Options,print,,,Security Options
+2.3.1,,,,Accounts,print,,,Accounts
+2.3.1.1,,,,Key needed,print,,,key needed
+2.3.1.2,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:SecurityOptions,MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\NoConnectedUser,Accounts: Block Microsoft accounts,int,1,5,
+2.3.1.3,,,,"key needed, default disabled",print,,,
+2.3.1.4,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:SecurityOptions,HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa:LimitBlankPasswordUse,Accounts: Limit local account use of blank passwords to console logon only,None,,,None
+2.3.1.5,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:SecurityOptions,NewAdministratorName,Accounts: Rename Administrator account,str,,,PGADMIN
+2.3.1.6,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:SecurityOptions,NewGuestName,Accounts: Rename guest account,str,,,RenamedGuestAccount
+2.3.2,,,,Audit ,print,,,
+2.3.2.1,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:SecurityOptions,MACHINE\System\CurrentControlSet\Control\Lsa\SCENoApplyLegacyAuditPolicy,,int,,,1
+2.3.2.2,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:SecurityOptions,MACHINE\System\CurrentControlSet\Control\Lsa\CrashOnAuditFail,,int,,,0
+2.3.3,,,,This section is intentionally blank and exists to ensure the structure of Windows benchmarks is consistent.,print,,,
+2.3.4,,,,Devices,print,,,
+2.3.4.1,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:SecurityOptions,MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\AllocateDASD,,str,,,2
+2.3.4.2,registry,Computer\HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\Print\Providers\LanMan Print Services\Servers,AddPrinterDrivers,,bool,,,FALSE
+2.3.5,,,,"Domain Controller, This section is intentionally blank and exists to ensure the structure of Windows benchmarks is consistent.",print,,,
+2.3.6,,,,Domain Member,print,,,
+2.3.6.1,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:SecurityOptions,MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\RequireSignOrSeal,,int,,,1
+2.3.6.2,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:SecurityOptions,MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\SealSecureChannel,,int,,,1
+2.3.6.3,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:SecurityOptions,MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\SignSecureChannel,,int,,,1
+2.3.6.4,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/security:SecurityOptions,MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\DisablePasswordChange,,int,,,0
+PG,,,,2.3 q14,print,,,
+2.3.1,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/fw:DomainProfile,fw:EnableFirewall,,bool,,,TRUE
+2.3.2,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/fw:DomainProfile,fw:DefaultInboundAction,,bool,,,FALSE
+2.3.3,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/fw:DomainProfile,fw:DefaultOutboundAction,,bool,,,FALSE
+2.3.4,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/fw:DomainProfile,fw:DisableNotifications,,bool,,,TRUE
+2.4,,,,2.4 q7,print,,,
+2.4.1,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/audit:AuditSetting,Audit Credential Validation,,int,,,3
+2.4.2,,rsop:ComputerResults/rsop:ExtensionData/settings:Extension/audit:AuditSetting,Audit Application Group Management,,int,,,3
+,,,,,,,,
+Comment,Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SecEdit\Reg Values\,,,,,,,
