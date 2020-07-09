@@ -311,7 +311,7 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
             else:
                 for item in xml_root.findall(row_dict["section"], STUPID_NAMESPACE):
                     item_tag = item.tag.split("}")[-1]
-                    ldb(f"Current item: {item_tag!s:15}"+"next_is_value: %s", next_is_value)
+                    # ldb(f"Current item: {item_tag!s:15}"+"next_is_value: %s", next_is_value)
 
                     if "Name" in item_tag and item.text == row_dict["policy"]:
                         ldb("Found policy %s", item.text)
