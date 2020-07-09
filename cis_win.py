@@ -30,7 +30,6 @@ linfo("Current SW version: %s", __version__)
 linfo("Current config version: %s", __cfg_version__)
 
 WORK_DIR = os.path.dirname(__file__)
-CONFIG_PATH = os.path.join(WORK_DIR, "config.csv")
 OUT_PATH = os.path.join(WORK_DIR, "out.csv")
 XML_PATH = os.path.join(WORK_DIR, "group-policy.xml")
 GENERATION_COMMAND = 'gpresult /F /X "%s"'%XML_PATH
@@ -222,9 +221,11 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
         ldb("Current section: >>>%s<<<", row_dict["section"])
 
         # User input testing
-        if str(row_dict["type"]).lower()().strip().startswith("!"):
+        if str(row_dict["type"]).lower().strip().startswith("!"):
             negation = True
             row_dict["type"] = row_dict["type"][1:]
+        else:
+            negation = False
 
         if str(row_dict["type"]).lower().strip() not in SUPPORTED_TYPES.keys():
             lfatal("%s is not a member of known types %s", row_dict["type"], tuple(SUPPORTED_TYPES.keys()))
