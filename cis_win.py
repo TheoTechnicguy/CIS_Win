@@ -1,5 +1,5 @@
 # File: cis_win
-# Author: Nicolas Fischer cis_win-program@licolas.net
+# Author: Theo Technicguy cis_win-program@licolas.net
 # Program: Python 3.8
 # Ext: py
 # Licensed under GPU GPLv3 and later.

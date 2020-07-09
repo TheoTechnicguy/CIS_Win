@@ -1,5 +1,5 @@
 # File: hash_check
-# Author: Nicolas Fischer hash_check-program@licolas.net
+# Author: Theo Technicguy hash_check-program@licolas.net
 # Program: Python 3.8
 # Ext: py
 # Licenced under GPU GLP v3. See LICENCE file for information.

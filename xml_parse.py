@@ -1,5 +1,5 @@
 # File: xml_parse
-# Author: Nicolas Fischer
+# Author: Theo Technicguy xml_parse-program@licolas.net
 # Program: Python 3.8
 # Ext: py
 # Licensed under GPU GPLv3 and later.
