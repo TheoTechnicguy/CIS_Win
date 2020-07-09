@@ -359,9 +359,9 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
             except ValueError:
                 policy_value = str(policy_value)
 
-                if policy_value.title() in ("True", "Yes"):
+                if policy_value.title() == "True":
                     policy_value = True
-                elif policy_value.title() in ("False", "No"):
+                elif policy_value.title() == "False":
                     policy_value = False
                 else:
                     policy_value = str(policy_value)
