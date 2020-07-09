@@ -1,5 +1,5 @@
 # File: cis_win
-# Author: Nicolas Fischer cis_win-program@licolas.net
+# Author: Theo Technicguy cis_win-program@licolas.net
 # Program: Python 3.8
 # Ext: py
 # Licensed under GPU GPLv3 and later.
@@ -11,7 +11,7 @@ logging.basicConfig(filename=__file__+'.log', level=logging.DEBUG, format='%(lev
 logging.info('Started')
 logging.info('Starting imports')
 from logging import info as linfo, warning as lwarn, critical as lfatal, debug as ldb
-import os, ctypes, sys, csv, datetime, getpass, socket, stat, hashlib, xml, winreg
+import os, ctypes, sys, csv, datetime, getpass, socket, stat, hashlib, xml, winreg, argparse
 from time import sleep
 from threading import Thread
 from xml.etree import ElementTree as ET
@@ -30,7 +30,6 @@ linfo("Current SW version: %s", __version__)
 linfo("Current config version: %s", __cfg_version__)
 
 WORK_DIR = os.path.dirname(__file__)
-CONFIG_PATH = os.path.join(WORK_DIR, "config.csv")
 OUT_PATH = os.path.join(WORK_DIR, "out.csv")
 XML_PATH = os.path.join(WORK_DIR, "group-policy.xml")
 GENERATION_COMMAND = 'gpresult /F /X "%s"'%XML_PATH
@@ -114,7 +113,30 @@ def get_namespace(tag):
             return key + ":" + get_tag_name(tag)
 ldb("Done functions")
 
+ldb("Setting parser")
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    "--cfg",
+    type = str,
+    help = "Optional config file location."
+)
+args = parser.parse_args()
+ldb("Done parser")
+
 ldb("Starting config fetching")
+if not args.cfg:
+    CONFIG_PATH = os.path.join(WORK_DIR, "config.csv")
+
+else:
+    if not os.path.exists(args.cfg):
+        raise FileNotFoundError("That path does not exist.")
+    elif not os.path.isfile(args.cfg):
+        raise Exception("That is not a file.")
+    elif not os.path.splitext(args.cfg)[-1] == ".csv":
+        raise Exception("That is not a csv.")
+    else:
+        CONFIG_PATH = args.cfg
+
 if not os.path.exists(CONFIG_PATH):
     with open(CONFIG_PATH, "w+", newline = "") as file:
         config_csv = csv.writer(file, delimiter=",")
@@ -222,6 +244,12 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
         ldb("Current section: >>>%s<<<", row_dict["section"])
 
         # User input testing
+        if str(row_dict["type"]).lower().strip().startswith("!"):
+            negation = True
+            row_dict["type"] = row_dict["type"][1:]
+        else:
+            negation = False
+
         if str(row_dict["type"]).lower().strip() not in SUPPORTED_TYPES.keys():
             lfatal("%s is not a member of known types %s", row_dict["type"], tuple(SUPPORTED_TYPES.keys()))
             raise TypeError("%s is not a member of supported types %s"%(row_dict["type"], tuple(SUPPORTED_TYPES.keys())))
@@ -513,6 +541,12 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
             lfatal("Inconsistent data. Verify config file at number %s"%row_dict["number"])
             linfo("row_dict: %s", row_dict)
             raise ConfigError("Inconsistent data. Verify config file at number %s"%row_dict["number"])
+
+        if negation:
+            for rev_pos in range(len(rev_pos), 0, -1):
+                if isinstance(to_csv[rev_pos], bool):
+                    to_csv[rev_pos] = not to_csv[rev_pos]
+                    break
 
         linfo("Writing %s", to_csv)
         out_csv.writerow(to_csv)
