@@ -11,7 +11,7 @@ logging.basicConfig(filename=__file__+'.log', level=logging.DEBUG, format='%(lev
 logging.info('Started')
 logging.info('Starting imports')
 from logging import info as linfo, warning as lwarn, critical as lfatal, debug as ldb
-import os, ctypes, sys, csv, datetime, getpass, socket, stat, hashlib, xml, winreg
+import os, ctypes, sys, csv, datetime, getpass, socket, stat, hashlib, xml, winreg, argparse
 from time import sleep
 from threading import Thread
 from xml.etree import ElementTree as ET
@@ -113,22 +113,29 @@ def get_namespace(tag):
             return key + ":" + get_tag_name(tag)
 ldb("Done functions")
 
+ldb("Setting parser")
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    "--cfg",
+    type = str,
+    help = "Optional config file location."
+)
+args = parser.parse_args()
+ldb("Done parser")
+
 ldb("Starting config fetching")
-while True:
-    user_cfg = input("Path to custom config file. Leave blank for default.\n > ")
-    if not user_cfg:
-        CONFIG_PATH = os.path.join(WORK_DIR, "config.csv")
-        break
+if not args.cfg:
+    CONFIG_PATH = os.path.join(WORK_DIR, "config.csv")
+
+else:
+    if not os.path.exists(args.cfg):
+        raise FileNotFoundError("That path does not exist.")
+    elif not os.path.isfile(args.cfg):
+        raise Exception("That is not a file.")
+    elif not os.path.splitext(args.cfg)[-1] == ".csv":
+        raise Exception("That is not a csv.")
     else:
-        if not os.path.exists(user_cfg):
-            print("That path does not exist.")
-        elif not os.path.isfile(user_cfg):
-            print("That is not a file.")
-        elif not os.path.splitext(user_cfg)[-1] == ".csv":
-            print("That is not a csv.")
-        else:
-            CONFIG_PATH = user_cfg
-            break
+        CONFIG_PATH = args.cfg
 
 if not os.path.exists(CONFIG_PATH):
     with open(CONFIG_PATH, "w+", newline = "") as file:
