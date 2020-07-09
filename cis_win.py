@@ -274,6 +274,7 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
         ldb("Getting value from %s", row_dict["source"])
         policy_values = []
 
+        verify = True
         if row_dict["source"] == "registry":
             path = row_dict["section"][:-1].split("\\")[1:]
             if path[0].lower().strip() == "computer":
@@ -300,53 +301,13 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
                     # raise ConfigError(r"Cannot find policy %s\%s\%s. Verify spelling in the CF."%(hkey, key, subkey))
                     # Issue #4
                     pass
-                else:
-                    try:
-                        int(policy_value)
-                    except ValueError:
-                        policy_value = str(policy_value)
 
-                        if policy_value.title() == "True":
-                            policy_value = True
-                        elif policy_value.title() == "False":
-                            policy_value = False
-                        elif policy_value.title() in ("None", "Null"):
-                            policy_value = None
-                        else:
-                            policy_value = str(policy_value)
-                    else:
-                        if "." in str(policy_value):
-                            policy_value = float(policy_value)
-                        else:
-                            policy_value = int(policy_value)
-                    finally:
-                        policy_values.append(policy_value)
         else:
             next_is_value = False
             if row_dict["policy"].startswith("fw:"):
                 ldb("Looking for fw policy %s", "/".join((row_dict["section"][:-1], row_dict["policy"], "fw:Value")))
                 policy_value = xml_root.find("/".join((row_dict["section"], row_dict["policy"], "fw:Value")), STUPID_NAMESPACE).text
 
-                try:
-                    int(policy_value)
-                except ValueError:
-                    policy_value = str(policy_value)
-
-                    if policy_value.title() == "True":
-                        policy_value = True
-                    elif policy_value.title() == "False":
-                        policy_value = False
-                    elif policy_value.title() in ("None", "Null"):
-                        policy_value = None
-                    else:
-                        policy_value = str(policy_value)
-                else:
-                    if "." in str(policy_value):
-                        policy_value = float(policy_value)
-                    else:
-                        policy_value = int(policy_value)
-                finally:
-                    policy_values.append(policy_value)
             else:
                 for item in xml_root.findall(row_dict["section"], STUPID_NAMESPACE):
                     item_tag = item.tag.split("}")[-1]
@@ -362,59 +323,34 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
                     elif next_is_value and "Setting" in item_tag:
                         policy_value = item.text
                         tag_type_str = item_tag[len("Setting"):].lower().strip()
-                        if tag_type_str in ("number", "value"):
-                            ldb("Policy value is a number: %s", policy_value)
-                            policy_values.append(int(policy_value))
-                        elif tag_type_str == "string":
-                            ldb("Policy value is a string: %s", policy_value)
-                            policy_values.append(str(policy_value).lower().strip())
-                        elif tag_type_str == "boolean":
-                            ldb("Policy value is a boolean: %s", policy_value)
-                            if policy_value.title() == "True":
-                                policy_values.append(True)
-                            else:
-                                policy_values.append(False)
-
-                        else:
-                            lwarn("Policy value could not be determined. Using fallback.")
-                            print("Policy value could not be determined. Using fallback.")
-                            try:
-                                int(policy_value)
-                            except ValueError:
-                                policy_value = str(policy_value)
-
-                                if policy_value.title() == "True":
-                                    policy_value = True
-                                elif policy_value.title() == "False":
-                                    policy_value = False
-                                elif policy_value.title() in ("None", "Null"):
-                                    policy_value = None
-                                else:
-                                    policy_value = str(policy_value)
-                            else:
-                                if "." in str(policy_value):
-                                    policy_value = float(policy_value)
-                                else:
-                                    policy_value = int(policy_value)
-                            finally:
-                                print("Please consider opening an issue on github: https://github.com/TheoTechnicguy/CIS_Win/issues/new?assignees=&labels=enhancement%2C+bug&template=add_type_request.md&title=%5BType+Request%5D+Add+type+"+tag_type_str+"+as+"+str(type(policy_value)).split("'")[1])
-                                print("Please pase following:")
-                                print("-"*50)
-                                print("Version:", __version__, "Cfg:", __cfg_version__)
-                                print("Full tag:", item.tag, "Tag:", item_tag)
-                                print("Tag type:", tag_type_str, "Value:", policy_value, "class:", type(policy_value))
-                                print("-"*50)
-                                print("Please attach logfile!")
-                                linfo("Policy %s %s value %s turned out to be %s", row_dict["section"], row_dict["policy"], policy_value, type(policy_value))
-                                policy_values.append(policy_value)
-
-
                         ldb("After adding value Current policy_values: %s", policy_values)
+
                     elif next_is_value and "Member" in item_tag:
                         ldb("Getting Members: %s", item.tag)
                         for name in item:
                             ldb(f"Current name .tag: {name.tag!s:15} .text: {name.text!s}")
                             policy_values.append(name.text.lower().strip())
+                        verify = False
+
+        if not isinstance(policy_value, type(None)) and verify:
+            try:
+                int(policy_value)
+            except ValueError:
+                policy_value = str(policy_value)
+
+                if policy_value.title() == "True":
+                    policy_value = True
+                elif policy_value.title() == "False":
+                    policy_value = False
+                else:
+                    policy_value = str(policy_value)
+            else:
+                if "." in str(policy_value):
+                    policy_value = float(policy_value)
+                else:
+                    policy_value = int(policy_value)
+            finally:
+                policy_values.append(policy_value)
 
         ldb("Current policy_values: %s length: %i", policy_values, len(policy_values))
         if len(policy_values) == 0:
