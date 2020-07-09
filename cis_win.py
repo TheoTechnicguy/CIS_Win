@@ -187,7 +187,7 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
         ).hexdigest().upper(), "Note: THIS FILE IS ONLY VALID IN READ-ONLY MODE AND CORRECT VALIDITY CODE."],
         ["DISCLAIMER:", "THE CONTENTS OF THIS FILE ONLY REFLECT THE GPO STATE OF THE PC AT EXECUTION TIME."],
         ["-"*15]*6,
-        ["Number", "Policy", "Current_val", "Min_val", "Max_val", "Exact_val", "Compliant"]
+        ["Number", "Source", "Section", "Policy", "Current_val", "Min_val", "Max_val", "Exact_val", "Compliant"]
     ])
     ldb("Written Heading")
     hash = hashlib.new("sha512")
@@ -422,7 +422,7 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
             policy_values.sort()
         ldb("Current policy_values %s is %s", policy_values, type(policy_values))
 
-        to_csv = [row_dict["number"], row_dict["user_key"], str(policy_values).title(), row_dict["min_val"], row_dict["max_val"], row_dict["exact_val"]]
+        to_csv = [row_dict["number"], row_dict["source"], row_dict["section"], row_dict["user_key"], str(policy_values).title(), row_dict["min_val"], row_dict["max_val"], row_dict["exact_val"]]
         if isinstance(policy_values, list):
             to_csv[2] = ", ".join(policy_values).title()
         ldb("Inintial to_csv: %s", to_csv)
