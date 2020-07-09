@@ -114,6 +114,22 @@ def get_namespace(tag):
 ldb("Done functions")
 
 ldb("Starting config fetching")
+while True:
+    user_cfg = input("Path to custom config file. Leave blank for default.\n > ")
+    if not user_cfg:
+        CONFIG_PATH = os.path.join(WORK_DIR, "config.csv")
+        break
+    else:
+        if not os.path.exists(user_cfg):
+            print("That path does not exist.")
+        elif not os.path.isfile(user_cfg):
+            print("That is not a file.")
+        elif not os.path.splitext(user_cfg)[-1] == ".csv":
+            print("That is not a csv.")
+        else:
+            CONFIG_PATH = user_cfg
+            break
+
 if not os.path.exists(CONFIG_PATH):
     with open(CONFIG_PATH, "w+", newline = "") as file:
         config_csv = csv.writer(file, delimiter=",")
