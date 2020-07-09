@@ -276,7 +276,10 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
 
         if row_dict["source"] == "registry":
             path = row_dict["section"][:-1].split("\\")[1:]
+            if path[0].lower().strip() == "computer":
+                path.remove(path[0])
             ldb("Current path: %s", path)
+
             hkey = path[0]
             key = "\\".join(path[1:])
             subkey = row_dict["policy"]
