@@ -429,6 +429,10 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
 
         linfo("%s is %s where min: %s max: %s exact: %s", row_dict["user_key"], row_dict["type"], bool(row_dict["min_val"]), bool(row_dict["max_val"]), bool(row_dict["exact_val"]))
 
+        if type(policy_values) != row_dict["type"] and (type(policy_value) != int and row_dict["type"] != bool) and (type(policy_value) != bool and row_dict["type"] != int):
+            lwarn("At CF number %s - Expected type: %s but got %s", row_dict["number"], row_dict["type"], type(policy_values))
+            print("Warning! At CF number %s - Expected type: %s but got %s" %(row_dict["number"], row_dict["type"], type(policy_values)))
+
         if row_dict["type"] != type(None) and policy_values == None: # Policy expected but not found:
             lwarn("Expected policy %s not found!", row_dict["policy"])
             to_csv[2] = "None"
