@@ -24,8 +24,8 @@ lwarn("Thread input_keep_alive intentionally commented!")
 ldb("Done threads")
 
 ldb("Setting constants")
-__version__ = "0.1.3"
-__cfg_version__ = "0.1.2"
+__version__ = "0.1.4"
+__cfg_version__ = "0.1.3"
 linfo("Current SW version: %s", __version__)
 linfo("Current config version: %s", __cfg_version__)
 
@@ -68,7 +68,8 @@ ROW_DICT_TEMPLATE = {
     "type" : None,
     "min_val" : None,
     "max_val" : None,
-    "exact_val" : None
+    "exact_val" : None,
+    "default" : False
 }
 ldb("Done constants")
 
@@ -141,8 +142,8 @@ if not os.path.exists(CONFIG_PATH):
     with open(CONFIG_PATH, "w+", newline = "") as file:
         config_csv = csv.writer(file, delimiter=",")
         config_csv.writerows([["Version:", __cfg_version__],
-        ["Note:", "Max_val is inclusive --> min=0 max=5 = 0-1-2-3-4-5.","Default source:",ROW_DICT_TEMPLATE["source"]],
-        ["Number","Source","Section", "Policy_name", "Human_readable_policy_name", "Type", "Min_val", "Max_val", "Exact_val"],
+        ["Note:", "Max_val is inclusive --> min=0 max=5 = 0-1-2-3-4-5.","Default source:",ROW_DICT_TEMPLATE["source"], "Default is_default:", ROW_DICT_TEMPLATE["default"]],
+        ["Number","Source","Section", "Policy_name", "Human_readable_policy_name", "Type", "Min_val", "Max_val", "Exact_val", "is_default"],
         ["-"*15]*8])
     lfatal(ConfigError("Configuration file generated. Please fill."))
     raise ConfigError("Configuration file generated. Please fill.")
@@ -260,6 +261,16 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
         if str(row_dict["source"]).lower().strip() not in SUPPORTED_SOURCES:
             lfatal("%s is not a known source.", row_dict["source"])
             raise ConfigError("%s in not a known source."%row_dict["source"])
+
+        if not isinstance(row_dict["default"], bool):
+            row_dict["default"] = row_dict["default"].title().strip()
+            if row_dict["default"] == "True":
+                row_dict["default"] = True
+            elif row_dict["default"] == "False":
+                row_dict["default"] = False
+            else:
+                lfatal("%s is not a boolean.", row_dict["default"])
+                raise ConfigError("%s in not a boolean."%row_dict["default"])
 
         if row_dict["type"] == "print": # add user key row to output file if type is print:
             out_csv.writerow([row_dict["number"], row_dict["user_key"], row_dict["exact_val"]])
@@ -403,7 +414,10 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
         if row_dict["type"] != type(None) and policy_values == None: # Policy expected but not found:
             lwarn("Expected policy %s not found!", row_dict["policy"])
             to_csv[2] = "None"
-            to_csv.append(False)
+            if row_dict["default"]:
+                to_csv.append(True)
+            else:
+                to_csv.append(False)
 
         elif row_dict["min_val"] == None and row_dict["max_val"] == None and str(row_dict["exact_val"]): # Exact value(s):
             ldb("In exact value")
