@@ -222,6 +222,10 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
         ldb("Current section: >>>%s<<<", row_dict["section"])
 
         # User input testing
+        if str(row_dict["type"]).lower()().strip().startswith("!"):
+            negation = True
+            row_dict["type"] = row_dict["type"][1:]
+
         if str(row_dict["type"]).lower().strip() not in SUPPORTED_TYPES.keys():
             lfatal("%s is not a member of known types %s", row_dict["type"], tuple(SUPPORTED_TYPES.keys()))
             raise TypeError("%s is not a member of supported types %s"%(row_dict["type"], tuple(SUPPORTED_TYPES.keys())))
@@ -513,6 +517,12 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
             lfatal("Inconsistent data. Verify config file at number %s"%row_dict["number"])
             linfo("row_dict: %s", row_dict)
             raise ConfigError("Inconsistent data. Verify config file at number %s"%row_dict["number"])
+
+        if negation:
+            for rev_pos in range(len(rev_pos), 0, -1):
+                if isinstance(to_csv[rev_pos], bool):
+                    to_csv[rev_pos] = not to_csv[rev_pos]
+                    break
 
         linfo("Writing %s", to_csv)
         out_csv.writerow(to_csv)
