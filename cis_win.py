@@ -11,11 +11,12 @@ logging.basicConfig(filename=__file__+'.log', level=logging.DEBUG, format='%(lev
 logging.info('Started')
 logging.info('Starting imports')
 from logging import info as linfo, warning as lwarn, critical as lfatal, debug as ldb
-import os, ctypes, sys, csv, datetime, getpass, socket, stat, hashlib, xml, winreg, argparse
+import os, ctypes, sys, csv, datetime, getpass, socket, stat, hashlib, xml, winreg, argparse, json
 from time import sleep
 from threading import Thread
 from xml.etree import ElementTree as ET
 from winreg import HKEY_LOCAL_MACHINE, HKEY_CLASSES_ROOT, HKEY_CURRENT_USER, HKEY_USERS, HKEY_CURRENT_CONFIG
+from mysql import connector
 ldb('Done Importing')
 
 linfo("Starting threads")
@@ -24,14 +25,16 @@ lwarn("Thread input_keep_alive intentionally commented!")
 ldb("Done threads")
 
 ldb("Setting constants")
-__version__ = "0.1.4"
+__version__ = "0.2.0"
 __cfg_version__ = "0.1.3"
+__json_version__ = "0.1.0"
 linfo("Current SW version: %s", __version__)
 linfo("Current config version: %s", __cfg_version__)
 
 WORK_DIR = os.path.dirname(__file__)
 OUT_PATH = os.path.join(WORK_DIR, "out.csv")
 XML_PATH = os.path.join(WORK_DIR, "group-policy.xml")
+JSON_PATH = os.path.join(WORK_DIR, "config.json")
 GENERATION_COMMAND = 'gpresult /F /X "%s"'%XML_PATH
 REGISTRY = {
     "HKEY_CLASSES_ROOT" : winreg.ConnectRegistry(None, HKEY_CLASSES_ROOT),
@@ -160,6 +163,37 @@ with open(CONFIG_PATH, "r") as file:
         elif row[0].startswith("Version:") and row[1] == __cfg_version__:
             break
 ldb("Done config fetching")
+
+ldb("Starting json fetch")
+if not os.path.exists(JSON_PATH):
+    with open(JSON_PATH, "w+") as file:
+        json.dump({
+            "version" : __json_version__,
+            "namespaces" : {
+                "rsop" : "http://www.microsoft.com/GroupPolicy/Rsop",
+                "settings" : "http://www.microsoft.com/GroupPolicy/Settings",
+                "type" : "http://www.microsoft.com/GroupPolicy/Types",
+                "script" : "http://www.microsoft.com/GroupPolicy/Settings/Scripts",
+                "win-reg" : "http://www.microsoft.com/GroupPolicy/Settings/Windows/Registry",
+                "pub-key" : "http://www.microsoft.com/GroupPolicy/Settings/PublicKey",
+                "registry" : "http://www.microsoft.com/GroupPolicy/Settings/Registry",
+                "audit" : "http://www.microsoft.com/GroupPolicy/Settings/Auditing",
+                "file" : "http://www.microsoft.com/GroupPolicy/Settings/Files",
+                "security" : "http://www.microsoft.com/GroupPolicy/Settings/Security",
+                "eqos" : "http://www.microsoft.com/GroupPolicy/Settings/eqos",
+                "fw" : "http://www.microsoft.com/GroupPolicy/Settings/WindowsFirewall"
+            },
+            "sql" : {
+                "username" : None,
+                "password" : None,
+                "host" : None,
+                "port" : 3306,
+                "database" : None
+            }
+        })
+    lfatal(ConfigError("JSON file generated. Please fill."))
+    raise ConfigError("JSON file generated. Please fill.")
+ldb("Done json fetch")
 
 linfo("Cleaning up")
 for path in (OUT_PATH,):# XML_PATH):
