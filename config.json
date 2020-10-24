@@ -1,0 +1,24 @@
+{
+  "version": "0.1.0",
+  "namespaces": {
+    "rsop": "http://www.microsoft.com/GroupPolicy/Rsop",
+    "settings": "http://www.microsoft.com/GroupPolicy/Settings",
+    "type": "http://www.microsoft.com/GroupPolicy/Types",
+    "script": "http://www.microsoft.com/GroupPolicy/Settings/Scripts",
+    "win-reg": "http://www.microsoft.com/GroupPolicy/Settings/Windows/Registry",
+    "pub-key": "http://www.microsoft.com/GroupPolicy/Settings/PublicKey",
+    "registry": "http://www.microsoft.com/GroupPolicy/Settings/Registry",
+    "audit": "http://www.microsoft.com/GroupPolicy/Settings/Auditing",
+    "file": "http://www.microsoft.com/GroupPolicy/Settings/Files",
+    "security": "http://www.microsoft.com/GroupPolicy/Settings/Security",
+    "eqos": "http://www.microsoft.com/GroupPolicy/Settings/eqos",
+    "fw": "http://www.microsoft.com/GroupPolicy/Settings/WindowsFirewall"
+  },
+  "sql": {
+    "username": null,
+    "password": null,
+    "host": null,
+    "port": 3306,
+    "database": null
+  }
+}
