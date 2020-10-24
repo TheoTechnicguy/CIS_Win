@@ -26,15 +26,15 @@ ldb("Done threads")
 
 ldb("Setting constants")
 __version__ = "0.2.0"
-__cfg_version__ = "0.1.3"
+__pol_version__ = "0.1.3"
 __json_version__ = "0.1.0"
 linfo("Current SW version: %s", __version__)
-linfo("Current config version: %s", __cfg_version__)
+linfo("Current policy version: %s", __pol_version__)
+linfo("Current json version: %s", __json_version__)
 
 WORK_DIR = os.path.dirname(__file__)
 OUT_PATH = os.path.join(WORK_DIR, "out.csv")
 XML_PATH = os.path.join(WORK_DIR, "group-policy.xml")
-JSON_PATH = os.path.join(WORK_DIR, "config.json")
 GENERATION_COMMAND = 'gpresult /F /X "%s"'%XML_PATH
 REGISTRY = {
     "HKEY_CLASSES_ROOT" : winreg.ConnectRegistry(None, HKEY_CLASSES_ROOT),
@@ -122,49 +122,32 @@ parser = argparse.ArgumentParser()
 parser.add_argument(
     "--cfg",
     type = str,
-    help = "Optional config file location."
+    help = "Optional config JSON file location."
 )
+
+parser.add_argument(
+    "--pol",
+    type = str,
+    help = "Optional policy CSV file location."
+)
+
 args = parser.parse_args()
 ldb("Done parser")
 
-ldb("Starting config fetching")
+ldb("Starting JSON fetching")
 if not args.cfg:
-    CONFIG_PATH = os.path.join(WORK_DIR, "config.csv")
+    JSON_PATH = os.path.join(WORK_DIR, "config.json")
 
 else:
     if not os.path.exists(args.cfg):
         raise FileNotFoundError("That path does not exist.")
     elif not os.path.isfile(args.cfg):
         raise Exception("That is not a file.")
-    elif not os.path.splitext(args.cfg)[-1] == ".csv":
-        raise Exception("That is not a csv.")
+    elif not os.path.splitext(args.cfg)[-1] == ".json":
+        raise Exception("That is not a json.")
     else:
-        CONFIG_PATH = args.cfg
+        JSON_PATH = args.cfg
 
-if not os.path.exists(CONFIG_PATH):
-    with open(CONFIG_PATH, "w+", newline = "") as file:
-        config_csv = csv.writer(file, delimiter=",")
-        config_csv.writerows([["Version:", __cfg_version__],
-        ["Note:", "Max_val is inclusive --> min=0 max=5 = 0-1-2-3-4-5.","Default source:",ROW_DICT_TEMPLATE["source"], "Default is_default:", ROW_DICT_TEMPLATE["default"]],
-        ["Number","Source","Section", "Policy_name", "Human_readable_policy_name", "Type", "Min_val", "Max_val", "Exact_val", "is_default"],
-        ["-"*15]*8])
-    lfatal(ConfigError("Configuration file generated. Please fill."))
-    raise ConfigError("Configuration file generated. Please fill.")
-
-with open(CONFIG_PATH, "r") as file:
-    config_csv = csv.reader(file, delimiter=",")
-    for row in config_csv:
-        if not row:
-            continue
-
-        if row[0].startswith("Version:") and row[1] != __cfg_version__:
-            lfatal(ConfigError("Configuration file is depreciated. Please back it up and delete it so it can be regenerated. Current version: %s - File version: %s"%(__cfg_version__, row[1].strip())))
-            raise ConfigError("Configuration file is depreciated. Please back it up and delete it so it can be regenerated. Current version: %s - File version %s"%(__cfg_version__, row[1].strip()))
-        elif row[0].startswith("Version:") and row[1] == __cfg_version__:
-            break
-ldb("Done config fetching")
-
-ldb("Starting json fetch")
 if not os.path.exists(JSON_PATH):
     with open(JSON_PATH, "w+") as file:
         json.dump({
@@ -188,12 +171,78 @@ if not os.path.exists(JSON_PATH):
                 "password" : None,
                 "host" : None,
                 "port" : 3306,
-                "database" : None
+                "database" : None,
+                "table" : None
             }
-        })
+        }, file, indent = 2)
     lfatal(ConfigError("JSON file generated. Please fill."))
     raise ConfigError("JSON file generated. Please fill.")
+else:
+    with open(JSON_PATH, "r") as file:
+        JSON_CFG = json.load(file)
+    ldb("JSON configuration: %s", JSON_CFG)
+    if JSON_CFG["version"] != __json_version__:
+        lfatal(ConfigError("JSON file outdated"))
+        raise ConfigError("JSON file outdated. Please back it up and let it be regenerated.")
 ldb("Done json fetch")
+
+connection_attempts, max_connection_attempts = 0, 5
+while JSON_CFG["sql"]["host"] != None and connection_attempts < max_connection_attempts:
+    try:
+        SQL_CONNECTION = connector.connect(**JSON_CFG["sql"])
+    except Exception as e:
+        e_num = e.errno
+        if e_num == 2003 and connection_attempts < max_connection_attempts - 1:
+            print("Connection timed out. %i/%i" %(connection_attempts, max_connection_attempts))
+            sleep(0.5)
+            continue
+        else:
+            lwarn("Could not connect: %s", Exception(e))
+            print(Exception(e))
+    else:
+        linfo("Connected to %s", JSON_CFG["sql"]["host"])
+        break
+else:
+    linfo("Using local policy file.")
+    if args.pol:
+        if not os.path.exists(args.pol):
+            raise FileNotFoundError("That path does not exist.")
+        elif not os.path.isfile(args.pol):
+            raise Exception("That is not a file.")
+        elif not os.path.splitext(args.pol)[-1] == ".json":
+            raise Exception("That is not a json.")
+        else:
+            POLICY_PATH = args.pol
+    elif os.path.exists(os.path.join(WORK_DIR, "config.csv")) and not os.path.exists(os.path.join(WORK_DIR, "policy.csv")):
+        print("Warning: policy file name outdated.")
+        POLICY_PATH = os.path.join(WORK_DIR, "policy.csv")
+        os.rename(os.path.join(WORK_DIR, "config.csv"))
+    else:
+        POLICY_PATH = os.path.join(WORK_DIR, "policy.csv")
+
+    if not os.path.exists(POLICY_PATH):
+        with open(POLICY_PATH, "w+", newline = "") as file:
+            policy_csv = csv.writer(file, delimiter=",")
+            policy_csv.writerows([["Version:", __pol_version__],
+            ["Note:", "Max_val is inclusive --> min=0 max=5 = 0-1-2-3-4-5.","Default source:",ROW_DICT_TEMPLATE["source"], "Default is_default:", ROW_DICT_TEMPLATE["default"]],
+            ["Number","Source","Section", "Policy_name", "Human_readable_policy_name", "Type", "Min_val", "Max_val", "Exact_val", "is_default"],
+            ["-"*15]*8])
+        lfatal(ConfigError("Configuration file generated. Please fill."))
+        raise ConfigError("Configuration file generated. Please fill.")
+
+    with open(POLICY_PATH, "r") as file:
+        policy_csv = csv.reader(file, delimiter=",")
+        for row in policy_csv:
+            if not row:
+                continue
+            JSON_PATH = args.cfg
+
+            if row[0].startswith("Version:") and row[1] != __pol_version__:
+                lfatal(ConfigError("Configuration file is depreciated. Please back it up and delete it so it can be regenerated. Current version: %s - File version: %s"%(__pol_version__, row[1].strip())))
+                raise ConfigError("Configuration file is depreciated. Please back it up and delete it so it can be regenerated. Current version: %s - File version %s"%(__pol_version__, row[1].strip()))
+            elif row[0].startswith("Version:") and row[1] == __pol_version__:
+                break
+    ldb("Done policy fetching")
 
 linfo("Cleaning up")
 for path in (OUT_PATH,):# XML_PATH):
@@ -227,9 +276,9 @@ xml_file = ET.parse(XML_PATH)
 xml_root = xml_file.getroot()
 
 linfo("Opening file out at %s"%OUT_PATH)
-with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newline = "") as config_file:
+with open(OUT_PATH, "w+", newline = "") as out_file, open(POLICY_PATH, "r", newline = "") as policy_file:
     out_csv = csv.writer(out_file, delimiter=",")
-    config_csv = csv.reader(config_file, delimiter=",")
+    policy_csv = csv.reader(policy_file, delimiter=",")
     time_now = datetime.datetime.now()
     out_csv.writerows([
         ["Output file version:", __version__, "Execution time:", time_now, "XML execution time:", xml_root.find("rsop:ReadTime", STUPID_NAMESPACE).text],
@@ -249,23 +298,23 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
     ldb("Written Heading")
     hash = hashlib.new("sha512")
 
-    for config_row in config_csv:
-        linfo(" --- New config row ---")
-        ldb("Current config_row: %s", config_row)
-        if not config_row or config_row[0] in ("Number", "Note:", "Comment", "Version:", "-"*15, ""):
+    for policy_row in policy_csv:
+        linfo(" --- New policy row ---")
+        ldb("Current policy_row: %s", policy_row)
+        if not policy_row or policy_row[0] in ("Number", "Note:", "Comment", "Version:", "-"*15, ""):
             continue
 
         ldb("Copying template & filling")
         row_dict = ROW_DICT_TEMPLATE.copy()
         row_dict_keys = list(row_dict.keys())
-        for pos in range(len(config_row)):
+        for pos in range(len(policy_row)):
             if len(row_dict_keys) <= pos:
                 break
-            ldb("Setting row_dict['%s'] to %s from config_row[%i]", row_dict_keys[pos], config_row[pos], pos)
-            if not config_row[pos]:
+            ldb("Setting row_dict['%s'] to %s from policy_row[%i]", row_dict_keys[pos], policy_row[pos], pos)
+            if not policy_row[pos]:
                 row_dict[row_dict_keys[pos]] = ROW_DICT_TEMPLATE[row_dict_keys[pos]]
             else:
-                row_dict[row_dict_keys[pos]] = config_row[pos].strip()
+                row_dict[row_dict_keys[pos]] = policy_row[pos].strip()
 
         ldb("Current row_dict: %s", row_dict)
         linfo("Current policy: %s", row_dict["policy"])
@@ -362,7 +411,7 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
                 ldb("Current registry: %s %s", registry, REGISTRY[hkey])
             except KeyError:
                 lfatal(ConfigError("Registry %s not found"%hkey))
-                raise ConfigError("Registry %s not found. Verify your config file!"%hkey)
+                raise ConfigError("Registry %s not found. Verify your policy file!"%hkey)
             else:
                 ldb("Looking for %s in %s", key, hkey)
                 try:
@@ -586,9 +635,9 @@ with open(OUT_PATH, "w+", newline = "") as out_file, open(CONFIG_PATH, "r", newl
             else:
                 raise TypeError("Cannot evaluate a range with type %s"%row_dict["type"])
         else:
-            lfatal("Inconsistent data. Verify config file at number %s"%row_dict["number"])
+            lfatal("Inconsistent data. Verify policy file at number %s"%row_dict["number"])
             linfo("row_dict: %s", row_dict)
-            raise ConfigError("Inconsistent data. Verify config file at number %s"%row_dict["number"])
+            raise ConfigError("Inconsistent data. Verify policy file at number %s"%row_dict["number"])
 
         if negation:
             for rev_pos in range(len(rev_pos), 0, -1):
