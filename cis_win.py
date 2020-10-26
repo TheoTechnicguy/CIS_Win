@@ -3,6 +3,7 @@
 # Program: Python 3.8
 # Ext: py
 # Licensed under GPU GPLv3 and later.
+# Copyright (c) 2020 Theo Technicguy All Rights Reserved.
 # -----------------------
 
 import logging
@@ -25,6 +26,7 @@ from winreg import (
     HKEY_CURRENT_CONFIG,
 )
 
+# Configuration for the log file.
 logging.basicConfig(
     filename=__file__ + ".log",
     level=logging.DEBUG,
@@ -36,21 +38,29 @@ logging.basicConfig(
 
 logging.info("Started")
 
-logging.info("Starting threads")
+# logging.info("Starting threads")
 # Thread(target=input).start()
-logging.warning("Thread input_keep_alive intentionally commented!")
-logging.debug("Done threads")
+# logging.warning("Thread input_keep_alive intentionally commented!")
+# logging.debug("Done threads")
 
 logging.debug("Setting constants")
-__version__ = "0.1.5"
+# Define program and config version and write to log file.
+__version__ = "0.1.6"
 __cfg_version__ = "0.1.3"
 logging.info("Current SW version: %s", __version__)
 logging.info("Current config version: %s", __cfg_version__)
 
+# Set work directory and file paths.
 WORK_DIR = os.path.dirname(__file__)
 OUT_PATH = os.path.join(WORK_DIR, "out.csv")
 XML_PATH = os.path.join(WORK_DIR, "group-policy.xml")
+
+# GPO generation command. Used later...
+# COMBAK: Keep as constant or move to cmd?
 GENERATION_COMMAND = 'gpresult /F /X "%s"' % XML_PATH
+
+# Set registry dictionnary
+# OPTIMIZE: Which do I need? They generate all a memory object!
 REGISTRY = {
     "HKEY_CLASSES_ROOT": winreg.ConnectRegistry(None, HKEY_CLASSES_ROOT),
     "HKEY_CURRENT_USER": winreg.ConnectRegistry(None, HKEY_CURRENT_USER),
@@ -59,21 +69,33 @@ REGISTRY = {
     "HKEY_CURRENT_CONFIG": winreg.ConnectRegistry(None, HKEY_CURRENT_CONFIG),
 }
 
+# Set XML namespaces dictionnary
 STUPID_NAMESPACE = {
-    "rsop": "http://www.microsoft.com/GroupPolicy/Rsop",  # root
-    "settings": "http://www.microsoft.com/GroupPolicy/Settings",  # root 2
-    "type": "http://www.microsoft.com/GroupPolicy/Types",  # root 3
-    "script": "http://www.microsoft.com/GroupPolicy/Settings/Scripts",  # q1 & q6
-    "win-reg": "http://www.microsoft.com/GroupPolicy/Settings/Windows/Registry",  # q2 & q8
-    "pub-key": "http://www.microsoft.com/GroupPolicy/Settings/PublicKey",  # q3 & q12
-    "registry": "http://www.microsoft.com/GroupPolicy/Settings/Registry",  # q4 & q5 & q15 & q16
-    "audit": "http://www.microsoft.com/GroupPolicy/Settings/Auditing",  # q7
-    "file": "http://www.microsoft.com/GroupPolicy/Settings/Files",  # q9
-    "security": "http://www.microsoft.com/GroupPolicy/Settings/Security",  # q10 & q11
-    "eqos": "http://www.microsoft.com/GroupPolicy/Settings/eqos",  # q13
-    "fw": "http://www.microsoft.com/GroupPolicy/Settings/WindowsFirewall",  # q14
+    # Roots: Main, Settings (root 2) and Type (root 3)
+    "rsop": "http://www.microsoft.com/GroupPolicy/Rsop",
+    "settings": "http://www.microsoft.com/GroupPolicy/Settings",
+    "type": "http://www.microsoft.com/GroupPolicy/Types",
+    # q1 & q6
+    "script": "http://www.microsoft.com/GroupPolicy/Settings/Scripts",
+    # q2 & q8
+    "win-reg": "http://www.microsoft.com/GroupPolicy/Settings/Windows/Registry",
+    # q3 & q12
+    "pub-key": "http://www.microsoft.com/GroupPolicy/Settings/PublicKey",
+    # q4 & q5 & q15 & q16
+    "registry": "http://www.microsoft.com/GroupPolicy/Settings/Registry",
+    # q7
+    "audit": "http://www.microsoft.com/GroupPolicy/Settings/Auditing",
+    # q9
+    "file": "http://www.microsoft.com/GroupPolicy/Settings/Files",
+    # q10 & q11
+    "security": "http://www.microsoft.com/GroupPolicy/Settings/Security",
+    # q13
+    "eqos": "http://www.microsoft.com/GroupPolicy/Settings/eqos",
+    # q14
+    "fw": "http://www.microsoft.com/GroupPolicy/Settings/WindowsFirewall",
 }
 
+# Dictionnary with type conversion.
 SUPPORTED_TYPES = {
     "int": int,
     "float": float,
@@ -83,8 +105,11 @@ SUPPORTED_TYPES = {
     "list": list,
     "print": "print",
 }
+
+# Tuple of supported sources
 SUPPORTED_SOURCES = ("xml", "registry")
 
+# Template for the row dictionnary.
 ROW_DICT_TEMPLATE = {
     "number": None,
     "source": "xml",
@@ -99,6 +124,7 @@ ROW_DICT_TEMPLATE = {
 }
 logging.debug("Done constants")
 
+# Custom Exception Classes.
 logging.debug("Creating classes")
 
 
@@ -146,14 +172,18 @@ class ConfigError(Exception):
 
 logging.debug("Done setting up classes")
 
+# Argument Parser setup.
+# Argument Parser = python -V --me
+#                           ^  ^^
 logging.debug("Setting up parser.")
-
 parser = argparse.ArgumentParser()
 parser.add_argument("--cfg", type=str, help="Optional config file location.")
 args = parser.parse_args()
 
 logging.debug("Done setting up parser.")
 
+# Get argements or set variables to default values.
+# TODO: Check file existance and set cmd defautl value.
 logging.debug("Starting config fetching")
 if not args.cfg:
     CONFIG_PATH = os.path.join(WORK_DIR, "config.csv")
@@ -167,7 +197,9 @@ else:
     else:
         CONFIG_PATH = args.cfg
 
+# Generate configuration file if it does not exist.
 if not os.path.exists(CONFIG_PATH):
+    # OPTIMIZE: combine the open with the csv writer.
     with open(CONFIG_PATH, "w+", newline="") as file:
         config_csv = csv.writer(file, delimiter=",")
         config_csv.writerows(
@@ -196,15 +228,22 @@ if not os.path.exists(CONFIG_PATH):
                 ["-" * 15] * 8,
             ]
         )
+    # End program and ask configuration file filling.
     logging.critical(ConfigError("Configuration file generated. Please fill."))
     raise ConfigError("Configuration file generated. Please fill.")
 
+# OPTIMIZE: combine the open with the csv writer.
 with open(CONFIG_PATH, "r") as file:
     config_csv = csv.reader(file, delimiter=",")
+
+    # Iterate every row.
     for row in config_csv:
+        # Skip if row is blank
         if not row:
             continue
 
+        # Verify version.
+        # COMBAK: Kill this option and make a DepreciationWarning
         if row[0].startswith("Version:") and row[1] != __cfg_version__:
             logging.critical(
                 ConfigError(
@@ -225,12 +264,17 @@ with open(CONFIG_PATH, "r") as file:
 logging.debug("Done config fetching")
 
 logging.info("Cleaning up")
+# Clean up files.
+# COMBAK: Should be at the end of the program: "Clean up"
+# XML_PATH is not cleaned up because I need it for development.
 for path in (OUT_PATH,):  # XML_PATH):
     logging.debug("Cleaning %s", path)
     try:
+        # Set rights to write before deletion.
         os.chmod(path, stat.S_IWUSR)
         os.remove(path)
     except FileNotFoundError:
+        # Skip not existing files.
         pass
     except Exception as e:
         logging.critical(Exception(e))
@@ -238,11 +282,13 @@ for path in (OUT_PATH,):  # XML_PATH):
         logging.warning("Deleted %s", path)
 logging.warning("Cleanup of group-policy.xml intentionally commented!")
 
+# Verify program being run as administrator.
 try:
     ctypes.windll.shell32.IsUserAnAdmin()
 except Exception:
     raise AdminError()
 
+# Generate GPO XML file if it does not exist.
 if not os.path.exists(XML_PATH):
     print("Getting group-policy.xml file. This may take a while...")
     logging.info(
@@ -250,20 +296,31 @@ if not os.path.exists(XML_PATH):
     )
     os.system(GENERATION_COMMAND)
 # logging.warning("XML regeneration intentionally commented!")
+
+# Change rights to read only (Attempt at tampering minimization).
 logging.info("Changing %s to read_only", XML_PATH)
 os.chmod(XML_PATH, stat.S_IRUSR)
 
+# Read GPO XML as xml file and select root.
 logging.info("Initializing xml file at %s" % XML_PATH)
 xml_file = ET.parse(XML_PATH)
 xml_root = xml_file.getroot()
 
+# Create output file and read config file.
 logging.info("Opening file out at %s" % OUT_PATH)
 with open(OUT_PATH, "w+", newline="") as out_file, open(
     CONFIG_PATH, "r", newline=""
 ) as config_file:
+    # Read files as CSV
+    # OPTIMIZE: combine open with csv writer.
     out_csv = csv.writer(out_file, delimiter=",")
     config_csv = csv.reader(config_file, delimiter=",")
+
+    # Get current time.
     time_now = datetime.datetime.now()
+
+    # Write header.
+    # OPTIMIZE: Create template file and dwl/copy it. Possible?
     out_csv.writerows(
         [
             [
@@ -331,12 +388,18 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
             ],
         ]
     )
+
+    # Create Integrity Hash using sha512.
     logging.debug("Written Heading")
     hash = hashlib.new("sha512")
 
+    # Iterate config file rows.
     for config_row in config_csv:
         logging.info(" --- New config row ---")
         logging.debug("Current config_row: %s", config_row)
+
+        # Skip file headers and comments.
+        # OPTIMIZE: Create function to evaluate if it "x.x.x.x" style.
         if not config_row or config_row[0] in (
             "Number",
             "Note:",
@@ -347,18 +410,27 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
         ):
             continue
 
+        # Fill template with info.
+        # OPTIMIZE: Use template once and overwrite last info.
         logging.debug("Copying template & filling")
         row_dict = ROW_DICT_TEMPLATE.copy()
         row_dict_keys = list(row_dict.keys())
+
+        # OPTIMIZE: change to enumerate?
         for pos in range(len(config_row)):
             if len(row_dict_keys) <= pos:
                 break
+
             logging.debug(
                 "Setting row_dict['%s'] to %s from config_row[%i]",
                 row_dict_keys[pos],
                 config_row[pos],
                 pos,
             )
+
+            # If entry is empty, use default value.
+            # OPTIMIZE: Because I copied the template, I DO NOT NEED TO RESET
+            # THE DEFAULT VALUE!
             if not config_row[pos]:
                 row_dict[row_dict_keys[pos]] = ROW_DICT_TEMPLATE[
                     row_dict_keys[pos]
@@ -369,6 +441,8 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
         logging.debug("Current row_dict: %s", row_dict)
         logging.info("Current policy: %s", row_dict["policy"])
 
+        # If the end of the path is a wildcard, remove it.
+        # If it doesn't end with `/`, add one.
         logging.debug("Analizing ending of section: %s", row_dict["section"])
         if not row_dict["section"].endswith("/"):
             if row_dict["section"].endswith("*"):
@@ -377,13 +451,15 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
                 row_dict["section"] += "/"
         logging.debug("Current section: >>>%s<<<", row_dict["section"])
 
-        # User input testing
+        # OPTIMIZE: Create a varriable that is lowered and stripped.
+        # If the type starts with an `!`, negate the result.
         if str(row_dict["type"]).lower().strip().startswith("!"):
             negation = True
             row_dict["type"] = row_dict["type"][1:]
         else:
             negation = False
 
+        # Check that the type is supported and convert it. Else raise TypeError
         if str(row_dict["type"]).lower().strip() not in SUPPORTED_TYPES.keys():
             logging.critical(
                 "%s is not a member of known types %s",
@@ -400,10 +476,13 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
                 str(row_dict["type"]).lower().strip()
             ]
 
+        # Check source is known.
         if str(row_dict["source"]).lower().strip() not in SUPPORTED_SOURCES:
             logging.critical("%s is not a known source.", row_dict["source"])
             raise ConfigError("%s in not a known source." % row_dict["source"])
 
+        # Convert string booleans to booleans
+        # OPTIMIZE: use distutils.util.strtobool?
         if not isinstance(row_dict["default"], bool):
             row_dict["default"] = row_dict["default"].title().strip()
             if row_dict["default"] == "True":
@@ -414,9 +493,9 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
                 logging.critical("%s is not a boolean.", row_dict["default"])
                 raise ConfigError("%s in not a boolean." % row_dict["default"])
 
-        if (
-            row_dict["type"] == "print"
-        ):  # add user key row to output file if type is print:
+        # Add `print` types to output file and start over.
+        # OPTIMIZE: move up to, like, directly after headers and commit jumps?
+        if row_dict["type"] == "print":
             out_csv.writerow(
                 [
                     row_dict["number"],
@@ -426,6 +505,7 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
             )
             continue
 
+        # Check that section and policy cells aren't empty.
         if not row_dict["section"]:
             logging.critical(
                 "Section number %s cannot be empty!", row_dict["number"]
@@ -440,9 +520,12 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
             raise ConfigError(
                 "Policy number %s cannot be empty!" % row_dict["number"]
             )
-        # END user input testing
 
+        # Converting cell values acoording to types.
+        # FIXME: USE `isinstance`!!!
         if row_dict["type"] == bool:
+            # Boolean convertsion.
+            # OPTIMIZE: Use distutils.utils.strtobool?
             logging.debug("Converting boolean %s", row_dict["exact_val"])
             if row_dict["exact_val"].title().strip() == "True":
                 row_dict["exact_val"] = True
@@ -452,6 +535,8 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
                 "Current row_dict['exact_val']: %s", row_dict["exact_val"]
             )
         elif row_dict["type"] == list:
+            # WHAAAAAT?
+            # COMBAK: Needs comments.
             list_values = {}
             if row_dict["exact_val"]:
                 list_values["exact_val"] = None
@@ -473,6 +558,7 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
                 list_values[list_item].sort()
                 logging.debug("Current values: %s", list_values[list_item])
 
+        # If there is not humnanly readable policy, use the programmatic one.
         if not row_dict["user_key"]:
             row_dict["user_key"] = row_dict["policy"]
 
@@ -481,14 +567,24 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
 
         verify = True
         if row_dict["source"] == "registry":
+            # OPTIMIZE: User replace or removeprefix for computer
+            # and for the registry.
+            # WHAAAAAT: just remove the lase `\` if you don't need it...
+            # WHAAAAAT: You split it to join it again ?!?
             path = row_dict["section"][:-1].split("\\")[1:]
             if path[0].lower().strip() == "computer":
                 path.remove(path[0])
             logging.debug("Current path: %s", path)
 
+            # Set HKEY, key path and subkey name.
             hkey = path[0]
             key = "\\".join(path[1:])
             subkey = row_dict["policy"]
+
+            # Attempt to get the registry. Raise ConfigError if it fails.
+            # Then get the key but pass if you cannot find it.
+            # Issue #4 states that a missing key can mean a default value.
+            # OPTIMIZE: combine the try: ... except: statements.
             try:
                 registry = REGISTRY[hkey]
                 logging.debug(
@@ -506,15 +602,15 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
                     policy_value = winreg.QueryValueEx(open_key, subkey)[0]
                     open_key.Close()
                 except FileNotFoundError:
-                    # logging.critical(r"Cannot find policy %s\%s\%s", hkey,
-                    #                  key, subkey)
-                    # raise ConfigError(r"Cannot find policy %s\%s\%s. Verify
-                    #                 spelling in the CF."%(hkey, key, subkey))
-                    # Issue #4
+                    # Issue #4 - Missing key can mean default value.
                     pass
 
         else:
+            # If the source is not registry, the default (XML).
             next_is_value = False
+
+            # Speciality for firewall policies.
+            # COMBAK: unify with rest. Wasn't this a hotfix?
             if row_dict["policy"].startswith("fw:"):
                 logging.debug(
                     "Looking for fw policy %s",
@@ -526,6 +622,8 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
                         )
                     ),
                 )
+
+                # Find the policy in the XML
                 policy_value = xml_root.find(
                     "/".join(
                         (row_dict["section"], row_dict["policy"], "fw:Value")
@@ -534,26 +632,33 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
                 ).text
 
             else:
+                # For non firewall policies
+                # TODO: Learn aboux xml lib.
                 for item in xml_root.findall(
                     row_dict["section"], STUPID_NAMESPACE
                 ):
+                    # Get item tag
                     item_tag = item.tag.split("}")[-1]
+                    # WHAAAAAT: Consistency PLEASE!
                     logging.debug(
                         f"Current item: {item_tag!s:15}" + "next_is_value: %s",
                         next_is_value,
                     )
 
+                    # Look if we found the policy.
                     if "Name" in item_tag and item.text == row_dict["policy"]:
                         logging.debug("Found policy %s", item.text)
                         next_is_value = True
                     elif "Name" in item_tag and policy_values:
+                        # break loop if we have the policy value.
                         logging.debug("Breaking")
                         break
 
                     elif next_is_value and "Setting" in item_tag:
+                        # Get the policy value if the previous tag was name
                         policy_value = item.text
                         tag_type_str = (
-                            item_tag[len("Setting") :].lower().strip()
+                            item_tag[len("Setting"):].lower().strip()
                         )
                         logging.debug(
                             "After adding value Current policy_values: %s",
@@ -561,6 +666,8 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
                         )
 
                     elif next_is_value and "Member" in item_tag:
+                        # If the policy value is a list (Member) get all list
+                        # members. Also do not verify.
                         logging.debug("Getting Members: %s", item.tag)
                         for name in item:
                             logging.debug(
@@ -570,6 +677,10 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
                             policy_values.append(name.text.lower().strip())
                         verify = False
 
+        # Verify/convert policy value.
+        # OPTIMIZE: use str's .isdigit to convert to int.
+        # OPTIMIZE: use distutils.utils.strtobool?
+        # COMBAK: Is there a float value?
         if not isinstance(policy_value, type(None)) and verify:
             try:
                 int(policy_value)
@@ -595,6 +706,9 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
             policy_values,
             len(policy_values),
         )
+
+        # Change policy_values list to one item. If list is empty, use None.
+        # OPTIMIZE: use standard int<->bool and list<->bool expressions.
         if len(policy_values) == 0:
             policy_values = None
         elif len(policy_values) == 1:
@@ -607,6 +721,8 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
             type(policy_values),
         )
 
+        # Ceate output list.
+        # OPTIMIZE: combine code below with a list comprehention.
         to_csv = [
             row_dict["number"],
             row_dict["source"],
@@ -617,6 +733,8 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
             row_dict["max_val"],
             row_dict["exact_val"],
         ]
+        # V Code below. V
+        # WHAAAAAT: ? Convert list to str? ?!?????
         if isinstance(policy_values, list):
             to_csv[2] = ", ".join(policy_values).title()
         logging.debug("Inintial to_csv: %s", to_csv)
@@ -630,6 +748,8 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
             bool(row_dict["exact_val"]),
         )
 
+        # Warn about type differences.
+        # OPTIMIZE: Use isinstance. Use `in` statements with tuples.
         if (
             type(policy_values) != row_dict["type"]
             and (type(policy_value) != int and row_dict["type"] != bool)
@@ -646,9 +766,10 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
                 % (row_dict["number"], row_dict["type"], type(policy_values))
             )
 
-        if (
-            isinstance(row_dict["type"], type(None)) and policy_values is None
-        ):  # Policy expected but not found:
+        # WHAAAAAT? - comment not matching with if clause.
+        # If no policy values are found and type is None, warn about it.
+        if isinstance(row_dict["type"], type(None)) and policy_values is None:
+            # Policy expected but not found.
             logging.warning(
                 "Expected policy %s not found!", row_dict["policy"]
             )
@@ -662,12 +783,11 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
             row_dict["min_val"] is None
             and row_dict["max_val"] is None
             and str(row_dict["exact_val"])
-        ):  # Exact value(s):
+        ):
+            # If an exact value is requested, compare using exact values.
             logging.debug("In exact value")
             if row_dict["type"] == int:
-                to_csv.append(
-                    int(policy_values) == int(row_dict["exact_val"])
-                )  # compliance
+                to_csv.append(int(policy_values) == int(row_dict["exact_val"]))
 
             elif row_dict["type"] == float:
                 to_csv.append(
@@ -675,19 +795,22 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
                 )
 
             elif isinstance(row_dict["type"], type(None)):
-                to_csv.append(not policy_values)  # compliance
+                to_csv.append(not policy_values)
 
             elif row_dict["type"] == str:
                 to_csv.append(
                     policy_values == row_dict["exact_val"].lower().strip()
-                )  # compliance:
+                )
 
+            # OPTIMIZE: Use isinstance.
             elif row_dict["type"] == list:
+                # FIXME: Don't need to check. (?)
                 try:
                     list_values["exact_val"]
                 except KeyError:
                     raise ConfigError("Could not find any data in exact_val")
 
+                # Convert to lists if nessesary.
                 if not isinstance(policy_values, list):
                     policy_values = [policy_values]
                 if not isinstance(list_values["exact_val"], list):
@@ -714,17 +837,17 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
             str(row_dict["min_val"])
             and row_dict["max_val"] is None
             and row_dict["exact_val"] is None
-        ):  # minimum:
+        ):
+            # If minimum value is requested, compare using minimum.
+            # OPTIMIZE: First look for range, then min/max.
             logging.debug("In min value")
             if row_dict["type"] == int:
-                to_csv.append(
-                    int(policy_values) >= int(row_dict["min_val"])
-                )  # compliance
+                to_csv.append(int(policy_values) >= int(row_dict["min_val"]))
 
             elif row_dict["type"] == float:
                 to_csv.append(
                     float(policy_values) >= float(row_dict["min_val"])
-                )  # compliance
+                )
 
             elif row_dict["type"] == list:
                 try:
@@ -732,6 +855,8 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
                 except KeyError:
                     raise ConfigError("Could not find any data in min_val")
 
+                # Convert to list if nessesary.
+                # OPTIMIZE: use list()
                 if not isinstance(policy_values, list):
                     policy_values = [policy_values]
                 if not isinstance(list_values["min_val"], list):
@@ -753,17 +878,17 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
             row_dict["min_val"] is None
             and str(row_dict["max_val"])
             and row_dict["exact_val"] is None
-        ):  # maximum:
+        ):
+            # If maximum value is requested, compare using maxmum.
+            # OPTIMIZE: First look for range, then min/max.
             logging.debug("In max value")
             if row_dict["type"] == int:
-                to_csv.append(
-                    int(policy_values) < int(row_dict["min_val"])
-                )  # compliance
+                to_csv.append(int(policy_values) < int(row_dict["min_val"]))
 
             elif row_dict["type"] == float:
                 to_csv.append(
                     float(policy_values) < float(row_dict["min_val"])
-                )  # compliance
+                )
 
             elif row_dict["type"] == list:
                 try:
@@ -771,6 +896,8 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
                 except KeyError:
                     raise ConfigError("Could not find any data in max_val")
 
+                # Convert to list if nessesary.
+                # OPTIMIZE: use list()
                 if not isinstance(policy_values, list):
                     policy_values = [policy_values]
                 if not isinstance(list_values["max_val"], list):
@@ -792,7 +919,10 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
             str(row_dict["min_val"])
             and str(row_dict["max_val"])
             and row_dict["exact_val"] is None
-        ):  # range:
+        ):
+            # If range value is requested, compare using range.
+            # OPTIMIZE: First look for range, then min/max.
+            # NOTE: Range is inclusive of max value! (note the +1)
             logging.debug("In range")
             if row_dict["type"] == int:
                 to_csv.append(
@@ -811,6 +941,8 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
                         "Could not find any data in min_val or max_val"
                     )
 
+                # Convert to list if nessesary.
+                # OPTIMIZE: use list()
                 if not isinstance(policy_values, list):
                     policy_values = [policy_values]
                 if not isinstance(list_values["max_val"], list):
@@ -846,23 +978,33 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
                 % row_dict["number"]
             )
 
+        # Ok. This is emparasing. rev_pos is not defined.
+        # WHAAAAAT ?
         if negation:
             for rev_pos in range(len(rev_pos), 0, -1):
                 if isinstance(to_csv[rev_pos], bool):
                     to_csv[rev_pos] = not to_csv[rev_pos]
                     break
 
+        # Write to out CSV file.
         logging.info("Writing %s", to_csv)
         out_csv.writerow(to_csv)
+
+        # WHAAAAAT? reverse list and iterate to find the compliance boolean?
         to_csv.reverse()
         for item in to_csv:
             if isinstance(item, bool):
                 hash.update(bytes(str(item).lower(), "utf-8"))
                 break
+
+    # Add compliance hash.
     out_csv.writerow(["Compliance integrity:", hash.hexdigest().upper()])
+
+# Change rights to read only.
 logging.info("Changing %s to read_only", OUT_PATH)
 os.chmod(OUT_PATH, stat.S_IRUSR)
 
+# Clean up after yourself.
 logging.info("Cleaning up")
 # os.chmod(XML_PATH, stat.S_IWUSR) # Need to allow writing to delete.
 # os.remove(XML_PATH)
