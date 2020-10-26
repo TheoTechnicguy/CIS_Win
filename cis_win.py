@@ -45,7 +45,7 @@ logging.info("Started")
 
 logging.debug("Setting constants")
 # Define program and config version and write to log file.
-__version__ = "0.1.6"
+__version__ = "0.1.7"
 __cfg_version__ = "0.1.3"
 logging.info("Current SW version: %s", __version__)
 logging.info("Current config version: %s", __cfg_version__)
@@ -981,7 +981,12 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
         # Ok. This is emparasing. rev_pos is not defined.
         # WHAAAAAT ?
         if negation:
-            for rev_pos in range(len(rev_pos), 0, -1):
+            for rev_pos in range(len(to_csv) - 1, -1, -1):
+                logging.debug(
+                    f"Negation: rev_pos {rev_pos}, "
+                    "to_csv[rev_pos] {to_csv[rev_pos]}"
+                )
+
                 if isinstance(to_csv[rev_pos], bool):
                     to_csv[rev_pos] = not to_csv[rev_pos]
                     break
