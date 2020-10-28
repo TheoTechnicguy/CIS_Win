@@ -45,7 +45,7 @@ logging.info("Started")
 
 logging.debug("Setting constants")
 # Define program and config version and write to log file.
-__version__ = "0.1.10"
+__version__ = "0.1.11"
 __cfg_version__ = "0.1.3"
 logging.info("Current SW version: %s", __version__)
 logging.info("Current config version: %s", __cfg_version__)
@@ -172,6 +172,23 @@ class ConfigError(Exception):
 
 logging.debug("Done setting up classes")
 
+logging.debug("Setting up functions.")
+
+
+def location_number_like(number: int) -> bool:
+    """Check if `number` is a location/version-like number.
+
+    Returns True if `number` is of type x.x.x.x, where x is an int.
+    """
+    logging.debug(
+        f"location like number called with {number}. "
+        f"Replaced: {number.replace('.', '')}."
+    )
+    return number.replace(".", "").isdigit()
+
+
+logging.debug("Finished setting up functions.")
+
 # Argument Parser setup.
 # Argument Parser = python -V --me
 #                           ^  ^^
@@ -199,7 +216,6 @@ else:
 
 # Generate configuration file if it does not exist.
 if not os.path.exists(CONFIG_PATH):
-    # OPTIMIZE: combine the open with the csv writer.
     with open(CONFIG_PATH, "w+", newline="") as file:
         config_csv = csv.writer(file, delimiter=",")
         config_csv.writerows(
@@ -232,7 +248,6 @@ if not os.path.exists(CONFIG_PATH):
     logging.critical(ConfigError("Configuration file generated. Please fill."))
     raise ConfigError("Configuration file generated. Please fill.")
 
-# OPTIMIZE: combine the open with the csv writer.
 with open(CONFIG_PATH, "r") as file:
     config_csv = csv.reader(file, delimiter=",")
 
@@ -284,6 +299,7 @@ logging.warning("Cleanup of group-policy.xml intentionally commented!")
 # Allow overwriting of output file if it exists.
 
 # Verify program being run as administrator.
+# Starting Python 3.9, this returns a boolean int.
 try:
     if not ctypes.windll.shell32.IsUserAnAdmin():
         raise AdminError()
@@ -297,7 +313,6 @@ if not os.path.exists(XML_PATH):
         "Running group-policy export command '%s'", GENERATION_COMMAND
     )
     os.system(GENERATION_COMMAND)
-# logging.warning("XML regeneration intentionally commented!")
 
 # Change rights to read only (Attempt at tampering minimization).
 logging.info("Changing %s to read_only", XML_PATH)
@@ -314,7 +329,6 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
     CONFIG_PATH, "r", newline=""
 ) as config_file:
     # Read files as CSV
-    # OPTIMIZE: combine open with csv writer.
     out_csv = csv.writer(out_file, delimiter=",")
     config_csv = csv.reader(config_file, delimiter=",")
 
@@ -402,14 +416,8 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
 
         # Skip file headers and comments.
         # OPTIMIZE: Create function to evaluate if it "x.x.x.x" style.
-        if not config_row or config_row[0] in (
-            "Number",
-            "Note:",
-            "Comment",
-            "Version:",
-            "-" * 15,
-            "",
-        ):
+        if not location_number_like(config_row[0]):
+            logging.debug("Skipping row.")
             continue
 
         # Fill template with info.
