@@ -45,7 +45,7 @@ logging.info("Started")
 
 logging.debug("Setting constants")
 # Define program and config version and write to log file.
-__version__ = "0.1.7"
+__version__ = "0.1.8"
 __cfg_version__ = "0.1.3"
 logging.info("Current SW version: %s", __version__)
 logging.info("Current config version: %s", __cfg_version__)
@@ -284,7 +284,8 @@ logging.warning("Cleanup of group-policy.xml intentionally commented!")
 
 # Verify program being run as administrator.
 try:
-    ctypes.windll.shell32.IsUserAnAdmin()
+    if not ctypes.windll.shell32.IsUserAnAdmin():
+        raise AdminError()
 except Exception:
     raise AdminError()
 
