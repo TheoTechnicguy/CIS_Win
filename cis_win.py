@@ -45,7 +45,7 @@ logging.info("Started")
 
 logging.debug("Setting constants")
 # Define program and config version and write to log file.
-__version__ = "0.1.12"
+__version__ = "0.1.13"
 __cfg_version__ = "0.1.3"
 logging.info("Current SW version: %s", __version__)
 logging.info("Current config version: %s", __cfg_version__)
@@ -288,21 +288,13 @@ logging.info("Cleaning up")
 # Clean up files.
 # COMBAK: Should be at the end of the program: "Clean up"
 # XML_PATH is not cleaned up because I need it for development.
-for path in (OUT_PATH,):  # XML_PATH):
-    logging.debug("Cleaning %s", path)
-    try:
-        # Set rights to write before deletion.
-        os.chmod(path, stat.S_IWUSR)
-        os.remove(path)
-    except FileNotFoundError:
-        # Skip not existing files.
-        pass
-    except Exception as e:
-        logging.critical(Exception(e))
-    else:
-        logging.warning("Deleted %s", path)
-logging.warning("Cleanup of group-policy.xml intentionally commented!")
 # Allow overwriting of output file if it exists.
+try:
+    os.chmod(OUT_PATH, stat.S_IWUSR)
+except FileNotFoundError:
+    logging.debug("No output file.")
+else:
+    logging.info("Changed rights on output file.")
 
 # Verify program being run as administrator.
 # Starting Python 3.9, this returns a boolean int.
@@ -421,13 +413,11 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
         logging.debug("Current config_row: %s", config_row)
 
         # Skip file headers and comments.
-        # OPTIMIZE: Create function to evaluate if it "x.x.x.x" style.
         if not location_number_like(config_row[0]):
             logging.debug("Skipping row.")
             continue
 
         # Fill template with info.
-        # OPTIMIZE: Use template once and overwrite last info.
         logging.debug("Copying template & filling")
         row_dict = ROW_DICT_TEMPLATE.copy()
         row_dict_keys = list(row_dict.keys())
@@ -495,7 +485,7 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
         # Check source is known.
         if str(row_dict["source"]).lower().strip() not in SUPPORTED_SOURCES:
             logging.critical("%s is not a known source.", row_dict["source"])
-            raise ConfigError("%s in not a known source." % row_dict["source"])
+            raise ConfigError("%s is not a known source." % row_dict["source"])
 
         # Convert string booleans to booleans
         # OPTIMIZE: use distutils.util.strtobool?
