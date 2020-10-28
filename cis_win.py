@@ -45,7 +45,7 @@ logging.info("Started")
 
 logging.debug("Setting constants")
 # Define program and config version and write to log file.
-__version__ = "0.1.9"
+__version__ = "0.1.10"
 __cfg_version__ = "0.1.3"
 logging.info("Current SW version: %s", __version__)
 logging.info("Current config version: %s", __cfg_version__)
@@ -62,11 +62,11 @@ GENERATION_COMMAND = 'gpresult /F /X "%s"' % XML_PATH
 # Set registry dictionnary
 # OPTIMIZE: Which do I need? They generate all a memory object!
 REGISTRY = {
-    "HKEY_CLASSES_ROOT": winreg.ConnectRegistry(None, HKEY_CLASSES_ROOT),
+    # "HKEY_CLASSES_ROOT": winreg.ConnectRegistry(None, HKEY_CLASSES_ROOT),
     "HKEY_CURRENT_USER": winreg.ConnectRegistry(None, HKEY_CURRENT_USER),
     "HKEY_LOCAL_MACHINE": winreg.ConnectRegistry(None, HKEY_LOCAL_MACHINE),
-    "HKEY_USERS": winreg.ConnectRegistry(None, HKEY_USERS),
-    "HKEY_CURRENT_CONFIG": winreg.ConnectRegistry(None, HKEY_CURRENT_CONFIG),
+    # "HKEY_USERS": winreg.ConnectRegistry(None, HKEY_USERS),
+    # "HKEY_CURRENT_CONFIG": winreg.ConnectRegistry(None, HKEY_CURRENT_CONFIG),
 }
 
 # Set XML namespaces dictionnary
