@@ -45,7 +45,7 @@ logging.info("Started")
 
 logging.debug("Setting constants")
 # Define program and config version and write to log file.
-__version__ = "0.1.11"
+__version__ = "0.1.12"
 __cfg_version__ = "0.1.3"
 logging.info("Current SW version: %s", __version__)
 logging.info("Current config version: %s", __cfg_version__)
@@ -249,33 +249,39 @@ if not os.path.exists(CONFIG_PATH):
     raise ConfigError("Configuration file generated. Please fill.")
 
 with open(CONFIG_PATH, "r") as file:
-    config_csv = csv.reader(file, delimiter=",")
+    read_file = file.read().lower()
+    # Find line with version info.
+    version_start = read_file.find("version:")
+    version_eol = read_file.find("\n", version_start)
 
-    # Iterate every row.
-    for row in config_csv:
-        # Skip if row is blank
-        if not row:
-            continue
+    if version_start == -1:
+        logging.warning(ConfigError("Could not find version string!"))
+        print(ConfigError("Could not find version string!"))
+
+    else:
+        # convert locations into line and pretify.
+        version_line = read_file[version_start:version_eol]
+        version_line = version_line.removeprefix("version:").strip(" \n,.")
+
+        logging.info(f"Config file version: {version_line}")
 
         # Verify version.
-        # COMBAK: Kill this option and make a DepreciationWarning
-        if row[0].startswith("Version:") and row[1] != __cfg_version__:
-            logging.critical(
-                ConfigError(
+        if version_line < __cfg_version__:
+            logging.warning(
+                DeprecationWarning(
                     "Configuration file is depreciated. "
-                    "Please back it up and delete it so it can be "
-                    "regenerated. Current version: %s - File version: %s"
-                    % (__cfg_version__, row[1].strip())
+                    f"Expected {__cfg_version__} - Got {version_line}"
                 )
             )
-            raise ConfigError(
-                "Configuration file is depreciated. "
-                "Please back it up and delete it so it can be "
-                "regenerated. Current version: %s - File version: %s"
-                % (__cfg_version__, row[1].strip())
+            print(
+                DeprecationWarning(
+                    "Configuration file is depreciated. "
+                    "Please back it up and delete it so it can be "
+                    f"regenerated. Current version: {__cfg_version__} "
+                    f"- File version: {version_line}"
+                )
             )
-        elif row[0].startswith("Version:") and row[1] == __cfg_version__:
-            break
+
 logging.debug("Done config fetching")
 
 logging.info("Cleaning up")
