@@ -20,10 +20,10 @@ import argparse
 from xml.etree import ElementTree as ET
 from winreg import (
     HKEY_LOCAL_MACHINE,
-    HKEY_CLASSES_ROOT,
+    # HKEY_CLASSES_ROOT,
     HKEY_CURRENT_USER,
-    HKEY_USERS,
-    HKEY_CURRENT_CONFIG,
+    # HKEY_USERS,
+    # HKEY_CURRENT_CONFIG,
 )
 
 # Configuration for the log file.
@@ -45,7 +45,7 @@ logging.info("Started")
 
 logging.debug("Setting constants")
 # Define program and config version and write to log file.
-__version__ = "0.1.8"
+__version__ = "0.1.9"
 __cfg_version__ = "0.1.3"
 logging.info("Current SW version: %s", __version__)
 logging.info("Current config version: %s", __cfg_version__)
@@ -281,6 +281,7 @@ for path in (OUT_PATH,):  # XML_PATH):
     else:
         logging.warning("Deleted %s", path)
 logging.warning("Cleanup of group-policy.xml intentionally commented!")
+# Allow overwriting of output file if it exists.
 
 # Verify program being run as administrator.
 try:
