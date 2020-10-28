@@ -45,8 +45,8 @@ logging.info("Started")
 
 logging.debug("Setting constants")
 # Define program and config version and write to log file.
-__version__ = "0.1.13"
-__cfg_version__ = "0.1.2"
+__version__ = "0.1.12"
+__cfg_version__ = "0.1.3"
 logging.info("Current SW version: %s", __version__)
 logging.info("Current config version: %s", __cfg_version__)
 
@@ -284,13 +284,25 @@ with open(CONFIG_PATH, "r") as file:
 
 logging.debug("Done config fetching")
 
+logging.info("Cleaning up")
+# Clean up files.
+# COMBAK: Should be at the end of the program: "Clean up"
+# XML_PATH is not cleaned up because I need it for development.
+for path in (OUT_PATH,):  # XML_PATH):
+    logging.debug("Cleaning %s", path)
+    try:
+        # Set rights to write before deletion.
+        os.chmod(path, stat.S_IWUSR)
+        os.remove(path)
+    except FileNotFoundError:
+        # Skip not existing files.
+        pass
+    except Exception as e:
+        logging.critical(Exception(e))
+    else:
+        logging.warning("Deleted %s", path)
+logging.warning("Cleanup of group-policy.xml intentionally commented!")
 # Allow overwriting of output file if it exists.
-try:
-    os.chmod(OUT_PATH, stat.S_IWUSR)
-except FileNotFoundError:
-    logging.debug("No output file.")
-else:
-    logging.info("Changed rights on output file.")
 
 # Verify program being run as administrator.
 # Starting Python 3.9, this returns a boolean int.
