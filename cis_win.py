@@ -45,7 +45,7 @@ logging.info("Started")
 
 logging.debug("Setting constants")
 # Define program and config version and write to log file.
-__version__ = "0.1.13"
+__version__ = "0.1.14"
 __cfg_version__ = "0.1.3"
 logging.info("Current SW version: %s", __version__)
 logging.info("Current config version: %s", __cfg_version__)
@@ -421,31 +421,41 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
         logging.debug("Copying template & filling")
         row_dict = ROW_DICT_TEMPLATE.copy()
         row_dict_keys = list(row_dict.keys())
+        logging.debug(f"row_dict copied from temlate: {row_dict}")
 
         # OPTIMIZE: change to enumerate?
-        for pos in range(len(config_row)):
+        for pos, value in enumerate(config_row):
             if len(row_dict_keys) <= pos:
                 break
 
             logging.debug(
                 "Setting row_dict['%s'] to %s from config_row[%i]",
                 row_dict_keys[pos],
-                config_row[pos],
+                value,
                 pos,
             )
 
             # If entry is empty, use default value.
             # OPTIMIZE: Because I copied the template, I DO NOT NEED TO RESET
             # THE DEFAULT VALUE!
-            if not config_row[pos]:
-                row_dict[row_dict_keys[pos]] = ROW_DICT_TEMPLATE[
-                    row_dict_keys[pos]
-                ]
-            else:
-                row_dict[row_dict_keys[pos]] = config_row[pos].strip()
+            if value:
+                row_dict[row_dict_keys[pos]] = value.strip()
 
         logging.debug("Current row_dict: %s", row_dict)
         logging.info("Current policy: %s", row_dict["policy"])
+
+        # Add `print` types to output file and start over.
+        # OPTIMIZE: move up to, like, directly after headers and commit jumps?
+        if row_dict["type"] == "print":
+            out_csv.writerow(
+                [
+                    row_dict["number"],
+                    "",  # Source is empty
+                    row_dict["user_key"],
+                    row_dict["exact_val"],
+                ]
+            )
+            continue
 
         # If the end of the path is a wildcard, remove it.
         # If it doesn't end with `/`, add one.
@@ -498,18 +508,6 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
             else:
                 logging.critical("%s is not a boolean.", row_dict["default"])
                 raise ConfigError("%s in not a boolean." % row_dict["default"])
-
-        # Add `print` types to output file and start over.
-        # OPTIMIZE: move up to, like, directly after headers and commit jumps?
-        if row_dict["type"] == "print":
-            out_csv.writerow(
-                [
-                    row_dict["number"],
-                    row_dict["user_key"],
-                    row_dict["exact_val"],
-                ]
-            )
-            continue
 
         # Check that section and policy cells aren't empty.
         if not row_dict["section"]:
