@@ -45,7 +45,7 @@ logging.info("Started")
 
 logging.debug("Setting constants")
 # Define program and config version and write to log file.
-__version__ = "0.1.15"
+__version__ = "0.1.16"
 __cfg_version__ = "0.1.3"
 logging.info("Current SW version: %s", __version__)
 logging.info("Current config version: %s", __cfg_version__)
@@ -518,8 +518,7 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
                 raise ConfigError(msg)
 
         # Converting cell values acoording to types.
-        # FIXME: USE `isinstance`!!!
-        if row_dict["type"] == bool:
+        if isinstance(row_dict["type"], bool):
             # Boolean convertsion.
             # OPTIMIZE: Use distutils.utils.strtobool?
             logging.debug("Converting boolean %s", row_dict["exact_val"])
@@ -530,7 +529,7 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
             logging.debug(
                 "Current row_dict['exact_val']: %s", row_dict["exact_val"]
             )
-        elif row_dict["type"] == list:
+        elif isinstance(row_dict["type"], list):
             # WHAAAAAT?
             # COMBAK: Needs comments.
             list_values = {}
@@ -672,12 +671,10 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
                         verify = False
 
         # Verify/convert policy value.
-        # OPTIMIZE: use str's .isdigit to convert to int.
-        # OPTIMIZE: use distutils.utils.strtobool?
         # COMBAK: Is there a float value?
         if not isinstance(policy_value, type(None)) and verify:
             try:
-                int(policy_value)
+                float(policy_value)
             except ValueError:
                 policy_value = str(policy_value)
 
@@ -688,7 +685,7 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
                 else:
                     policy_value = str(policy_value)
             else:
-                if "." in str(policy_value):
+                if str(policy_value).count(".") == 1:
                     policy_value = float(policy_value)
                 else:
                     policy_value = int(policy_value)
