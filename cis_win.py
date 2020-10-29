@@ -45,7 +45,7 @@ logging.info("Started")
 
 logging.debug("Setting constants")
 # Define program and config version and write to log file.
-__version__ = "0.1.14"
+__version__ = "0.1.15"
 __cfg_version__ = "0.1.3"
 logging.info("Current SW version: %s", __version__)
 logging.info("Current config version: %s", __cfg_version__)
@@ -469,14 +469,14 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
 
         # OPTIMIZE: Create a varriable that is lowered and stripped.
         # If the type starts with an `!`, negate the result.
-        if str(row_dict["type"]).lower().strip().startswith("!"):
+        if str(row_dict["type"]).lower().startswith("!"):
             negation = True
             row_dict["type"] = row_dict["type"][1:]
         else:
             negation = False
 
         # Check that the type is supported and convert it. Else raise TypeError
-        if str(row_dict["type"]).lower().strip() not in SUPPORTED_TYPES.keys():
+        if str(row_dict["type"]).lower() not in SUPPORTED_TYPES.keys():
             logging.critical(
                 "%s is not a member of known types %s",
                 row_dict["type"],
@@ -488,19 +488,17 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
             )
         else:
             logging.debug("Current row_dict['type']: %s", row_dict["type"])
-            row_dict["type"] = SUPPORTED_TYPES[
-                str(row_dict["type"]).lower().strip()
-            ]
+            row_dict["type"] = SUPPORTED_TYPES[str(row_dict["type"]).lower()]
 
         # Check source is known.
-        if str(row_dict["source"]).lower().strip() not in SUPPORTED_SOURCES:
+        if str(row_dict["source"]).lower() not in SUPPORTED_SOURCES:
             logging.critical("%s is not a known source.", row_dict["source"])
             raise ConfigError("%s is not a known source." % row_dict["source"])
 
         # Convert string booleans to booleans
         # OPTIMIZE: use distutils.util.strtobool?
         if not isinstance(row_dict["default"], bool):
-            row_dict["default"] = row_dict["default"].title().strip()
+            row_dict["default"] = row_dict["default"].title()
             if row_dict["default"] == "True":
                 row_dict["default"] = True
             elif row_dict["default"] == "False":
@@ -510,20 +508,14 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
                 raise ConfigError("%s in not a boolean." % row_dict["default"])
 
         # Check that section and policy cells aren't empty.
-        if not row_dict["section"]:
-            logging.critical(
-                "Section number %s cannot be empty!", row_dict["number"]
-            )
-            raise ConfigError(
-                "Section number %s cannot be empty!" % row_dict["number"]
-            )
-        if not row_dict["policy"]:
-            logging.critical(
-                "Policy number %s cannot be empty!", row_dict["number"]
-            )
-            raise ConfigError(
-                "Policy number %s cannot be empty!" % row_dict["number"]
-            )
+        for key in ("section", "policy"):
+            if not row_dict[key]:
+                msg = (
+                    f"{key.title()} number {row_dict['number']} "
+                    "cannot be empty!"
+                )
+                logging.critical(msg)
+                raise ConfigError(msg)
 
         # Converting cell values acoording to types.
         # FIXME: USE `isinstance`!!!
@@ -531,7 +523,7 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
             # Boolean convertsion.
             # OPTIMIZE: Use distutils.utils.strtobool?
             logging.debug("Converting boolean %s", row_dict["exact_val"])
-            if row_dict["exact_val"].title().strip() == "True":
+            if row_dict["exact_val"].title() == "True":
                 row_dict["exact_val"] = True
             else:
                 row_dict["exact_val"] = False
@@ -556,9 +548,9 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
                 )
                 list_values[list_item] = row_dict[list_item].split(",")
                 for pos in range(len(list_values[list_item])):
-                    list_values[list_item][pos] = (
-                        list_values[list_item][pos].lower().strip()
-                    )
+                    list_values[list_item][pos] = list_values[list_item][
+                        pos
+                    ].lower()
                 list_values[list_item].sort()
                 logging.debug("Current values: %s", list_values[list_item])
 
@@ -581,7 +573,7 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
             logging.debug("Current path: %s", path)
 
             # Set HKEY, key path and subkey name.
-            hkey = path[0]
+            hkey = path[0].upper()
             key = "\\".join(path[1:])
             subkey = row_dict["policy"]
 
@@ -661,9 +653,7 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
                     elif next_is_value and "Setting" in item_tag:
                         # Get the policy value if the previous tag was name
                         policy_value = item.text
-                        tag_type_str = (
-                            item_tag[len("Setting"):].lower().strip()
-                        )
+                        tag_type_str = item_tag[len("Setting"):].lower()
                         logging.debug(
                             "After adding value Current policy_values: %s",
                             policy_values,
@@ -678,7 +668,7 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
                                 f"Current name .tag: {name.tag!s:15} "
                                 ".text: {name.text!s}"
                             )
-                            policy_values.append(name.text.lower().strip())
+                            policy_values.append(name.text.lower())
                         verify = False
 
         # Verify/convert policy value.
@@ -802,9 +792,7 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
                 to_csv.append(not policy_values)
 
             elif row_dict["type"] == str:
-                to_csv.append(
-                    policy_values == row_dict["exact_val"].lower().strip()
-                )
+                to_csv.append(policy_values == row_dict["exact_val"].lower())
 
             # OPTIMIZE: Use isinstance.
             elif row_dict["type"] == list:
