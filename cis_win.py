@@ -45,7 +45,7 @@ logging.info("Started")
 
 logging.debug("Setting constants")
 # Define program and config version and write to log file.
-__version__ = "0.1.16"
+__version__ = "0.1.17"
 __cfg_version__ = "0.1.3"
 logging.info("Current SW version: %s", __version__)
 logging.info("Current config version: %s", __cfg_version__)
@@ -457,23 +457,12 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
             )
             continue
 
-        # If the end of the path is a wildcard, remove it.
-        # If it doesn't end with `/`, add one.
-        logging.debug("Analizing ending of section: %s", row_dict["section"])
-        if not row_dict["section"].endswith("/"):
-            if row_dict["section"].endswith("*"):
-                row_dict["section"] = row_dict["section"][:-1]
-            if not row_dict["section"].endswith("/"):
-                row_dict["section"] += "/"
-        logging.debug("Current section: >>>%s<<<", row_dict["section"])
+        # If the end of the path is a wildcard `*` or a slash `/`, remove it.
+        row_dict["section"] = row_dict["section"].strip(" /\\*")
 
-        # OPTIMIZE: Create a varriable that is lowered and stripped.
         # If the type starts with an `!`, negate the result.
-        if str(row_dict["type"]).lower().startswith("!"):
-            negation = True
-            row_dict["type"] = row_dict["type"][1:]
-        else:
-            negation = False
+        negation = "!" in row_dict["type"]
+        row_dict["type"] = row_dict["type"].replace("!", "")
 
         # Check that the type is supported and convert it. Else raise TypeError
         if str(row_dict["type"]).lower() not in SUPPORTED_TYPES.keys():
@@ -630,7 +619,7 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
                 # For non firewall policies
                 # TODO: Learn aboux xml lib.
                 for item in xml_root.findall(
-                    row_dict["section"], STUPID_NAMESPACE
+                    row_dict["section"] + "/", STUPID_NAMESPACE
                 ):
                     # Get item tag
                     item_tag = item.tag.split("}")[-1]
