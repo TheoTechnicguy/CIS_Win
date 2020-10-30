@@ -45,7 +45,7 @@ logging.info("Started")
 
 logging.debug("Setting constants")
 # Define program and config version and write to log file.
-__version__ = "0.1.17"
+__version__ = "0.1.18"
 __cfg_version__ = "0.1.3"
 logging.info("Current SW version: %s", __version__)
 logging.info("Current config version: %s", __cfg_version__)
@@ -398,6 +398,7 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
                 "Min_val",
                 "Max_val",
                 "Exact_val",
+                "Is_default",
                 "Compliant",
             ],
         ]
@@ -423,7 +424,6 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
         row_dict_keys = list(row_dict.keys())
         logging.debug(f"row_dict copied from temlate: {row_dict}")
 
-        # OPTIMIZE: change to enumerate?
         for pos, value in enumerate(config_row):
             if len(row_dict_keys) <= pos:
                 break
@@ -435,17 +435,17 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
                 pos,
             )
 
-            # If entry is empty, use default value.
-            # OPTIMIZE: Because I copied the template, I DO NOT NEED TO RESET
-            # THE DEFAULT VALUE!
-            if value:
+            # Use the user's value if it exists and lower values if needed.
+            lowered = ("type", "source", "exact_val", "min_val", "max_val")
+            if value and row_dict_keys[pos] in lowered:
+                row_dict[row_dict_keys[pos]] = value.strip().lower()
+            elif value:
                 row_dict[row_dict_keys[pos]] = value.strip()
 
         logging.debug("Current row_dict: %s", row_dict)
         logging.info("Current policy: %s", row_dict["policy"])
 
         # Add `print` types to output file and start over.
-        # OPTIMIZE: move up to, like, directly after headers and commit jumps?
         if row_dict["type"] == "print":
             out_csv.writerow(
                 [
@@ -465,7 +465,7 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
         row_dict["type"] = row_dict["type"].replace("!", "")
 
         # Check that the type is supported and convert it. Else raise TypeError
-        if str(row_dict["type"]).lower() not in SUPPORTED_TYPES.keys():
+        if str(row_dict["type"]) not in SUPPORTED_TYPES.keys():
             logging.critical(
                 "%s is not a member of known types %s",
                 row_dict["type"],
@@ -477,15 +477,14 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
             )
         else:
             logging.debug("Current row_dict['type']: %s", row_dict["type"])
-            row_dict["type"] = SUPPORTED_TYPES[str(row_dict["type"]).lower()]
+            row_dict["type"] = SUPPORTED_TYPES[str(row_dict["type"])]
 
         # Check source is known.
-        if str(row_dict["source"]).lower() not in SUPPORTED_SOURCES:
+        if str(row_dict["source"]) not in SUPPORTED_SOURCES:
             logging.critical("%s is not a known source.", row_dict["source"])
             raise ConfigError("%s is not a known source." % row_dict["source"])
 
         # Convert string booleans to booleans
-        # OPTIMIZE: use distutils.util.strtobool?
         if not isinstance(row_dict["default"], bool):
             row_dict["default"] = row_dict["default"].title()
             if row_dict["default"] == "True":
@@ -509,7 +508,6 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
         # Converting cell values acoording to types.
         if isinstance(row_dict["type"], bool):
             # Boolean convertsion.
-            # OPTIMIZE: Use distutils.utils.strtobool?
             logging.debug("Converting boolean %s", row_dict["exact_val"])
             if row_dict["exact_val"].title() == "True":
                 row_dict["exact_val"] = True
@@ -778,7 +776,7 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
                 to_csv.append(not policy_values)
 
             elif row_dict["type"] == str:
-                to_csv.append(policy_values == row_dict["exact_val"].lower())
+                to_csv.append(policy_values == row_dict["exact_val"])
 
             # OPTIMIZE: Use isinstance.
             elif row_dict["type"] == list:
