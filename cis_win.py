@@ -45,7 +45,7 @@ logging.info("Started")
 
 logging.debug("Setting constants")
 # Define program and config version and write to log file.
-__version__ = "0.1.18"
+__version__ = "0.1.19"
 __cfg_version__ = "0.1.3"
 logging.info("Current SW version: %s", __version__)
 logging.info("Current config version: %s", __cfg_version__)
@@ -122,6 +122,12 @@ ROW_DICT_TEMPLATE = {
     "exact_val": None,
     "default": False,
 }
+
+EXPORT_VALUES = (
+    key
+    for key in list(ROW_DICT_TEMPLATE.keys())
+    if key not in ("policy", "type")
+)
 logging.debug("Done constants")
 
 # Custom Exception Classes.
@@ -686,8 +692,7 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
         )
 
         # Change policy_values list to one item. If list is empty, use None.
-        # OPTIMIZE: use standard int<->bool and list<->bool expressions.
-        if len(policy_values) == 0:
+        if not policy_values:
             policy_values = None
         elif len(policy_values) == 1:
             policy_values = policy_values[0]
@@ -701,20 +706,13 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
 
         # Ceate output list.
         # OPTIMIZE: combine code below with a list comprehention.
-        to_csv = [
-            row_dict["number"],
-            row_dict["source"],
-            row_dict["section"],
-            row_dict["user_key"],
-            str(policy_values).title(),
-            row_dict["min_val"],
-            row_dict["max_val"],
-            row_dict["exact_val"],
-        ]
+        to_csv = [row_dict[key] for key in EXPORT_VALUES]
+        to_csv.insert(4, str(policy_values).title())
+
         # V Code below. V
         # WHAAAAAT: ? Convert list to str? ?!?????
-        if isinstance(policy_values, list):
-            to_csv[2] = ", ".join(policy_values).title()
+        # if isinstance(policy_values, list):
+        #     to_csv[2] = ", ".join(policy_values).title()
         logging.debug("Inintial to_csv: %s", to_csv)
 
         logging.info(
