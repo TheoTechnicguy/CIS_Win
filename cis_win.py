@@ -45,7 +45,7 @@ logging.info("Started")
 
 logging.debug("Setting constants")
 # Define program and config version and write to log file.
-__version__ = "0.1.19"
+__version__ = "0.1.20"
 __cfg_version__ = "0.1.3"
 logging.info("Current SW version: %s", __version__)
 logging.info("Current config version: %s", __cfg_version__)
@@ -555,43 +555,39 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
 
         verify = True
         if row_dict["source"] == "registry":
-            # OPTIMIZE: User replace or removeprefix for computer
-            # and for the registry.
             # WHAAAAAT: just remove the lase `\` if you don't need it...
             # WHAAAAAT: You split it to join it again ?!?
-            path = row_dict["section"][:-1].split("\\")[1:]
-            if path[0].lower().strip() == "computer":
-                path.remove(path[0])
-            logging.debug("Current path: %s", path)
+            path = row_dict["section"].lower()
+            path = path.replace("computer\\", "")
+            logging.debug("Replaced path: %s", path)
+            path = path.strip(" /\\")
+            path = path.split("\\")
+            logging.debug("Split path: %s", path)
+            logging.debug("Final path: %s", path)
 
-            # Set HKEY, key path and subkey name.
-            hkey = path[0].upper()
-            key = "\\".join(path[1:])
+            # Set HKEY by popping the first elemet of the path
+            hkey = path.pop(0).upper()
+            # Key path is the joined path
+            key = "\\".join(path)
+            # Subkey is the policy
             subkey = row_dict["policy"]
 
             # Attempt to get the registry. Raise ConfigError if it fails.
             # Then get the key but pass if you cannot find it.
             # Issue #4 states that a missing key can mean a default value.
-            # OPTIMIZE: combine the try: ... except: statements.
             try:
                 registry = REGISTRY[hkey]
-                logging.debug(
-                    "Current registry: %s %s", registry, REGISTRY[hkey]
-                )
+                logging.debug("Looking for %s in %s in %s", subkey, key, hkey)
+                with winreg.OpenKey(registry, key) as open_key:
+                    policy_value = winreg.QueryValueEx(open_key, subkey)[0]
             except KeyError:
                 logging.critical(ConfigError("Registry %s not found" % hkey))
                 raise ConfigError(
                     "Registry %s not found. Verify your config file!" % hkey
                 )
-            else:
-                logging.debug("Looking for %s in %s", key, hkey)
-                try:
-                    open_key = winreg.OpenKey(registry, key)
-                    policy_value = winreg.QueryValueEx(open_key, subkey)[0]
-                    open_key.Close()
-                except FileNotFoundError:
-                    # Issue #4 - Missing key can mean default value.
-                    pass
+            except FileNotFoundError:
+                # Issue #4 - Missing key can mean default value.
+                pass
 
         else:
             # If the source is not registry, the default (XML).
