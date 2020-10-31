@@ -45,7 +45,7 @@ logging.info("Started")
 
 logging.debug("Setting constants")
 # Define program and config version and write to log file.
-__version__ = "0.1.21"
+__version__ = "0.1.22"
 __cfg_version__ = "0.1.3"
 logging.info("Current SW version: %s", __version__)
 logging.info("Current config version: %s", __cfg_version__)
@@ -617,7 +617,7 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
 
             else:
                 # For non firewall policies
-                # TODO: Learn aboux xml lib.
+                # TODO: Learn aboux xml lib. --> Change to lxml?
                 for item in xml_root.findall(
                     row_dict["section"] + "/", STUPID_NAMESPACE
                 ):
@@ -625,8 +625,8 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
                     item_tag = item.tag.split("}")[-1]
                     # WHAAAAAT: Consistency PLEASE!
                     logging.debug(
-                        f"Current item: {item_tag!s:15}" + "next_is_value: %s",
-                        next_is_value,
+                        f"Current item: {item_tag!s:15} "
+                        f"next_is_value: {next_is_value}"
                     )
 
                     # Look if we found the policy.
@@ -641,7 +641,8 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
                     elif next_is_value and "Setting" in item_tag:
                         # Get the policy value if the previous tag was name
                         policy_value = item.text
-                        tag_type_str = item_tag[len("Setting"):].lower()
+                        logging.debug("Policy value is %s", policy_value)
+                        policy_values.append(policy_value)
                         logging.debug(
                             "After adding value Current policy_values: %s",
                             policy_values,
@@ -813,6 +814,9 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
             # If minimum value is requested, compare using minimum.
             # OPTIMIZE: First look for range, then min/max.
             logging.debug("In min value")
+            logging.debug(
+                "Type %s - value %s", row_dict["type"], policy_values
+            )
             if row_dict["type"] == int:
                 to_csv.append(int(policy_values) >= int(row_dict["min_val"]))
 
