@@ -45,7 +45,7 @@ logging.info("Started")
 
 logging.debug("Setting constants")
 # Define program and config version and write to log file.
-__version__ = "0.1.22"
+__version__ = "0.1.23"
 __cfg_version__ = "0.1.3"
 logging.info("Current SW version: %s", __version__)
 logging.info("Current config version: %s", __cfg_version__)
@@ -662,25 +662,35 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
 
         # Verify/convert policy value.
         # COMBAK: Is there a float value?
-        if not isinstance(policy_value, type(None)) and verify:
-            try:
-                float(policy_value)
-            except ValueError:
-                policy_value = str(policy_value)
-
-                if policy_value.title() == "True":
-                    policy_value = True
-                elif policy_value.title() == "False":
-                    policy_value = False
-                else:
+        logging.debug(" ------ Starting Conversion ------")
+        policy_values_out = []
+        for policy_value in policy_values:
+            logging.debug("Current policy value %s", policy_value)
+            if not isinstance(policy_value, type(None)) and verify:
+                try:
+                    float(policy_value)
+                except ValueError:
                     policy_value = str(policy_value)
-            else:
-                if str(policy_value).count(".") == 1:
-                    policy_value = float(policy_value)
+
+                    if policy_value.title() == "True":
+                        policy_value = True
+                    elif policy_value.title() == "False":
+                        policy_value = False
+                    else:
+                        policy_value = str(policy_value)
                 else:
-                    policy_value = int(policy_value)
-            finally:
-                policy_values.append(policy_value)
+                    logging.debug("Is a float.")
+                    if str(policy_value).count(".") == 1:
+                        policy_value = float(policy_value)
+                        logging.debug("Really a float.")
+                    else:
+                        policy_value = int(policy_value)
+                        logging.debug("No - Really an int")
+                finally:
+                    logging.info(
+                        "Appending %s (%s)", policy_value, type(policy_value)
+                    )
+                    policy_values_out.append(policy_value)
 
         logging.debug(
             "Current policy_values: %s length: %i",
@@ -689,12 +699,12 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
         )
 
         # Change policy_values list to one item. If list is empty, use None.
-        if not policy_values:
+        if not policy_values_out:
             policy_values = None
-        elif len(policy_values) == 1:
-            policy_values = policy_values[0]
+        elif len(policy_values_out) == 1:
+            policy_values = policy_values_out[0]
         else:
-            policy_values.sort()
+            policy_values = policy_values_out.sort()
         logging.debug(
             "Current policy_values %s is %s",
             policy_values,
@@ -706,12 +716,11 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
         logging.debug("row_dict: %s", row_dict)
         logging.debug("EXPORT_VALUES: %s", tuple(EXPORT_VALUES))
         to_csv = [row_dict[key] for key in EXPORT_VALUES]
+
+        if isinstance(policy_values, list):
+            policy_values = ",".join(policy_values).title()
         to_csv.insert(4, str(policy_values).title())
 
-        # V Code below. V
-        # WHAAAAAT: ? Convert list to str? ?!?????
-        # if isinstance(policy_values, list):
-        #     to_csv[2] = ", ".join(policy_values).title()
         logging.debug("Inintial to_csv: %s", to_csv)
 
         logging.info(
