@@ -45,7 +45,7 @@ logging.info("Started")
 
 logging.debug("Setting constants")
 # Define program and config version and write to log file.
-__version__ = "0.1.20"
+__version__ = "0.1.21"
 __cfg_version__ = "0.1.3"
 logging.info("Current SW version: %s", __version__)
 logging.info("Current config version: %s", __cfg_version__)
@@ -123,7 +123,7 @@ ROW_DICT_TEMPLATE = {
     "default": False,
 }
 
-EXPORT_VALUES = (
+EXPORT_VALUES = tuple(
     key
     for key in list(ROW_DICT_TEMPLATE.keys())
     if key not in ("policy", "type")
@@ -702,6 +702,8 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
 
         # Ceate output list.
         # OPTIMIZE: combine code below with a list comprehention.
+        logging.debug("row_dict: %s", row_dict)
+        logging.debug("EXPORT_VALUES: %s", tuple(EXPORT_VALUES))
         to_csv = [row_dict[key] for key in EXPORT_VALUES]
         to_csv.insert(4, str(policy_values).title())
 
