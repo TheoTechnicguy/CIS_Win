@@ -43,7 +43,7 @@ logging.info("Started")
 # ---------- START Fix Environement Constants ----------
 logging.debug("Setting Fix Constants")
 # Define program and config version and write to log file.
-__version__ = "0.1.27"
+__version__ = "0.1.28"
 __cfg_version__ = "0.1.4"
 logging.info("Current SW version: %s", __version__)
 logging.info("Current config version: %s", __cfg_version__)
@@ -799,17 +799,20 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
             )
 
         # WHAAAAAT? - comment not matching with if clause.
-        # If no policy values are found and type is None, warn about it.
-        if isinstance(row_dict["type"], type(None)) and policy_values is None:
+        # If no policy values are found and type isn't None, warn about it.
+        if (
+            not isinstance(row_dict["type"], type(None))
+            and policy_values is None
+        ):
             # Policy expected but not found.
             logging.warning(
                 "Expected policy %s not found!", row_dict["policy"]
             )
-            to_csv[2] = "None"
             if row_dict["default"]:
                 to_csv.append(True)
             else:
                 to_csv.append(False)
+                to_csv[2] = "Policy Not Found!"
 
         elif (
             row_dict["min_val"] is None
@@ -1017,7 +1020,6 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
                 % row_dict["number"]
             )
 
-        # Ok. This is emparasing. rev_pos is not defined.
         # WHAAAAAT ?
         if negation:
             for rev_pos in range(len(to_csv) - 1, -1, -1):
