@@ -43,7 +43,7 @@ logging.info("Started")
 # ---------- START Fix Environement Constants ----------
 logging.debug("Setting Fix Constants")
 # Define program and config version and write to log file.
-__version__ = "0.1.26"
+__version__ = "0.1.27"
 __cfg_version__ = "0.1.4"
 logging.info("Current SW version: %s", __version__)
 logging.info("Current config version: %s", __cfg_version__)
@@ -559,7 +559,7 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
                 raise ConfigError(msg)
 
         # Converting cell values acoording to types.
-        if isinstance(row_dict["type"], bool):
+        if row_dict["type"] == bool:
             # Boolean convertsion.
             logging.debug("Converting boolean %s", row_dict["exact_val"])
             if row_dict["exact_val"].title() == "True":
@@ -569,7 +569,7 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
             logging.debug(
                 "Current row_dict['exact_val']: %s", row_dict["exact_val"]
             )
-        elif isinstance(row_dict["type"], list):
+        elif row_dict["type"] == list:
             # WHAAAAAT?
             # COMBAK: Needs comments.
             list_values = {}
@@ -763,6 +763,7 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
         logging.debug("row_dict: %s", row_dict)
         logging.debug("EXPORT_VALUES: %s", tuple(EXPORT_VALUES))
         to_csv = [row_dict[key] for key in EXPORT_VALUES]
+        logging.debug("CSV row frame: %s", to_csv)
 
         if isinstance(policy_values, list):
             policy_values = ",".join(policy_values).title()
@@ -831,7 +832,6 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
             elif row_dict["type"] == str:
                 to_csv.append(policy_values == row_dict["exact_val"])
 
-            # OPTIMIZE: Use isinstance.
             elif row_dict["type"] == list:
                 # FIXME: Don't need to check. (?)
                 try:
@@ -857,6 +857,12 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
 
             elif row_dict["type"] == bool:
                 to_csv.append(policy_values == row_dict["exact_val"])
+                logging.debug(
+                    "Result of %s == %s: %s",
+                    policy_values,
+                    row_dict["exact_val"],
+                    policy_values == row_dict["exact_val"],
+                )
 
             else:
                 logging.critical(ImplementationError())
