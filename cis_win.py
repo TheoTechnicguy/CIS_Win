@@ -43,8 +43,8 @@ logging.info("Started")
 # ---------- START Fix Environement Constants ----------
 logging.debug("Setting Fix Constants")
 # Define program and config version and write to log file.
-__version__ = "0.1.25"
-__cfg_version__ = "0.1.3"
+__version__ = "0.1.26"
+__cfg_version__ = "0.1.4"
 logging.info("Current SW version: %s", __version__)
 logging.info("Current config version: %s", __cfg_version__)
 
@@ -59,12 +59,20 @@ WORK_DIR = os.path.dirname(__file__)
 logging.debug("Setting up parser.")
 
 parser = argparse.ArgumentParser()
+
+# ~~~ Config file related ~~~
 parser.add_argument(
     "--config-file",
     type=str,
     help="Config file location. Default is `config.csv`",
     default=os.path.join(WORK_DIR, "config.csv"),
 )
+parser.add_argument(
+    "--force-generate-config",
+    action="store_true",
+    help="Force config file regeneration. THIS WILL REPLACE THE FILE.",
+)
+
 parser.add_argument(
     "--output-file",
     type=str,
@@ -252,12 +260,12 @@ def location_number_like(number: int) -> bool:
 logging.debug("Finished setting up functions.")
 
 # Generate configuration file if it does not exist.
-if not os.path.exists(CONFIG_PATH):
+if not os.path.exists(CONFIG_PATH) or args.force_generate_config:
     with open(CONFIG_PATH, "w+", newline="") as file:
         config_csv = csv.writer(file, delimiter=",")
         config_csv.writerows(
             [
-                ["Version:", __cfg_version__],
+                ["Config name:", "", "Version:", __cfg_version__],
                 [
                     "Note:",
                     "Max_val is inclusive --> min=0 max=5 = 0-1-2-3-4-5.",
@@ -278,7 +286,7 @@ if not os.path.exists(CONFIG_PATH):
                     "Exact_val",
                     "is_default",
                 ],
-                ["-" * 15] * 8,
+                ["-" * 15] * 10,
             ]
         )
     # End program and ask configuration file filling.
@@ -286,38 +294,31 @@ if not os.path.exists(CONFIG_PATH):
     raise ConfigError("Configuration file generated. Please fill.")
 
 with open(CONFIG_PATH, "r") as file:
-    read_file = file.read().lower()
-    # Find line with version info.
-    version_start = read_file.find("version:")
-    version_eol = read_file.find("\n", version_start)
+    config_csv = csv.reader(file, delimiter=",")
 
-    if version_start == -1:
-        logging.warning(ConfigError("Could not find version string!"))
-        print(ConfigError("Could not find version string!"))
+    for row in config_csv:
+        config_name = row[1]  # line 0 col 1 (Name)
+        config_version = row[3]
+        break
 
-    else:
-        # convert locations into line and pretify.
-        version_line = read_file[version_start:version_eol]
-        version_line = version_line.removeprefix("version:").strip(" \n,.")
+    logging.info(f"Config file version: {config_version}")
 
-        logging.info(f"Config file version: {version_line}")
-
-        # Verify version.
-        if version_line < __cfg_version__:
-            logging.warning(
-                DeprecationWarning(
-                    "Configuration file is depreciated. "
-                    f"Expected {__cfg_version__} - Got {version_line}"
-                )
+    # Verify version.
+    if config_version < __cfg_version__:
+        logging.warning(
+            DeprecationWarning(
+                "Configuration file is depreciated. "
+                f"Expected {__cfg_version__} - Got {config_version}"
             )
-            print(
-                DeprecationWarning(
-                    "Configuration file is depreciated. "
-                    "Please back it up and delete it so it can be "
-                    f"regenerated. Current version: {__cfg_version__} "
-                    f"- File version: {version_line}"
-                )
+        )
+        print(
+            DeprecationWarning(
+                "Configuration file is depreciated. "
+                "Please back it up and delete it so it can be "
+                f"regenerated. Current version: {__cfg_version__} "
+                f"- File version: {config_version}"
             )
+        )
 
 logging.debug("Done config fetching")
 
@@ -384,6 +385,10 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
             [
                 "Program version:",
                 __version__,
+                "Config Name",
+                config_name,
+                "Config Version",
+                config_version,
                 "Execution time:",
                 time_now,
                 "XML execution time:",
