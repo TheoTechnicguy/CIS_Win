@@ -40,25 +40,75 @@ logging.basicConfig(
 logging.info("Started")
 # ---------- END Setup ----------
 
-# logging.info("Starting threads")
-# Thread(target=input).start()
-# logging.warning("Thread input_keep_alive intentionally commented!")
-# logging.debug("Done threads")
-
-logging.debug("Setting constants")
 # ---------- START Fix Environement Constants ----------
+logging.debug("Setting Fix Constants")
 # Define program and config version and write to log file.
-__version__ = "0.1.24"
+__version__ = "0.1.25"
 __cfg_version__ = "0.1.3"
 logging.info("Current SW version: %s", __version__)
 logging.info("Current config version: %s", __cfg_version__)
 
 # Set work directory and file paths.
 WORK_DIR = os.path.dirname(__file__)
-OUT_PATH = os.path.join(WORK_DIR, "out.csv")
-XML_PATH = os.path.join(WORK_DIR, "group-policy.xml")
 # ---------- END Fix Environement Constants ----------
+
 # ---------- START Arguments Parsing ----------
+# Argument Parser setup.
+# Argument Parser = python -V --me
+#                           ^  ^^
+logging.debug("Setting up parser.")
+
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    "--config-file",
+    type=str,
+    help="Config file location. Default is `config.csv`",
+    default=os.path.join(WORK_DIR, "config.csv"),
+)
+parser.add_argument(
+    "--output-file",
+    type=str,
+    help="Output file location. Default is `out.csv`",
+    default=os.path.join(WORK_DIR, "out.csv"),
+)
+parser.add_argument(
+    "--gpo-file",
+    type=str,
+    help="GPO file location. Default is `group-policy.xml`",
+    default=os.path.join(WORK_DIR, "group-policy.xml"),
+)
+parser.add_argument(
+    "--no-generate-gpo",
+    action="store_true",
+    help="Do not generate or delete the group-policy.xml file. ONLY FOR TESTING!",
+)
+parser.add_argument(
+    "--use-time",
+    type=str,
+    help="Use the time specified for execution time. ONLY FOR TESTING!",
+    default=str(datetime.datetime.now()),
+)
+parser.add_argument(
+    "--no-check-admin",
+    action="store_false",
+    help="Do not check if executed as admin. THIS CAN CREATE PROBLEMS!",
+)
+
+args = parser.parse_args()
+logging.info("Arguments parsed: %s", args)
+logging.debug("Done setting up parser.")
+# ---------- END Arguments Parsing ----------
+
+# ---------- START User Input Verification ----------
+# Get argements or set variables to default values.
+CONFIG_PATH = args.config_file
+OUT_PATH = args.output_file
+XML_PATH = args.gpo_file
+
+is_dev = args.no_generate_gpo or args.use_time != str(datetime.datetime.now())
+if is_dev:
+    logging.warning("Running in dev environment.")
+# ---------- END User Input Verification ----------
 
 # GPO generation command. Used later...
 # COMBAK: Keep as constant or move to cmd?
@@ -133,7 +183,7 @@ EXPORT_VALUES = tuple(
     for key in list(ROW_DICT_TEMPLATE.keys())
     if key not in ("policy", "type")
 )
-logging.debug("Done constants")
+logging.debug("Done setting Fix Constants")
 # ---------- END Fix Constants ----------
 
 # Custom Exception Classes.
@@ -200,31 +250,6 @@ def location_number_like(number: int) -> bool:
 
 
 logging.debug("Finished setting up functions.")
-
-# Argument Parser setup.
-# Argument Parser = python -V --me
-#                           ^  ^^
-logging.debug("Setting up parser.")
-parser = argparse.ArgumentParser()
-parser.add_argument("--cfg", type=str, help="Optional config file location.")
-args = parser.parse_args()
-
-logging.debug("Done setting up parser.")
-
-# Get argements or set variables to default values.
-# TODO: Check file existance and set cmd defautl value.
-logging.debug("Starting config fetching")
-if not args.cfg:
-    CONFIG_PATH = os.path.join(WORK_DIR, "config.csv")
-else:
-    if not os.path.exists(args.cfg):
-        raise FileNotFoundError("That path does not exist.")
-    elif not os.path.isfile(args.cfg):
-        raise Exception("That is not a file.")
-    elif not os.path.splitext(args.cfg)[-1] == ".csv":
-        raise Exception("That is not a csv.")
-    else:
-        CONFIG_PATH = args.cfg
 
 # Generate configuration file if it does not exist.
 if not os.path.exists(CONFIG_PATH):
@@ -310,14 +335,21 @@ else:
 
 # Verify program being run as administrator.
 # Starting Python 3.9, this returns a boolean int.
-try:
-    if not ctypes.windll.shell32.IsUserAnAdmin():
+if args.no_check_admin:
+    try:
+        if not ctypes.windll.shell32.IsUserAnAdmin():
+            raise AdminError()
+    except AdminError:
+        raise
+    except Exception:
         raise AdminError()
-except Exception:
-    raise AdminError()
+else:
+    logging.warning("Skipping admin check!")
 
 # Generate GPO XML file if it does not exist.
-if not os.path.exists(XML_PATH):
+if args.no_generate_gpo:
+    logging.warning("Not Generating new GPO.")
+else:
     print("Getting group-policy.xml file. This may take a while...")
     logging.info(
         "Running group-policy export command '%s'", GENERATION_COMMAND
@@ -343,7 +375,7 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
     config_csv = csv.reader(config_file, delimiter=",")
 
     # Get current time.
-    time_now = datetime.datetime.now()
+    time_now = args.use_time
 
     # Write header.
     # OPTIMIZE: Create template file and dwl/copy it. Possible?
@@ -356,6 +388,7 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
                 time_now,
                 "XML execution time:",
                 xml_root.find("rsop:ReadTime", STUPID_NAMESPACE).text,
+                "Development environment" if is_dev else "",
             ],
             ["User:", getpass.getuser(), "Domain:", os.environ["userdomain"]],
             [
@@ -389,6 +422,9 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
                     + bytes(
                         socket.gethostbyname(socket.gethostname()), "utf-16"
                     )
+                    + bytes("XXX-DEV-XXX", "ascii")
+                    if is_dev
+                    else b""
                 )
                 .hexdigest()
                 .upper(),
@@ -1003,9 +1039,11 @@ os.chmod(OUT_PATH, stat.S_IRUSR)
 
 # Clean up after yourself.
 logging.info("Cleaning up")
-# os.chmod(XML_PATH, stat.S_IWUSR) # Need to allow writing to delete.
-# os.remove(XML_PATH)
-logging.warning("XML_PATH clean up intentionally commented!")
+if not args.no_generate_gpo:
+    os.chmod(XML_PATH, stat.S_IWUSR)  # Need to allow writing to delete.
+    os.remove(XML_PATH)
+else:
+    logging.warning("Did not clean up.")
 
 logging.info("Exiting")
 print("Done")
