@@ -6,6 +6,7 @@
 # Copyright (c) 2020 Theo Technicguy All Rights Reserved.
 # -----------------------
 
+# ---------- START Setup ----------
 import logging
 import os
 import ctypes
@@ -37,6 +38,7 @@ logging.basicConfig(
 )
 
 logging.info("Started")
+# ---------- END Setup ----------
 
 # logging.info("Starting threads")
 # Thread(target=input).start()
@@ -44,8 +46,9 @@ logging.info("Started")
 # logging.debug("Done threads")
 
 logging.debug("Setting constants")
+# ---------- START Fix Environement Constants ----------
 # Define program and config version and write to log file.
-__version__ = "0.1.23"
+__version__ = "0.1.24"
 __cfg_version__ = "0.1.3"
 logging.info("Current SW version: %s", __version__)
 logging.info("Current config version: %s", __cfg_version__)
@@ -54,6 +57,8 @@ logging.info("Current config version: %s", __cfg_version__)
 WORK_DIR = os.path.dirname(__file__)
 OUT_PATH = os.path.join(WORK_DIR, "out.csv")
 XML_PATH = os.path.join(WORK_DIR, "group-policy.xml")
+# ---------- END Fix Environement Constants ----------
+# ---------- START Arguments Parsing ----------
 
 # GPO generation command. Used later...
 # COMBAK: Keep as constant or move to cmd?
@@ -129,6 +134,7 @@ EXPORT_VALUES = tuple(
     if key not in ("policy", "type")
 )
 logging.debug("Done constants")
+# ---------- END Fix Constants ----------
 
 # Custom Exception Classes.
 logging.debug("Creating classes")
@@ -344,7 +350,7 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
     out_csv.writerows(
         [
             [
-                "Output file version:",
+                "Program version:",
                 __version__,
                 "Execution time:",
                 time_now,
@@ -826,6 +832,7 @@ with open(OUT_PATH, "w+", newline="") as out_file, open(
             logging.debug(
                 "Type %s - value %s", row_dict["type"], policy_values
             )
+
             if row_dict["type"] == int:
                 to_csv.append(int(policy_values) >= int(row_dict["min_val"]))
 
